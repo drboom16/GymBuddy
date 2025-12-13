@@ -75,6 +75,216 @@
             font-weight: 500;
             text-align: center;
         }
+
+        .nav-item.pulse {
+            animation: pulse 0.1s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 24px;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .modal-close:hover {
+            background: #f0f0f0;
+        }
+
+        .modal-content {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .selection-group {
+            margin-bottom: 32px;
+        }
+
+        .selection-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .duration-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 8px;
+            height: 40px;
+        }
+
+        .duration-option {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            transition: all 0.3s ease;
+            color: #333;
+            font-weight: 600;
+            font-size: 13px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .duration-option.selected {
+            border: 3px solid #000;
+            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+        }
+
+        .intensity-low.selected,
+        .intensity-medium.selected,
+        .intensity-high.selected,
+        .intensity-max.selected {
+            border: 3px solid #000;
+        }
+
+        .go-button {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 16px;
+            cursor: pointer;
+            margin-top: 24px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .go-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+        }
+
+        .go-button:active {
+            transform: translateY(0);
+        }
+
+        .go-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .intensity-bar {
+            height: 40px;
+            margin-top: 3px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 8px;
+        }
+
+        .intensity-low,
+        .intensity-medium,
+        .intensity-high,
+        .intensity-max {
+            transition: all 0.3s ease;
+            color: white;
+            font-weight: 600;
+            font-size: 13px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .intensity-low {
+            background: linear-gradient(135deg, #c084fc 0%, #a855f7 100%);
+        }
+
+        .intensity-medium {
+            background: linear-gradient(135deg, #9333ea 0%, #7c3aed 100%);
+        }
+
+        .intensity-high {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        }
+
+        .intensity-max {
+            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+        }
+
     </style>
 </head>
 <body>
@@ -87,7 +297,7 @@
             <i data-lucide="clipboard-list" class="nav-icon"></i>
             <div class="nav-label">Workouts</div>
         </a>
-        <a class="nav-item" onclick="alert('Train coming soon!')">
+        <a class="nav-item" id="trainButton" onclick="openTrainModal(event)">
             <i data-lucide="dumbbell" class="nav-icon"></i>
             <div class="nav-label">Train</div>
         </a>
@@ -101,9 +311,146 @@
         </a>
     </div>
 
+    <!-- Modal -->
+    <div class="modal-overlay" id="trainModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Start Training</h2>
+                <button class="modal-close" onclick="closeTrainModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <div class="selection-group">
+                    <label class="selection-label">Intensity</label>
+                    <div class="intensity-bar">
+                        <div class="intensity-low" onclick="selectIntensity(this, 'low')">
+                            LOW
+                        </div>
+                        <div class="intensity-medium" onclick="selectIntensity(this, 'medium')">
+                            MEDIUM
+                        </div>
+                        <div class="intensity-high" onclick="selectIntensity(this, 'high')">
+                            HIGH
+                        </div>
+                        <div class="intensity-max" onclick="selectIntensity(this, 'max')">
+                            MAX
+                        </div>
+                    </div>
+                </div>
+
+                <div class="selection-group">
+                    <label class="selection-label">Duration</label>
+                    <div class="duration-bar">
+                        <div class="duration-option" onclick="selectDuration(this, '30s')">
+                            30s
+                        </div>
+                        <div class="duration-option" onclick="selectDuration(this, '1m')">
+                            1m
+                        </div>
+                        <div class="duration-option" onclick="selectDuration(this, '2m')">
+                            2m
+                        </div>
+                        <div class="duration-option" onclick="selectDuration(this, '3m')">
+                            3m
+                        </div>
+                    </div>
+                </div>
+
+                <button class="go-button" onclick="startTraining()">
+                    GO!
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Initialize Lucide icons
         lucide.createIcons();
+
+        function openTrainModal(event) {    
+            event.preventDefault() // In case there were a href in <a> tag, we won't wrongly redirect there
+            
+            // Add pulse animation to button
+            const button = document.getElementById('trainButton');
+            button.classList.add('pulse');
+            
+            // Remove pulse class after animation completes
+            setTimeout(() => {
+                button.classList.remove('pulse');
+            }, 100);
+            
+            // Show modal
+            const modal = document.getElementById('trainModal');
+            modal.classList.add('active');
+            
+            // Reinitialize icons for the close button
+            setTimeout(() => {
+                lucide.createIcons();
+            }, 10);
+        }
+
+        function closeTrainModal() {
+            const modal = document.getElementById('trainModal');
+            modal.classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('trainModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeTrainModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeTrainModal();
+            }
+        });
+
+        // Selection functions
+        function selectIntensity(element, value) {
+            // Remove selected class from all intensity options
+            document.querySelectorAll('.intensity-low, .intensity-medium, .intensity-high, .intensity-max').forEach(el => {
+                el.classList.remove('selected');
+            });
+            // Add selected class to clicked element
+            element.classList.add('selected');
+        }
+
+        function selectDuration(element, value) {
+            // Remove selected class from all duration options
+            document.querySelectorAll('.duration-option').forEach(el => {
+                el.classList.remove('selected');
+            });
+            // Add selected class to clicked element
+            element.classList.add('selected');
+        }
+
+        function startTraining() {
+            const selectedIntensity = document.querySelector('.intensity-low.selected, .intensity-medium.selected, .intensity-high.selected, .intensity-max.selected');
+            const selectedDuration = document.querySelector('.duration-option.selected');
+
+            if (!selectedIntensity) {
+                alert('Please select an intensity!');
+                return;
+            }
+
+            if (!selectedDuration) {
+                alert('Please select a duration!');
+                return;
+            }
+
+            const intensityValue = selectedIntensity.textContent.trim();
+            const durationValue = selectedDuration.textContent.trim();
+
+            console.log('Intensity:', intensityValue);
+            console.log('Duration:', durationValue); 
+
+            // TODO: Start the workout with these values
+            alert(`Starting training: ${intensityValue} intensity, ${durationValue} duration!`);
+        }
+
     </script>
 </body>
 </html>
