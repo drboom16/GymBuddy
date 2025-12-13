@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GymBuddy - Your Workout Companion</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         * {
             margin: 0;
@@ -13,7 +14,6 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -25,7 +25,6 @@
         .container {
             background: white;
             border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             padding: 60px 40px;
             max-width: 500px;
             width: 100%;
@@ -251,15 +250,14 @@
         }
 
         .cta-button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: black;
             color: white;
-            border: none;
+            border: 2px solid black;
             padding: 18px 48px;
             font-size: 20px;
             font-weight: 600;
             border-radius: 16px;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
             transition: transform 0.2s, box-shadow 0.2s;
             width: 100%;
             max-width: 300px;
@@ -267,7 +265,6 @@
 
         .cta-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
         }
 
         .cta-button:active {
@@ -284,17 +281,17 @@
         .feature {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 16px;
-            text-align: left;
             padding: 16px;
             background: #f8f9fa;
             border-radius: 12px;
+            text-align: center;
         }
 
         .feature-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 24px;
+            height: 24px;
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -304,10 +301,10 @@
         }
 
         .feature-text {
-            flex: 1;
             font-size: 16px;
             color: #333;
             font-weight: 500;
+            flex-shrink: 0;
         }
     </style>
 </head>
@@ -341,7 +338,7 @@
             <div class="crotch"></div>
         </div>
 
-        <h1>GymBuddy</h1>
+        <h1>Gym Buddy</h1>
         <p class="subtitle">Your friendly workout companion. Let's get moving together!</p>
 
         <button class="cta-button" onclick="window.location.href='/home'">
@@ -350,21 +347,23 @@
 
         <div class="features">
             <div class="feature">
-                <div class="feature-icon">💪</div>
+                <i class="feature-icon" data-lucide="biceps-flexed"></i>
                 <div class="feature-text">Track your progress</div>
             </div>
             <div class="feature">
-                <div class="feature-icon">🏆</div>
+                <i class="feature-icon" data-lucide="trophy"></i>
                 <div class="feature-text">Unlock new buddies</div>
             </div>
             <div class="feature">
-                <div class="feature-icon">⚡</div>
+                <i class="feature-icon" data-lucide="zap"></i>
                 <div class="feature-text">Build consistency</div>
             </div>
         </div>
     </div>
 
     <script>
+        lucide.createIcons();
+
         function randomBlink() {
             const eyes = document.querySelectorAll('.eye');
             eyes.forEach(eye => {
