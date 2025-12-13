@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GymBuddy - Your Workout Companion</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 60px 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .gymbuddy-character {
+            width: 200px;
+            height: 250px;
+            margin: 0 auto 40px;
+            position: relative;
+        }
+
+        .head {
+            width: 140px;
+            height: 140px;
+            background: white;
+            border-radius: 50%;
+            border: 3px solid #333;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .eyes {
+            position: absolute;
+            top: 45px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 40px;
+        }
+
+        .eye {
+            width: 8px;
+            height: 20px;
+            background: #333;
+            border-radius: 4px;
+            transition: transform 0.15s ease-in-out;
+            transform-origin: center;
+        }
+
+        .eye.blinking {
+            animation: blink 0.15s ease-in-out;
+        }
+
+        @keyframes blink {
+            0%, 100% {
+                transform: scaleY(1);
+            }
+            50% {
+                transform: scaleY(0.2);
+            }
+        }
+
+        .mouth {
+            position: absolute;
+            bottom: 45px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px; 
+            border: 4px solid #333;
+            border-radius: 50%; 
+            background: transparent;
+            clip-path: inset(80% 0 0 0);
+        }
+
+        .mouth-dimples {
+            display: flex;
+            gap: 12.7px;
+            position: absolute;
+            top: 62%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .mouth-dimple {
+            width: 5.6px;
+            height: 5.6px;
+            background: #333;
+            border-radius: 50%;
+            clip-path: inset(0 0 50% 0);
+        }
+
+        .body {
+            width: 70px;
+            height: 80px;
+            background: white;
+            border: 3px solid #333;
+            border-radius: 20px;
+            position: absolute;
+            top: 140px;
+            left: 50%;
+            transform: translateX(-50%);
+            clip-path: inset(20% 0 25% 0);
+        }
+
+        .upper-arms {
+            position: absolute;
+            top: 127px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 80px;
+            pointer-events: none;
+        }
+
+        .upper-arm {
+            position: absolute;
+            background: white;
+            border: 3px solid #333;
+            border-radius: 12px;
+        }
+
+        .upper-arm-left {
+            width: 18px;
+            height: 50px;
+            top: 0px;
+            left: -16px;
+            transform: rotate(25deg);
+            border-right: none;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            clip-path: inset(0% 12% 0% 0%);
+        }
+
+        .upper-arm-right {
+            width: 18px;
+            height: 50px;
+            top: 0px;
+            right: -16px;
+            transform: rotate(-25deg);
+            border-left: none;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            clip-path: inset(0% -12% 0% 0%);
+        }
+
+        .lower-arms {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+        }
+
+        .lower-arm {
+            position: absolute;
+            background: #333;
+            border: none;
+            top: 17.4px;
+        }
+
+        .lower-arm-left {
+            width: 3px;
+            height: 34px;
+            left: -16px;
+            clip-path: inset(50% 0% 0% 0%);
+            transform: rotate(-65deg);
+        }
+
+        .lower-arm-right {
+            width: 3px;
+            height: 34px;
+            right: -16px;
+            clip-path: inset(50% 0% 0% 0%);
+            transform: rotate(65deg);
+        }
+
+        .legs {
+            display: flex;
+            gap: 6px;
+            position: absolute;
+            top: 180px;
+            left: 50%;
+            transform: translateX(-50%);  
+        }
+
+        .leg {
+            display: absolute;
+            background: white;
+            border: 3px solid #333;
+            border-radius: 12px;
+            clip-path: inset(25% 0 0% 0);
+        }
+
+        .leg-left {
+            width: 32px;
+            height: 80px;
+            top: 0px;
+            left: -16px;
+        }
+
+        .leg-right {
+            width: 32px;
+            height: 80px;
+            top: 0px;
+            right: -16px;
+        }
+
+        .crotch {
+            position: absolute;
+            top: 200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 3px;
+            background: #333;
+        }
+
+        h1 {
+            font-size: 42px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px 48px;
+            font-size: 20px;
+            font-weight: 600;
+            border-radius: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+        }
+
+        .cta-button:active {
+            transform: translateY(0);
+        }
+
+        .features {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-align: left;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .feature-text {
+            flex: 1;
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="gymbuddy-character">
+            <div class="head">
+                <div class="eyes">
+                    <div class="eye"></div>
+                    <div class="eye"></div>
+                </div>
+                <div class="mouth-dimples">
+                    <div class="mouth-dimple"></div>
+                    <div class="mouth-dimple"></div>
+                </div>
+                <div class="mouth"></div>
+            </div>
+            <div class="body"></div>
+            <div class="upper-arms">
+                <div class="upper-arm upper-arm-left"></div>
+                <div class="upper-arm upper-arm-right"></div>
+            </div>
+            <div class="lower-arms">
+                <div class="lower-arm lower-arm-left"></div>
+                <div class="lower-arm lower-arm-right"></div>
+            </div>
+            <div class="legs">
+                <div class="leg leg-left"></div>
+                <div class="leg leg-right"></div>
+            </div>
+            <div class="crotch"></div>
+        </div>
+
+        <h1>GymBuddy</h1>
+        <p class="subtitle">Your friendly workout companion. Let's get moving together!</p>
+
+        <button class="cta-button" onclick="window.location.href='/home'">
+            Start Workout
+        </button>
+
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">💪</div>
+                <div class="feature-text">Track your progress</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🏆</div>
+                <div class="feature-text">Unlock new buddies</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-text">Build consistency</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function randomBlink() {
+            const eyes = document.querySelectorAll('.eye');
+            eyes.forEach(eye => {
+                eye.classList.add('blinking');
+                setTimeout(() => {
+                    eye.classList.remove('blinking');
+                }, 300);
+            });
+
+            // Random delay between 2-5 seconds (2000-5000ms)
+            const minDelay = 2000;
+            const maxDelay = 5000;
+            const randomDelay = Math.random() * (maxDelay - minDelay) + minDelay;
+            
+            setTimeout(randomBlink, randomDelay);
+        }
+
+        // Start blinking after initial delay
+        setTimeout(randomBlink, 2000);
+    </script>
+</body>
+</html>
+

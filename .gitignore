@@ -1,0 +1,19 @@
+# General
+.DS_Store
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Backend
+backend/target/
+backend/.mvn/
+
+# iOS
+ios-app/.build/
+ios-app/*.xcodeproj/
+ios-app/*.xcworkspace/
+ios-app/DerivedData/
+ios-app/Pods/
+
