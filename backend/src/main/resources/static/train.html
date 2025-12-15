@@ -1,10 +1,835 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: white;
+        }
 
+        .workout-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 0;
+            display: block;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeIn 0.3s ease-out 0.2s forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .white-overlay {
+            position: fixed;
+            top: -150%;
+            left: -150%;
+            width: 300%;
+            height: 300%;
+            background: white;
+            transform: rotate(-30deg) translate(-50%, -50%);
+            transform-origin: top left;
+            z-index: 2500;
+            transition: transform 0.8s ease-out;
+        }
+
+        .white-overlay.slide-in {
+            transform: rotate(-30deg) translate(0%, 0%);
+        }
+
+        .go-text {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            position: fixed;
+            top: 50%;
+            left: 0;
+            transform: translate(-100%, -50%);
+            font-size: 120px;
+            font-weight: 700;
+            color: #333;
+            z-index: 2600;
+            opacity: 1;
+            transition: transform 0.5s ease;
+            letter-spacing: -1px;
+        }
+
+        .go-text.show {
+            transform: translate(calc(50vw - 50%), -50%);
+        }
+
+        .go-text.exit {
+            transform: translate(150vw, -50%);
+            transition: transform 0.6s ease;
+        }
+
+        .end-workout-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: grey;
+            color: white;
+            border: none;
+            padding: 24px 48px;
+            font-size: 24px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            z-index: 3100;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .end-workout-button.visible {
+            opacity: 1;
+        }
+
+        .end-workout-button:hover {
+            background: #a0a0a0;
+            transform: translateY(-2px);
+        }
+
+        .timer {
+            position: fixed;
+            top: 25vh;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 120px;
+            font-weight: 700;
+            color: #333;
+            z-index: 2800;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            letter-spacing: -2px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 24px;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .modal-close:hover {
+            background: #f0f0f0;
+        }
+
+        .modal-content {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .bench-top-face {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: skewX(-50deg);
+            width: 140px;
+            height: 140px;
+            background: black;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        .bench-bottom-edge {
+            position: fixed;
+            top: 56.8%;
+            left: 48.5%;
+            transform: translateX(-50%);
+            width: 140px;
+            height: 15px;
+            background: black;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        .bench-left-edge {
+            position: fixed;
+            top: 52%;
+            left: 56%;
+            transform: skewY(-40deg);
+            width: 240px;
+            height: 15px;
+            background: black;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            clip-path: inset(0 30% 0 0);
+        }
+
+        .bench-top-face.visible, .bench-bottom-edge.visible, .bench-left-edge.visible {
+            opacity: 1;
+        }
+
+        .barbell {
+            position: fixed;
+            top: 50.2%;
+            left: 56%;
+            transform: translateX(-50%);
+            width: 320px;
+            height: 10px;
+            background: black;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2000;
+        }
+
+        .barbell.visible {
+            opacity: 1;
+            animation: swing-barbell 2s infinite;
+        }
+
+        .barbell-weight {
+            position: fixed;
+            top: 48.1%;
+            left: 56%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1400;
+            display: flex;
+            gap: 280px;
+        }
+
+        .barbell-weight.visible {
+            opacity: 1;
+            animation: swing-barbell 2s infinite;
+        }
+
+        .left-weight {
+            width: 30px;
+            height: 100px;
+            background: black;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 10px;
+            z-index: 2000;
+        }
+
+        .right-weight {
+            width: 30px;
+            height: 100px;
+            background: black;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 10px;
+            z-index: 2000;
+        }
+
+        .right-weight.visible, .left-weight.visible {
+            opacity: 1;
+        }
+
+        @keyframes swing-barbell {
+            0%, 100% {
+                transform: translateX(-50%) translateY(-42px);
+            }
+            50% {
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .head {
+            position: absolute;
+            top: 44%;
+            left: 52%;
+            width: 180px;
+            height: 180px;
+            background: white;
+            border-radius: 50%;
+            border: 3px solid #333;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1100;
+        }
+        .head.visible {
+            opacity: 1;
+        }
+
+        .eyes {
+            position: absolute;
+            top: 46.5%;
+            left: 58%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 40px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2000;
+        }
+        .eyes.visible {
+            opacity: 1;
+        }
+        .eye {
+            width: 10px;
+            height: 26px;
+            background: #333;
+            border-radius: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 2000;
+            opacity: 1;
+        }
+
+        .eye.blinking {
+            animation: blink 0.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% {
+                transform: scaleY(1);
+            }
+            50% {
+                transform: scaleY(0.2);
+            }
+        }
+
+        .body-top-face {
+            position: fixed;
+            top: 50%;
+            left: 46.7%;
+            transform: skewX(-50deg);
+            width: 120px;
+            height: 140px;
+            background: white;
+            border: 6px solid #333;
+            border-radius: 20px;
+            clip-path: inset(11% 5% 20% 2%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1300;
+        }
+
+        .body-top-face.visible {
+            opacity: 1;
+        }
+
+        .body-belly {
+            position: fixed;
+            top: 50.2%;
+            left: 43.4%;
+            transform: skewX(-45deg);
+            width: 200px;
+            height: 130px;
+            background: white;
+            border: 3px solid #333;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1400;
+            clip-path: inset(9% 50% 18% 0%);
+        }
+
+        .body-belly.visible {
+            opacity: 1;
+        }
+
+        .upper-arms {
+            position: fixed;
+            top: 50.5%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1350;
+        }
+
+        .upper-arms.visible {
+            opacity: 1;
+        }
+
+        .upper-arm-left {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 90px;
+            height: 40px;
+            background: white;
+            border: 3px solid #333;
+            border-radius: 24px;
+            transform: translateX(80%) rotate(20deg);
+            clip-path: inset(0% 0% 0% 16%);
+            transform-origin: left center;
+        }
+
+        .upper-arm-right {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 90px;
+            height: 40px;
+            background: white;
+            border: 3px solid #333;
+            border-radius: 24px;
+            transform: translateX(40%) rotate(-20deg);
+            transform-origin: right center; 
+        }
+
+        .upper-arm-left.visible {
+            opacity: 1;
+            animation: bend-left-arm 2s infinite;
+        }
+
+        .upper-arm-right.visible {
+            opacity: 1;
+            animation: bend-right-arm 2s infinite;
+        }
+
+        @keyframes bend-left-arm {
+            0%, 100% {
+                transform: translateX(80%) rotate(-20deg);
+            }
+            50% {
+                transform: translateX(80%) rotate(20deg);
+            }
+        }
+
+        @keyframes bend-right-arm {
+            0%, 100% {
+                transform: translateX(40%) rotate(20deg);
+            }
+            50% {
+                transform: translateX(40%) rotate(-20deg);
+            }
+        }
+
+        .lower-arms {
+            position: fixed;
+            top: 48.0%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1375;
+        }
+
+        .lower-arms.visible {
+            opacity: 1;
+        }
+
+        .lower-arm {
+            position: absolute;
+            background: #333;
+            border: none;
+        }
+
+        .lower-arm-left {
+            position: absolute;
+            top: 8px;
+            left: 90px;
+            width: 40px;
+            height: 90px;
+            background: white;
+            border: 3px solid #333;
+            border-radius: 24px;
+            transform: translateX(80%);
+            transform-origin: left center;
+            clip-path: inset(0% 0% 29% 0%);
+        }
+
+        .lower-arm-right {
+            position: absolute;
+            top: 8px;
+            right: 30px;
+            width: 40px;
+            height: 90px;       
+            background: white;
+            border: 3px solid #333;
+            border-radius: 24px;
+            transform: translateX(40%);
+            transform-origin: right center; 
+            clip-path: inset(0% 0% 29% 0%);
+        }
+
+        .lower-arm-left.visible {
+            opacity: 1;
+            animation: bend-left-lower-arm 2s infinite;
+        }
+
+        .lower-arm-right.visible {
+            opacity: 1;
+            animation: bend-right-lower-arm 2s infinite;
+        }
+
+        @keyframes bend-left-lower-arm {
+            0%, 100% {
+                transform: translate(72%, -24%);
+            }
+            50% {
+                transform: translate(80%, 24%);
+            }
+        }
+        
+        @keyframes bend-right-lower-arm {
+            0%, 100% {
+                transform: translate(46%, -24%);
+            }
+            50% {
+                transform: translate(43%, 24%);
+            }
+        }
+
+        .legs {
+            position: fixed;
+            top: 53.7%;
+            left: 47.8%;
+            transform: translateX(-50%);
+            width: 66px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2700;
+        }
+
+        .legs.visible {
+            opacity: 1;
+        }
+
+        .leg {
+            position: absolute;
+            background: white;
+            border: 4px solid #333;
+            border-radius: 24px;
+            clip-path: inset(20.8% 0 0% 0);
+            width: 50px;
+            height: 160px;
+        }
+
+        .leg-left {
+            top: 0px;
+            left: -30px;
+        }
+
+        .leg-right {
+            top: 0px;
+            right: -30px;
+        }
+
+    </style>
 </head>
 <body>
+    <!-- Workout Screen -->
+    <div class="workout-screen" id="workoutScreen">
+        <div class="white-overlay" id="whiteOverlay"></div>
+        <div class="go-text" id="goText">GO!</div>
+        <div class="timer" id="timer">00:00</div>
 
+        <!--gymbuddy character--> 
+        <div class="gymbuddy-character-setup">
+            <div class="head" id="head"></div>
+            <div class="eyes" id="eyes">
+                <div class="eye" id="eyeLeft"></div>
+                <div class="eye" id="eyeRight"></div>
+            </div>
+            <div class="body-top-face" id="bodyTopFace"></div>
+            <div class="body-belly" id="bodyBelly"></div>
+            <div class="upper-arms" id="upperArms">
+                <div class="upper-arm-left" id="upperArmLeft"></div>
+                <div class="upper-arm-right" id="upperArmRight"></div>
+            </div>
+            <div class="lower-arms" id="lowerArms">
+                <div class="lower-arm lower-arm-left" id="lowerArmLeft"></div>
+                <div class="lower-arm lower-arm-right" id="lowerArmRight"></div>
+            </div>
+            <div class="legs" id="legs">
+                <div class="leg leg-left"></div>
+                <div class="leg leg-right"></div>
+            </div>
+        </div>
+        
+        <!-- Bench Press Setup -->
+        <div class="bench-setup" id="benchSetup">
+            <div class="bench-top-face" id="benchTopFace"></div>
+            <div class="bench-bottom-edge" id="benchBottomEdge"></div>
+            <div class="bench-left-edge" id="benchLeftEdge"></div>
+        </div>
+
+        <!-- Barbell Setup -->
+        <div class="barbell" id="barbell"></div>
+        <div class="barbell-weight" id="barbellWeight">
+            <div class="right-weight" id="rightWeight"></div>
+            <div class="left-weight" id="leftWeight"></div>
+        </div>
+        <div>
+            <button class="end-workout-button" id="endWorkoutButton" onclick="leaveWorkoutPopUp(event)">End Workout</button>
+        </div>
+    </div>
+
+    <!-- Exit Training Modal -->
+    <div class="modal-overlay" id="exitWorkoutModal">
+        <div class="modal-header">
+            <h2 class="modal-title">Are you sure you want to leave?</h2>
+        </div>
+        <div class="modal-content">
+            <button onclick="endWorkout()">
+                Leave
+            </button>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        function leaveWorkoutPopUp(event) {
+            window.location = '/home';
+            const exitWorkoutModal = document.getElementById('exitWorkoutModal');
+            exitWorkoutModal.classList.add('active');
+        }
+    
+        function endWorkout() {
+            // const workoutScreen = document.getElementById('workoutScreen');
+            // const whiteOverlay = document.getElementById('whiteOverlay');
+            // const goText = document.getElementById('goText');
+            // const endButton = document.getElementById('endWorkoutButton');
+    
+            // // Reset all animations
+            // workoutScreen.classList.remove('active');
+            // whiteOverlay.classList.remove('slide-in');
+            // goText.classList.remove('show', 'exit');
+            // endButton.classList.remove('visible');
+
+            window.location = '/home';
+    
+            // TODO: Save workout data and return to home
+            alert('Workout ended!');
+        }
+    
+        function parseDuration(duration) {
+            // Parse duration string like "30s", "1m", "2m", "3m" into seconds
+            if (duration.endsWith('s')) {
+                return parseInt(duration);
+            } else if (duration.endsWith('m')) {
+                return parseInt(duration) * 60;
+            }
+            return 30; // default to 30 seconds
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        function startWorkoutAnimation(intensity, duration) {
+            const workoutScreen = document.getElementById('workoutScreen');
+            const whiteOverlay = document.getElementById('whiteOverlay');
+            const goText = document.getElementById('goText');
+            const endButton = document.getElementById('endWorkoutButton');
+            const timer = document.getElementById('timer');
+            const benchSetup = document.getElementById('benchSetup');
+            const head = document.getElementById('head');
+
+            console.log(`INTENSITY: ${intensity}`);
+            console.log(`DURATION: ${duration}`);
+    
+            // Step 1: White overlay slides in from top left at 30 degrees
+            setTimeout(() => {
+                whiteOverlay.classList.add('slide-in');
+            }, 100);
+    
+            // Step 2: GO! text pops up
+            setTimeout(() => {
+                goText.classList.add('show');
+            }, 500);
+    
+            // Step 3: GO! dashes out vertically
+            setTimeout(() => {
+                goText.classList.remove('show');
+                goText.classList.add('exit');
+            }, 1300);
+    
+            // Step 4: Show end workout button, character, bench, and start timer after GO! exits
+            setTimeout(() => {
+                endButton.classList.add('visible');
+                const bench = document.getElementById('benchTopFace');
+                bench.classList.add('visible');
+                const benchBottomEdge = document.getElementById('benchBottomEdge');
+                benchBottomEdge.classList.add('visible');
+                const benchLeftEdge = document.getElementById('benchLeftEdge');
+                benchLeftEdge.classList.add('visible');
+                const head = document.getElementById('head');
+                head.classList.add('visible');
+                const bodyTopFace = document.getElementById('bodyTopFace');
+                bodyTopFace.classList.add('visible');
+                const bodyBelly = document.getElementById('bodyBelly');
+                bodyBelly.classList.add('visible');
+                const upperArms = document.getElementById('upperArms');
+                upperArms.classList.add('visible');
+                const upperArmLeft = document.getElementById('upperArmLeft');
+                upperArmLeft.classList.add('visible');
+                const upperArmRight = document.getElementById('upperArmRight');
+                upperArmRight.classList.add('visible');
+                const lowerArms = document.getElementById('lowerArms');
+                lowerArms.classList.add('visible');
+                const lowerArmLeft = document.getElementById('lowerArmLeft');
+                lowerArmLeft.classList.add('visible');
+                const lowerArmRight = document.getElementById('lowerArmRight');
+                lowerArmRight.classList.add('visible');
+                const legs = document.getElementById('legs');
+                legs.classList.add('visible');
+                const eyes = document.getElementById('eyes');
+                eyes.classList.add('visible');
+                const eyeLeft = document.getElementById('eyeLeft');
+                eyeLeft.classList.add('visible');
+                const eyeRight = document.getElementById('eyeRight');
+                eyeRight.classList.add('visible');
+                const rightWeight = document.getElementById('rightWeight');
+                rightWeight.classList.add('visible');
+                const leftWeight = document.getElementById('leftWeight');
+                leftWeight.classList.add('visible');
+                const barbell = document.getElementById('barbell');
+                barbell.classList.add('visible');
+                const barbellWeight = document.getElementById('barbellWeight');
+                barbellWeight.classList.add('visible');
+            }, 1700);
+
+            setTimeout(setSpeed(intensity), 1000);
+
+            setTimeout(randomBlink, 2000);
+        } 
+
+        function setSpeed(intensity) {
+            const barbell = document.getElementById('barbell');
+            const barbellWeight = document.getElementById('barbellWeight');
+            const upperArmLeft = document.getElementById('upperArmLeft');
+            const lowerArmLeft = document.getElementById('lowerArmLeft');
+            const upperArmRight = document.getElementById('upperArmRight');
+            const lowerArmRight = document.getElementById('lowerArmRight');
+
+            if (intensity === 'LOW') {
+                barbell.style.animationDuration = '3.0s';
+                barbellWeight.style.animationDuration = '3.0s';
+                upperArmLeft.style.animationDuration = '3.0s';
+                lowerArmLeft.style.animationDuration = '3.0s';
+                upperArmRight.style.animationDuration = '3.0s';
+                lowerArmRight.style.animationDuration = '3.0s';
+            } else if (intensity === 'MEDIUM') {
+                barbell.style.animationDuration = '2.0s';
+                barbellWeight.style.animationDuration = '2.0s';
+                upperArmLeft.style.animationDuration = '2.0s';
+                lowerArmLeft.style.animationDuration = '2.0s';
+                upperArmRight.style.animationDuration = '2.0s';
+                lowerArmRight.style.animationDuration = '2.0s';
+            } else if (intensity === 'HIGH') {
+                barbell.style.animationDuration = '1.0s';
+                barbellWeight.style.animationDuration = '1.0s';
+                upperArmLeft.style.animationDuration = '1.0s';
+                lowerArmLeft.style.animationDuration = '1.0s';
+                upperArmRight.style.animationDuration = '1.0s';
+                lowerArmRight.style.animationDuration = '1.0s';
+            } else if (intensity === 'MAX') {
+                barbell.style.animationDuration = '0.2s';
+                barbellWeight.style.animationDuration = '0.2s';
+                upperArmLeft.style.animationDuration = '0.2s';
+                lowerArmLeft.style.animationDuration = '0.2s';
+                upperArmRight.style.animationDuration = '0.2s';
+                lowerArmRight.style.animationDuration = '0.2s';
+            }
+        }
+
+        function randomBlink() {
+            const eyeLeft = document.getElementById('eyeLeft');
+            const eyeRight = document.getElementById('eyeRight');
+
+            eyeLeft.classList.add('blinking');
+            eyeRight.classList.add('blinking');
+            setTimeout(() => {
+                eyeLeft.classList.remove('blinking');
+                eyeRight.classList.remove('blinking');
+            }, 300);
+
+            const minDelay = 2000;
+            const maxDelay = 5000;
+            const randomDelay = Math.random() * (maxDelay - minDelay) + minDelay;
+            setTimeout(randomBlink, randomDelay);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const params = new URLSearchParams(window.location.search);
+
+            const intensity = params.get('intensity');
+            const duration = params.get('duration');
+
+            startWorkoutAnimation(intensity, duration);
+        })
+
+    </script>
 </body>
 </html>
 

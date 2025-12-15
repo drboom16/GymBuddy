@@ -77,7 +77,7 @@
         }
 
         .nav-item.pulse {
-            animation: pulse 0.1s ease-in-out;
+            animation: pulse 0.3s ease-in-out;
         }
 
         @keyframes pulse {
@@ -246,6 +246,36 @@
             transform: none;
         }
 
+        .transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 5000;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform-origin: top left;
+        }
+
+        .transition-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: all;
+            animation: slideInFromTopLeft 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes slideInFromTopLeft {
+            0% {
+                clip-path: polygon(0 0, 0% 0, 0% 0, 0 0);
+            }
+            100% {
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            }
+        }
+
         .intensity-bar {
             height: 40px;
             margin-top: 3px;
@@ -311,7 +341,7 @@
         </a>
     </div>
 
-    <!-- Modal -->
+    <!-- Train Modal -->
     <div class="modal-overlay" id="trainModal">
         <div class="modal">
             <div class="modal-header">
@@ -377,7 +407,7 @@
             // Remove pulse class after animation completes
             setTimeout(() => {
                 button.classList.remove('pulse');
-            }, 100);
+            }, 300);
             
             // Show modal
             const modal = document.getElementById('trainModal');
@@ -392,6 +422,15 @@
         function closeTrainModal() {
             const modal = document.getElementById('trainModal');
             modal.classList.remove('active');
+
+            // Deactivate intensity and duration selection
+            document.querySelectorAll('.intensity-low, .intensity-medium, .intensity-high, .intensity-max').forEach(el => {
+                el.classList.remove('selected');
+            });
+
+            document.querySelectorAll('.duration-option').forEach(el => {
+                el.classList.remove('selected');
+            });
         }
 
         // Close modal when clicking outside
@@ -431,6 +470,11 @@
             const selectedIntensity = document.querySelector('.intensity-low.selected, .intensity-medium.selected, .intensity-high.selected, .intensity-max.selected');
             const selectedDuration = document.querySelector('.duration-option.selected');
 
+            if (!selectedIntensity && !selectedDuration) {
+                alert('Please select an intensity and duration!');
+                return;
+            }
+
             if (!selectedIntensity) {
                 alert('Please select an intensity!');
                 return;
@@ -445,12 +489,36 @@
             const durationValue = selectedDuration.textContent.trim();
 
             console.log('Intensity:', intensityValue);
-            console.log('Duration:', durationValue); 
+            console.log('Duration:', durationValue);
 
-            // TODO: Start the workout with these values
-            alert(`Starting training: ${intensityValue} intensity, ${durationValue} duration!`);
+            // Start smooth transition
+            startTransition(intensityValue, durationValue);
         }
 
+        function startTransition(intensity, duration) {
+            // Close modal with smooth fade
+            const modal = document.getElementById('trainModal');
+            modal.classList.remove('active');
+
+            // Create and show transition overlay after modal closes
+            setTimeout(() => {
+                const transitionOverlay = document.createElement('div');
+                transitionOverlay.className = 'transition-overlay';
+                document.body.appendChild(transitionOverlay);
+
+                // Trigger animation on next frame for smooth start
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        transitionOverlay.classList.add('active');
+                    });
+                });
+
+                // Navigate after transition completes
+                setTimeout(() => {
+                    window.location.href = `/train.html?intensity=${encodeURIComponent(intensity)}&duration=${encodeURIComponent(duration)}`;
+                }, 750);
+            }, 250);
+        }
     </script>
 </body>
 </html>
