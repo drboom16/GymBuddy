@@ -8,6 +8,7 @@
             padding: 0;
             overflow: hidden;
             background: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
         }
 
         .workout-screen {
@@ -121,7 +122,8 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -194,6 +196,64 @@
             line-height: 1.6;
         }
 
+        .workout-complete-modal {
+            z-index: 3200;
+        }
+
+        .workout-complete-modal .modal {
+            text-align: center;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .workout-complete-modal .modal-header {
+            border-bottom: none;
+            margin-bottom: 24px;
+            padding-bottom: 0;
+        }
+
+        .workout-complete-modal .modal-title {
+            font-size: 42px;
+            font-weight: 700;
+            color: #333;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+        }
+
+        .workout-complete-message {
+            font-size: 20px;
+            font-weight: 500;
+            color: #666;
+            margin: 0 0 40px 0;
+            line-height: 1.5;
+        }
+
+        .modal-button {
+            background: black;
+            color: white;
+            border: 2px solid black;
+            padding: 18px 48px;
+            font-size: 20px;
+            font-weight: 600;
+            border-radius: 16px;
+            cursor: pointer;
+            margin-top: 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .modal-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .modal-button:active {
+            transform: translateY(0);
+        }
+
         .bench-top-face {
             position: fixed;
             top: 50%;
@@ -234,7 +294,64 @@
             clip-path: inset(0 30% 0 0);
         }
 
-        .bench-top-face.visible, .bench-bottom-edge.visible, .bench-left-edge.visible {
+        .bench-front-leg {
+            position: fixed;
+            top: 57%;
+            left: 48.5%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 100px;
+            background: black;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1001;
+            border-radius: 4px;
+        }
+
+        .bench-back-leg {
+            position: fixed;
+            top: 53.4%;
+            left: 65%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 50px;
+            background: black;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1001;
+            border-radius: 4px;
+            clip-path: polygon(0 35%, 100% 0, 100% 100%, 0 100%)
+        }
+
+        .bench-front-leg-base {
+            position: fixed;
+            top: 61.4%;
+            left: 48.5%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 10px;
+            background: black;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1001;
+            border-radius: 4px;
+        }
+
+        .bench-back-leg-base {
+            position: fixed;
+            top: 55.4%;
+            left: 65%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 10px;
+            background: black;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1001;
+            border-radius: 4px;
+        }
+
+        .bench-top-face.visible, .bench-bottom-edge.visible, .bench-left-edge.visible, .bench-front-leg.visible, .bench-back-leg.visible, .bench-front-leg-base.visible, .bench-back-leg-base.visible {
             opacity: 1;
         }
 
@@ -618,6 +735,10 @@
             <div class="bench-top-face" id="benchTopFace"></div>
             <div class="bench-bottom-edge" id="benchBottomEdge"></div>
             <div class="bench-left-edge" id="benchLeftEdge"></div>
+            <div class="bench-front-leg" id="benchFrontLeg"></div>
+            <div class="bench-back-leg" id="benchBackLeg"></div>
+            <div class="bench-front-leg-base" id="benchFrontLegBase"></div>
+            <div class="bench-back-leg-base" id="benchBackLegBase"></div>
         </div>
 
         <!-- Barbell Setup -->
@@ -643,8 +764,69 @@
         </div>
     </div>
 
+    <!-- Workout Complete Modal -->
+    <div class="modal-overlay workout-complete-modal" id="workoutCompleteModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Workout Complete!</h2>
+            </div>
+            <div class="modal-content">
+                <div class="workout-complete-message" id="workoutCompleteMessage"></div>
+                <button class="modal-button" onclick="returnToHome()">Return to Home</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         lucide.createIcons();
+
+        // Motivational messages dictionary
+        const motivationalMessages = [
+            "Nice job, you smashed it!",
+            "Incredible work! You're a champion!",
+            "You crushed that workout!",
+            "Amazing effort! You're unstoppable!",
+            "Outstanding! You're getting stronger!",
+            "Fantastic! You pushed through!",
+            "Well done! You're a beast!",
+            "Excellent work! Keep it up!",
+            "You nailed it! So proud!",
+            "Incredible! You're on fire!",
+            "Outstanding performance!",
+            "You're a workout warrior!",
+            "Brilliant! You're unstoppable!",
+            "Amazing! You're building greatness!",
+            "You're absolutely crushing it!",
+            "Phenomenal work! Keep going!",
+            "You're a fitness legend!",
+            "Incredible dedication!",
+            "You're making progress every day!",
+            "Outstanding commitment!"
+        ];
+
+        function getRandomMotivationalMessage() {
+            const randomIndex = Math.floor(Math.random() * motivationalMessages.length);
+            return motivationalMessages[randomIndex];
+        }
+
+        function showWorkoutCompleteModal() {
+            // Clear countdown interval if it exists
+            if (window.countdownInterval) {
+                clearInterval(window.countdownInterval);
+                window.countdownInterval = null;
+            }
+
+            const modal = document.getElementById('workoutCompleteModal');
+            const messageElement = document.getElementById('workoutCompleteMessage');
+            const randomMessage = getRandomMotivationalMessage();
+            
+            messageElement.textContent = randomMessage;
+            modal.classList.add('active');
+        }
+
+        function returnToHome() {
+            window.location = '/home';
+        }
 
         function leaveWorkoutPopUp(event) {
             window.location = '/home';
@@ -653,16 +835,11 @@
         }
     
         function endWorkout() {
-            // const workoutScreen = document.getElementById('workoutScreen');
-            // const whiteOverlay = document.getElementById('whiteOverlay');
-            // const goText = document.getElementById('goText');
-            // const endButton = document.getElementById('endWorkoutButton');
-    
-            // // Reset all animations
-            // workoutScreen.classList.remove('active');
-            // whiteOverlay.classList.remove('slide-in');
-            // goText.classList.remove('show', 'exit');
-            // endButton.classList.remove('visible');
+            // Clear countdown interval if it exists
+            if (window.countdownInterval) {
+                clearInterval(window.countdownInterval);
+                window.countdownInterval = null;
+            }
 
             window.location = '/home';
     
@@ -757,11 +934,44 @@
                 barbell.classList.add('visible');
                 const barbellWeight = document.getElementById('barbellWeight');
                 barbellWeight.classList.add('visible');
+                const benchFrontLeg = document.getElementById('benchFrontLeg');
+                benchFrontLeg.classList.add('visible');
+                const benchBackLeg = document.getElementById('benchBackLeg');
+                benchBackLeg.classList.add('visible');
+                const benchFrontLegBase = document.getElementById('benchFrontLegBase');
+                benchFrontLegBase.classList.add('visible');
+                const benchBackLegBase = document.getElementById('benchBackLegBase');
+                benchBackLegBase.classList.add('visible');
             }, 1700);
 
-            setTimeout(setSpeed(intensity), 1000);
+            setTimeout(() => {
+                setSpeed(intensity);
+            }, 1000);
 
             setTimeout(randomBlink, 2000);
+
+            // Step 5: Start countdown timer after elements are visible
+            setTimeout(() => {
+                let totalSeconds = parseDuration(duration);
+                timer.textContent = formatTime(totalSeconds);
+                timer.style.opacity = '1';
+
+                // Start countdown
+                const countdownInterval = setInterval(() => {
+                    totalSeconds--;
+                    timer.textContent = formatTime(totalSeconds);
+
+                    if (totalSeconds <= 0) {
+                        clearInterval(countdownInterval);
+                        timer.textContent = '00:00';
+                        // Show workout complete modal with random motivational message
+                        showWorkoutCompleteModal();
+                    }
+                }, 1000);
+
+                // Store interval ID globally so it can be cleared if workout is ended early
+                window.countdownInterval = countdownInterval;
+            }, 1700);
         } 
 
         function setSpeed(intensity) {
