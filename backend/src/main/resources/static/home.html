@@ -41,7 +41,7 @@
             right: 0;
             background: white;
             border-top: 1px solid #e0e0e0;
-            padding: 8px 0;
+            padding: 14px 0;
             display: flex;
             justify-content: space-around;
             align-items: center;
@@ -57,9 +57,17 @@
             flex: 1;
             padding: 4px 8px;
             cursor: pointer;
-            transition: opacity 0.2s;
-            color: black;
+            transition: opacity 0.2s, color 0.2s;
+            color: gray;
             text-decoration: none;
+        }
+
+        .nav-item.active {
+            color: black;
+        }
+
+        .nav-item.active .nav-icon {
+            stroke: black;
         }
 
         .nav-icon {
@@ -67,6 +75,7 @@
             height: 24px;
             margin-bottom: 4px;
             stroke-width: 2;
+            stroke: currentColor;
             color: currentColor;
         }
 
@@ -323,7 +332,7 @@
             <i data-lucide="home" class="nav-icon"></i>
             <div class="nav-label">Home</div>
         </a>
-        <a class="nav-item" onclick="alert('Workouts coming soon!')">
+        <a href="/workouts" class="nav-item">
             <i data-lucide="clipboard-list" class="nav-icon"></i>
             <div class="nav-label">Workouts</div>
         </a>
@@ -331,11 +340,11 @@
             <i data-lucide="dumbbell" class="nav-icon"></i>
             <div class="nav-label">Train</div>
         </a>
-        <a class="nav-item" onclick="alert('Achievements coming soon!')">
+        <a href="/achievements" class="nav-item">
             <i data-lucide="medal" class="nav-icon"></i>
             <div class="nav-label">Achievements</div>
         </a>
-        <a class="nav-item" onclick="alert('Achievements coming soon!')">
+        <a href="/shop" class="nav-item">
             <i data-lucide="shopping-cart" class="nav-icon"></i>
             <div class="nav-label">Shop</div>
         </a>
@@ -396,6 +405,35 @@
 
     <script>
         lucide.createIcons();
+
+        // Set active nav-item based on current page
+        function setActiveNavItem() {
+            const currentPath = window.location.pathname;
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                const href = item.getAttribute('href');
+                
+                // Check if this nav-item matches the current page
+                if (href) {
+                    // Handle home page: both "/" and "/home" should activate the Home nav-item
+                    if ((currentPath === '/home' || currentPath === '/') && (href === '/' || href === '/home')) {
+                        item.classList.add('active');
+                    } 
+                    // For other pages, check exact match
+                    else if (currentPath === href || currentPath === href + '.html') {
+                        item.classList.add('active');
+                    }
+                }
+            });
+            
+            // Reinitialize icons to apply stroke color changes
+            lucide.createIcons();
+        }
+
+        // Set active nav-item on page load
+        setActiveNavItem();
 
         function openTrainModal(event) {    
             event.preventDefault() // In case there were a href in <a> tag, we won't wrongly redirect there

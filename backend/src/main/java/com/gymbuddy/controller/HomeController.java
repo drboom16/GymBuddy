@@ -24,5 +24,23 @@ public class HomeController {
         Resource resource = new ClassPathResource("static/train.html");
         return StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
     }
+
+    @GetMapping(value = "/workouts", produces = MediaType.TEXT_HTML_VALUE)
+    public String workouts() throws IOException {
+        Resource resource = new ClassPathResource("static/workouts.html");
+        return StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
+    }
+
+    @GetMapping(value = "/achievements", produces = MediaType.TEXT_HTML_VALUE)
+    public String achievements() throws IOException {
+        Resource resource = new ClassPathResource("static/achievements.html");
+        return StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
+    }
+
+    @GetMapping(value = "/shop", produces = MediaType.TEXT_HTML_VALUE)
+    public String shop() throws IOException {
+        Resource resource = new ClassPathResource("static/shop.html");
+        return StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
+    }
 }
 
