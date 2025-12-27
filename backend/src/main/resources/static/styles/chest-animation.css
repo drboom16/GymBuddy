@@ -1,0 +1,452 @@
+/* Bench Press Workout Animation Styles */
+
+/* Bench Elements */
+.bench-top-face {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: skewX(-50deg);
+    width: 140px;
+    height: 140px;
+    background: black;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+}
+
+.bench-bottom-edge {
+    position: fixed;
+    top: 56.8%;
+    left: 48.5%;
+    transform: translateX(-50%);
+    width: 140px;
+    height: 15px;
+    background: black;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+}
+
+.bench-left-edge {
+    position: fixed;
+    top: 52%;
+    left: 56%;
+    transform: skewY(-40deg);
+    width: 240px;
+    height: 15px;
+    background: black;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+    clip-path: inset(0 30% 0 0);
+}
+
+.bench-front-leg {
+    position: fixed;
+    top: 57%;
+    left: 48.5%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 100px;
+    background: black;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1001;
+    border-radius: 4px;
+}
+
+.bench-back-leg {
+    position: fixed;
+    top: 53.4%;
+    left: 65%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 50px;
+    background: black;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1001;
+    border-radius: 4px;
+    clip-path: polygon(0 35%, 100% 0, 100% 100%, 0 100%)
+}
+
+.bench-front-leg-base {
+    position: fixed;
+    top: 61.4%;
+    left: 48.5%;
+    transform: translateX(-50%);
+    width: 70px;
+    height: 10px;
+    background: black;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1001;
+    border-radius: 4px;
+}
+
+.bench-back-leg-base {
+    position: fixed;
+    top: 55.4%;
+    left: 65%;
+    transform: translateX(-50%);
+    width: 70px;
+    height: 10px;
+    background: black;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1001;
+    border-radius: 4px;
+}
+
+.bench-top-face.visible, .bench-bottom-edge.visible, .bench-left-edge.visible, .bench-front-leg.visible, .bench-back-leg.visible, .bench-front-leg-base.visible, .bench-back-leg-base.visible {
+    opacity: 1;
+}
+
+/* Barbell Elements */
+.barbell {
+    position: fixed;
+    top: 50.2%;
+    left: 56%;
+    transform: translateX(-50%);
+    width: 320px;
+    height: 10px;
+    background: black;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2000;
+}
+
+.barbell.visible {
+    opacity: 1;
+    animation: swing-barbell 2s infinite;
+}
+
+.barbell-weight {
+    position: fixed;
+    top: 48.1%;
+    left: 56%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1400;
+    display: flex;
+    gap: 280px;
+}
+
+.barbell-weight.visible {
+    opacity: 1;
+    animation: swing-barbell 2s infinite;
+}
+
+.left-weight {
+    width: 30px;
+    height: 100px;
+    background: black;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 10px;
+    z-index: 2000;
+}
+
+.right-weight {
+    width: 30px;
+    height: 100px;
+    background: black;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 10px;
+    z-index: 2000;
+}
+
+.right-weight.visible, .left-weight.visible {
+    opacity: 1;
+}
+
+@keyframes swing-barbell {
+    0%, 100% {
+        transform: translateX(-50%) translateY(-42px);
+    }
+    50% {
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* Character Elements */
+.head {
+    position: absolute;
+    top: 44%;
+    left: 52%;
+    width: 180px;
+    height: 180px;
+    background: white;
+    border-radius: 50%;
+    border: 3px solid #333;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1100;
+}
+
+.head.visible {
+    opacity: 1;
+}
+
+.eyes {
+    position: absolute;
+    top: 46.5%;
+    left: 58%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 40px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2000;
+}
+
+.eyes.visible {
+    opacity: 1;
+}
+
+.eye {
+    width: 10px;
+    height: 26px;
+    background: #333;
+    border-radius: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 2000;
+    opacity: 1;
+}
+
+.eye.blinking {
+    animation: blink 0.5s infinite;
+}
+
+@keyframes blink {
+    0%, 100% {
+        transform: scaleY(1);
+    }
+    50% {
+        transform: scaleY(0.2);
+    }
+}
+
+.body-top-face {
+    position: fixed;
+    top: 50%;
+    left: 46.7%;
+    transform: skewX(-50deg);
+    width: 120px;
+    height: 140px;
+    background: white;
+    border: 6px solid #333;
+    border-radius: 20px;
+    clip-path: inset(11% 5% 20% 2%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1300;
+}
+
+.body-top-face.visible {
+    opacity: 1;
+}
+
+.body-belly {
+    position: fixed;
+    top: 50.2%;
+    left: 43.4%;
+    transform: skewX(-45deg);
+    width: 200px;
+    height: 130px;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1400;
+    clip-path: inset(9% 50% 18% 0%);
+}
+
+.body-belly.visible {
+    opacity: 1;
+}
+
+.upper-arms {
+    position: fixed;
+    top: 50.5%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1350;
+}
+
+.upper-arms.visible {
+    opacity: 1;
+}
+
+.upper-arm-left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 90px;
+    height: 40px;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 24px;
+    transform: translateX(80%) rotate(20deg);
+    clip-path: inset(0% 0% 0% 16%);
+    transform-origin: left center;
+}
+
+.upper-arm-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 90px;
+    height: 40px;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 24px;
+    transform: translateX(40%) rotate(-20deg);
+    transform-origin: right center; 
+}
+
+.upper-arm-left.visible {
+    opacity: 1;
+    animation: bend-left-arm 2s infinite;
+}
+
+.upper-arm-right.visible {
+    opacity: 1;
+    animation: bend-right-arm 2s infinite;
+}
+
+@keyframes bend-left-arm {
+    0%, 100% {
+        transform: translateX(80%) rotate(-20deg);
+    }
+    50% {
+        transform: translateX(80%) rotate(20deg);
+    }
+}
+
+@keyframes bend-right-arm {
+    0%, 100% {
+        transform: translateX(40%) rotate(20deg);
+    }
+    50% {
+        transform: translateX(40%) rotate(-20deg);
+    }
+}
+
+.lower-arms {
+    position: fixed;
+    top: 48.0%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1375;
+}
+
+.lower-arms.visible {
+    opacity: 1;
+}
+
+.lower-arm {
+    position: absolute;
+    background: #333;
+    border: none;
+}
+
+.lower-arm-left {
+    position: absolute;
+    top: 8px;
+    left: 90px;
+    width: 40px;
+    height: 90px;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 24px;
+    transform: translateX(80%);
+    transform-origin: left center;
+    clip-path: inset(0% 0% 29% 0%);
+}
+
+.lower-arm-right {
+    position: absolute;
+    top: 8px;
+    right: 30px;
+    width: 40px;
+    height: 90px;       
+    background: white;
+    border: 3px solid #333;
+    border-radius: 24px;
+    transform: translateX(40%);
+    transform-origin: right center; 
+    clip-path: inset(0% 0% 29% 0%);
+}
+
+.lower-arm-left.visible {
+    opacity: 1;
+    animation: bend-left-lower-arm 2s infinite;
+}
+
+.lower-arm-right.visible {
+    opacity: 1;
+    animation: bend-right-lower-arm 2s infinite;
+}
+
+@keyframes bend-left-lower-arm {
+    0%, 100% {
+        transform: translate(72%, -24%);
+    }
+    50% {
+        transform: translate(80%, 24%);
+    }
+}
+
+@keyframes bend-right-lower-arm {
+    0%, 100% {
+        transform: translate(46%, -24%);
+    }
+    50% {
+        transform: translate(43%, 24%);
+    }
+}
+
+.legs {
+    position: fixed;
+    top: 53.7%;
+    left: 47.8%;
+    transform: translateX(-50%);
+    width: 62px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2700;
+}
+
+.legs.visible {
+    opacity: 1;
+}
+
+.leg {
+    position: absolute;
+    background: white;
+    border: 4px solid #333;
+    border-radius: 12px;
+    clip-path: inset(17% 0 0% 0);
+    width: 50px;
+    height: 180px;
+}
+
+.leg-left {
+    top: 0px;
+    left: -31px;
+}
+
+.leg-right {
+    top: 0px;
+    right: -27px;
+}
+

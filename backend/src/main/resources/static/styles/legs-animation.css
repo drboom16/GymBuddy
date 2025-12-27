@@ -1,0 +1,424 @@
+/* Legs Workout Animation Styles */
+
+/* Character Elements - Standing Position */
+.head-legs {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 180px;
+    height: 180px;
+    background: white;
+    border-radius: 50%;
+    border: 3px solid #333;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1400;
+    clip-path: inset(0 0 6.8% 0);
+}
+
+.head-legs.visible {
+    opacity: 1;
+    animation: squat-upper-body 3s infinite;
+}
+
+.eyes-legs {
+    position: fixed;
+    top: 42.5%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 40px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2000;
+}
+
+.eyes-legs.visible {
+    opacity: 1;
+    animation: squat-upper-body 3s infinite;
+}
+
+.eye-legs {
+    width: 10px;
+    height: 26px;
+    background: #333;
+    border-radius: 10px;
+    opacity: 1;
+    z-index: 2000;
+}
+
+.body-top-face-legs {
+    position: fixed;
+    top: 47.2%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90px;
+    height: 110px;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1300;
+}
+
+.body-top-face-legs.visible {
+    opacity: 1;
+    animation: squat-upper-body 3s infinite, body-polygon-transform 3s infinite;
+}
+
+.upper-arm-left-legs {
+    position: fixed;
+    top: 47%;
+    left: 43.0%;
+    transform: translateX(-50%) rotate(80deg);
+    width: 30px;
+    height: 60px;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 24px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+    clip-path: inset(10% 0% 0% 0%);
+}
+
+.upper-arm-left-legs.visible {
+    opacity: 1;
+    animation: squat-upper-body-rotate-left 3s infinite;
+}
+
+.upper-arm-right-legs {
+    position: fixed;
+    top: 47%;
+    left: 57%;
+    transform: translateX(-50%) rotate(-80deg);
+    width: 30px;
+    height: 60px;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 24px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+    clip-path: inset(10% 0% 0% 0%);
+}
+
+.upper-arm-right-legs.visible {
+    opacity: 1;
+    animation: squat-upper-body-rotate-right 3s infinite;
+}
+
+.lower-arm-left-legs {
+    position: fixed;
+    top: 46.3%;
+    left: 41.1%;
+    transform: translateX(-50%) rotate(-10deg);
+    width: 30px;
+    height: 60px;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 24px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+    clip-path: inset(0% 0% 22% 0%);
+}
+
+.lower-arm-left-legs.visible {
+    opacity: 1;
+    animation: squat-upper-body-rotate-left-lower 3s infinite;
+}
+
+.lower-arm-right-legs {
+    position: fixed;
+    top: 46.3%;
+    left: 58.9%;
+    transform: translateX(-50%) rotate(10deg);
+    width: 30px;
+    height: 60px;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 24px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+    clip-path: inset(0% 0% 22% 0%);
+}
+
+.lower-arm-right-legs.visible {
+    opacity: 1;
+    animation: squat-upper-body-rotate-right-lower 3s infinite;
+}
+
+.legs-legs {
+    position: fixed;
+    top: 51%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1100;
+}
+
+.legs-legs.visible {
+    opacity: 1;
+}
+
+.upper-leg-left-legs {
+    position: absolute;
+    top: 0px;
+    left: -46px;
+    width: 40px;
+    height: 80px;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 12px;
+    transform: rotate(15deg);
+    animation: squat-flare-upper-leg-left 3s infinite, shrink-grow-polygon-left 3s infinite;
+    animation-delay: 0.2s;
+    z-index: 1250;
+}
+
+.lower-leg-left-legs {
+    position: absolute;
+    top: 50px;
+    left: -55px;
+    width: 40px;
+    height: 55px;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 12px;
+    transform: rotate(20deg);
+    animation: rotate-right-lower-leg 3s infinite, lower-leg-polygon-left 3s infinite;
+    animation-delay: 0.2s;
+    z-index: 1500;
+}
+
+.upper-leg-right-legs {
+    position: absolute;
+    top: 0px;
+    right: -46px;
+    width: 40px;
+    height: 80px;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 12px;    
+    transform: rotate(-15deg);
+    animation: squat-flare-upper-leg-right 3s infinite, shrink-grow-polygon-right 3s infinite;
+    animation-delay: 0.2s;
+    z-index: 1250;
+}
+
+.lower-leg-right-legs {
+    position: absolute;
+    top: 50px;
+    right: -55px;
+    width: 40px;
+    height: 55px;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 12px;
+    transform: rotate(-20deg);
+    animation: rotate-left-lower-leg 3s infinite, lower-leg-polygon-right 3s infinite;
+    animation-delay: 0.2s;
+    z-index: 1500;
+}
+
+@keyframes squat-flare-upper-leg-left {
+    0%, 100% {
+        transform: translateY(15px) rotate(35deg);
+    }
+    50% {
+        transform: translateY(0px) rotate(15deg);
+    }
+}
+
+@keyframes squat-flare-upper-leg-right {
+    0%, 100% {
+        transform: translateY(15px) rotate(-35deg);
+    }
+    50% {
+        transform: translateY(0px) rotate(-15deg);
+    }
+}
+
+@keyframes shrink-grow-polygon-left {
+    0%, 100% {
+        clip-path: polygon(0% 50%, 100% 45%, 100% 85%, 0% 75%);
+    }
+    50% {
+        clip-path: polygon(0% 20%, 100% 15%, 100% 85%, 0% 85%);
+    }
+}
+
+@keyframes shrink-grow-polygon-right {
+    0%, 100% {
+        clip-path: polygon(100% 50%, 0% 45%, 0% 85%, 100% 75%);
+    }
+    50% {
+        clip-path: polygon(100% 20%, 0% 15%, 0% 85%, 100% 85%);
+    }
+}
+
+@keyframes lower-leg-polygon-left {
+    0%, 100% {
+        clip-path: polygon(0 20%, 100% 36%, 100% 100%, 0 100%);
+    }
+    50% {
+        clip-path: polygon(0 20%, 100% 20%, 100% 100%, 0 100%);
+    }
+}
+
+@keyframes lower-leg-polygon-right {
+    0%, 100% {
+        clip-path: polygon(0 36%, 100% 20%, 100% 100%, 0 100%);
+    }
+    50% {
+        clip-path: polygon(0 20%, 100% 20%, 100% 100%, 0 100%);
+    }
+}
+
+@keyframes rotate-left-lower-leg {
+    0%, 100% {
+        transform: rotate(-2deg);
+    }
+    50% {
+        transform: rotate(-8deg);
+    }
+}
+
+@keyframes rotate-right-lower-leg {
+    0%, 100% {
+        transform: rotate(2deg);
+    }
+    50% {
+        transform: rotate(8deg);
+    }
+}
+
+@keyframes squat-upper-body {
+    0%, 100% {
+        transform: translateX(-50%) translateY(0);
+    }
+    50% {
+        transform: translateX(-50%) translateY(45px);
+    }
+}
+
+@keyframes squat-upper-body-rotate-left {
+    0%, 100% {
+        transform: translateX(-50%) translateY(0) rotate(80deg);
+    }
+    50% {
+        transform: translateX(-50%) translateY(45px) rotate(80deg);
+    }
+}
+
+@keyframes squat-upper-body-rotate-right {
+    0%, 100% {
+        transform: translateX(-50%) translateY(0) rotate(-80deg);
+    }
+    50% {
+        transform: translateX(-50%) translateY(45px) rotate(-80deg);
+    }
+}
+
+@keyframes squat-upper-body-rotate-left-lower {
+    0%, 100% {
+        transform: translateX(-50%) translateY(0) rotate(-10deg);
+    }
+    50% {
+        transform: translateX(-50%) translateY(45px) rotate(-10deg);
+    }
+}
+
+@keyframes squat-upper-body-rotate-right-lower {
+    0%, 100% {
+        transform: translateX(-50%) translateY(0) rotate(10deg);
+    }
+    50% {
+        transform: translateX(-50%) translateY(45px) rotate(10deg);
+    }
+}
+
+@keyframes body-polygon-transform {
+    0%, 100% {
+        clip-path: polygon(0% 0%, 100% 0%, 100% 86%, 60% 100%, 40% 100%, 0% 86%);
+    }
+    50% {
+        clip-path: polygon(0% 0%, 100% 0%, 100% 73%, 70% 100%, 30% 100%, 0% 73%);
+    }
+}
+
+/* .legs-legs-crotch {
+    position: fixed;
+    top: 52.3%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 19px;
+    background: white;
+    border: 1px solid #333;
+    border-radius: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1450;
+}
+
+.legs-legs-crotch.visible {
+    opacity: 1;
+    animation: squat-upper-body 3s infinite;
+} */
+
+/* Barbell */
+.barbell-legs {
+    position: fixed;
+    top: 46.5%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.barbell-legs.visible {
+    opacity: 1;
+    animation: squat-upper-body 3s infinite;
+}
+
+.barbell-bar-legs {
+    width: 300px;
+    height: 10px;
+    background: #333;
+    border-radius: 7px;
+    z-index: 1;
+}
+
+.barbell-weight-left-legs {
+    position: absolute;
+    left: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 100px;
+    background: #333;
+    border-radius: 8px;
+    z-index: 0;
+}
+
+.barbell-weight-right-legs {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 100px;
+    background: #333;
+    border-radius: 8px;
+    z-index: 0;
+}

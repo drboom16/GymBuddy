@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Workouts - GymBuddy</title>
+    <link rel="stylesheet" href="styles/design-system.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         * {
@@ -13,105 +14,155 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            min-height: 100vh;
-            padding: 20px;
-            padding-bottom: 100px;
+            background: var(--background-cream);
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 24px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+
+
+        .workout-list {
+            margin-top: 0;
+            padding: 0 var(--spacing-lg);
         }
 
-        h1 {
-            font-size: 36px;
-            color: #333;
-            margin-bottom: 20px;
+        .workout-item {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-lg);
+            border: 2px solid #000;
+            transition: transform 0.2s, box-shadow 0.2s;
+            min-height: 120px;
         }
 
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            border-top: 1px solid #e0e0e0;
-            padding: 14px 0;
+        .workout-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .workout-header {
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
             align-items: center;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
+            margin-bottom: var(--spacing-md);
         }
 
-        .nav-item {
+        .workout-date {
+            font-size: var(--font-size-lg);
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .workout-intensity {
+            display: inline-block;
+            padding: var(--spacing-xs) var(--spacing-md);
+            border-radius: 12px;
+            font-size: var(--font-size-sm);
+            font-weight: 700;
+            text-transform: uppercase;
+            border: 2px solid #000;
+        }
+
+        .intensity-low {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .intensity-medium {
+            background: #a7f3d0;
+            color: #047857;
+        }
+
+        .intensity-high {
+            background: #6ee7b7;
+            color: #059669;
+        }
+
+        .intensity-max {
+            background: #4ade80;
+            color: #047857;
+        }
+
+        .workout-details {
             display: flex;
-            flex-direction: column;
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-sm);
+        }
+
+        .workout-detail {
+            display: flex;
             align-items: center;
-            justify-content: center;
-            flex: 1;
-            padding: 4px 8px;
-            cursor: pointer;
-            transition: opacity 0.2s, color 0.2s;
-            color: gray;
-            text-decoration: none;
+            gap: var(--spacing-sm);
+            font-size: var(--font-size-lg);
+            color: var(--text-primary);
+            font-weight: 600;
         }
 
-        .nav-item.active {
-            color: black;
-        }
-
-        .nav-item.active .nav-icon {
-            stroke: black;
-        }
-
-        .nav-icon {
+        .workout-detail-icon {
             width: 24px;
             height: 24px;
-            margin-bottom: 4px;
-            stroke-width: 2;
             stroke: currentColor;
-            color: currentColor;
+            stroke-width: 2.5;
         }
 
-        .nav-label {
-            font-size: 12px;
-            font-weight: 500;
+        .empty-state {
             text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 16px;
+            stroke: var(--neutral-gray);
+        }
+
+        .empty-state-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .empty-state-message {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Workouts</h1>
-        <p>Your workout history and routines will appear here.</p>
+    <!-- iPhone Dynamic Island -->
+    <div class="dynamic-island"></div>
+
+    <h1 class="page-title-large">Workouts</h1>
+
+    <div class="content-container">
+        <div id="workoutList" class="workout-list">
+            <div class="loading">Loading workouts...</div>
+        </div>
     </div>
 
     <div class="bottom-nav">
         <a href="/home" class="nav-item">
             <i data-lucide="home" class="nav-icon"></i>
-            <div class="nav-label">Home</div>
         </a>
         <a href="/workouts" class="nav-item">
             <i data-lucide="clipboard-list" class="nav-icon"></i>
-            <div class="nav-label">Workouts</div>
         </a>
-        <a href="/home" class="nav-item" onclick="event.preventDefault(); alert('Use the Train button on the Home page!');">
+        <a href="/train" class="nav-item" id="trainButton">
             <i data-lucide="dumbbell" class="nav-icon"></i>
-            <div class="nav-label">Train</div>
         </a>
         <a href="/achievements" class="nav-item">
             <i data-lucide="medal" class="nav-icon"></i>
-            <div class="nav-label">Achievements</div>
         </a>
         <a href="/shop" class="nav-item">
             <i data-lucide="shopping-cart" class="nav-icon"></i>
-            <div class="nav-label">Shop</div>
         </a>
     </div>
 
@@ -129,8 +180,8 @@
                 
                 // Check if this nav-item matches the current page
                 if (href) {
-                    // Handle home page: both "/" and "/home" should activate the Home nav-item
-                    if ((currentPath === '/home' || currentPath === '/') && (href === '/' || href === '/home')) {
+                    // Handle home page: only "/home" should activate the Home nav-item
+                    if (currentPath === '/home' && href === '/home') {
                         item.classList.add('active');
                     } 
                     // For other pages, check exact match
@@ -146,6 +197,106 @@
 
         // Set active nav-item on page load
         setActiveNavItem();
+
+        // Fetch and display workouts
+        async function loadWorkouts() {
+            const workoutList = document.getElementById('workoutList');
+            
+            try {
+                const response = await fetch('/api/workouts');
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch workouts');
+                }
+                
+                const workouts = await response.json();
+                
+                if (workouts.length === 0) {
+                    workoutList.innerHTML = `
+                        <div class="empty-state">
+                            <i data-lucide="clipboard-list" class="empty-state-icon"></i>
+                            <div class="empty-state-title">No workouts yet</div>
+                            <div class="empty-state-message">Complete your first workout to see it here!</div>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                    return;
+                }
+                
+                workoutList.innerHTML = workouts.map(workout => {
+                    const date = new Date(workout.completedAt);
+                    const formattedDate = formatDate(date);
+                    const formattedTime = formatTime(date);
+                    const intensityClass = `intensity-${workout.intensity.toLowerCase()}`;
+                    const workoutType = workout.workoutType || 'Unknown';
+                    
+                    return `
+                        <div class="workout-item">
+                            <div class="workout-header">
+                                <div class="workout-date">${formattedDate} at ${formattedTime}</div>
+                                <span class="workout-intensity ${intensityClass}">${workout.intensity}</span>
+                            </div>
+                            <div class="workout-details">
+                                <div class="workout-detail">
+                                    <i data-lucide="dumbbell" class="workout-detail-icon"></i>
+                                    <span>${workoutType}</span>
+                                </div>
+                                <div class="workout-detail">
+                                    <i data-lucide="clock" class="workout-detail-icon"></i>
+                                    <span>${workout.duration}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                lucide.createIcons();
+            } catch (error) {
+                console.error('Error loading workouts:', error);
+                console.error('Error details:', error.message, error.stack);
+                workoutList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-title">Error loading workouts</div>
+                        <div class="empty-state-message">${error.message || 'Please try refreshing the page.'}</div>
+                    </div>
+                `;
+            }
+        }
+
+        function formatDate(date) {
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            // Check if it's today
+            if (date.toDateString() === today.toDateString()) {
+                return 'Today';
+            }
+            
+            // Check if it's yesterday
+            if (date.toDateString() === yesterday.toDateString()) {
+                return 'Yesterday';
+            }
+            
+            // Format as "Month Day, Year" or "Month Day" if same year
+            const options = { 
+                month: 'short', 
+                day: 'numeric',
+                year: date.getFullYear() !== today.getFullYear() ? 'numeric' : undefined
+            };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        function formatTime(date) {
+            return date.toLocaleTimeString('en-US', { 
+                hour: 'numeric', 
+                minute: '2-digit',
+                hour12: true 
+            });
+        }
+
+        // Load workouts when page loads
+        loadWorkouts();
     </script>
 </body>
 </html>
