@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Workout - GymBuddy</title>
+    <link rel="stylesheet" href="styles/chest-animation.css">
+    <link rel="stylesheet" href="styles/arms-animation.css">
+    <link rel="stylesheet" href="styles/legs-animation.css">
+    <link rel="stylesheet" href="styles/back-animation.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .workout-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 0;
+            display: block;
+            overflow: hidden;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .white-overlay {
+            position: fixed;
+            top: -150%;
+            left: -150%;
+            width: 300%;
+            height: 300%;
+            background: white;
+            transform: rotate(-30deg) translate(-50%, -50%);
+            transform-origin: top left;
+            z-index: 2500;
+            transition: transform 0.8s ease-out;
+        }
+
+        .white-overlay.slide-in {
+            transform: rotate(-30deg) translate(0%, 0%);
+        }
+
+        .go-text {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            position: fixed;
+            top: 50%;
+            left: 0;
+            transform: translate(-100%, -50%);
+            font-size: 120px;
+            font-weight: 700;
+            color: #333;
+            z-index: 2600;
+            opacity: 1;
+            transition: transform 0.5s ease;
+            letter-spacing: -1px;
+        }
+
+        .go-text.show {
+            transform: translate(calc(50vw - 50%), -50%);
+        }
+
+        .go-text.exit {
+            transform: translate(150vw, -50%);
+            transition: transform 0.6s ease;
+        }
+
+        .end-workout-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: grey;
+            color: white;
+            border: none;
+            padding: 24px 48px;
+            font-size: 24px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            z-index: 3100;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .end-workout-button.visible {
+            opacity: 1;
+        }
+
+        .end-workout-button:hover {
+            background: #a0a0a0;
+            transform: translateY(-2px);
+        }
+
+        .timer {
+            position: fixed;
+            top: 25vh;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 120px;
+            font-weight: 700;
+            color: #333;
+            z-index: 2800;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            letter-spacing: -2px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            /* Timer visible but countdown disabled for development */
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 24px;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .modal-close:hover {
+            background: #f0f0f0;
+        }
+
+        .modal-content {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .workout-complete-modal {
+            z-index: 3200;
+        }
+
+        .workout-complete-modal .modal {
+            text-align: center;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .workout-complete-modal .modal-header {
+            border-bottom: none;
+            margin-bottom: 24px;
+            padding-bottom: 0;
+        }
+
+        .workout-complete-modal .modal-title {
+            font-size: 42px;
+            font-weight: 700;
+            color: #333;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+        }
+
+        .workout-complete-message {
+            font-size: 20px;
+            font-weight: 500;
+            color: #666;
+            margin: 0 0 40px 0;
+            line-height: 1.5;
+        }
+
+        .modal-button {
+            background: black;
+            color: white;
+            border: 2px solid black;
+            padding: 18px 48px;
+            font-size: 20px;
+            font-weight: 600;
+            border-radius: 16px;
+            cursor: pointer;
+            margin-top: 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .modal-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .modal-button:active {
+            transform: translateY(0);
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Workout Screen -->
+    <div class="workout-screen" id="workoutScreen">
+        <div class="white-overlay" id="whiteOverlay"></div>
+        <div class="go-text" id="goText">GO!</div>
+        <div class="timer" id="timer">00:00</div>
+
+        <!-- Dynamic workout content container -->
+        <div id="workoutContentContainer"></div>
+
+        <div>
+            <button class="end-workout-button" id="endWorkoutButton" onclick="leaveWorkoutPopUp(event)">End Workout</button>
+        </div>
+    </div>
+
+    <!-- Exit Training Modal -->
+    <div class="modal-overlay" id="exitWorkoutModal">
+        <div class="modal-header">
+            <h2 class="modal-title">Are you sure you want to leave?</h2>
+        </div>
+        <div class="modal-content">
+            <button onclick="endWorkout()">
+                Leave
+            </button>
+        </div>
+    </div>
+
+    <!-- Workout Complete Modal -->
+    <div class="modal-overlay workout-complete-modal" id="workoutCompleteModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Workout Complete!</h2>
+            </div>
+            <div class="modal-content">
+                <div class="workout-complete-message" id="workoutCompleteMessage"></div>
+                <button class="modal-button" onclick="returnToHome()">Return to Home</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Motivational messages dictionary
+        const motivationalMessages = [
+            "Nice job, you smashed it!",
+            "Incredible work! You're a champion!",
+            "You crushed that workout!",
+            "Amazing effort! You're unstoppable!",
+            "Outstanding! You're getting stronger!",
+            "Fantastic! You pushed through!",
+            "Well done! You're a beast!",
+            "Excellent work! Keep it up!",
+            "You nailed it! So proud!",
+            "Incredible! You're on fire!",
+            "Outstanding performance!",
+            "You're a workout warrior!",
+            "Brilliant! You're unstoppable!",
+            "Amazing! You're building greatness!",
+            "You're absolutely crushing it!",
+            "Phenomenal work! Keep going!",
+            "You're a fitness legend!",
+            "Incredible dedication!",
+            "You're making progress every day!",
+            "Outstanding commitment!"
+        ];
+
+        function getRandomMotivationalMessage() {
+            const randomIndex = Math.floor(Math.random() * motivationalMessages.length);
+            return motivationalMessages[randomIndex];
+        }
+
+        function showWorkoutCompleteModal() {
+            // Clear countdown interval if it exists
+            if (window.countdownInterval) {
+                clearInterval(window.countdownInterval);
+                window.countdownInterval = null;
+            }
+
+            const modal = document.getElementById('workoutCompleteModal');
+            const messageElement = document.getElementById('workoutCompleteMessage');
+            const randomMessage = getRandomMotivationalMessage();
+            
+            messageElement.textContent = randomMessage;
+            modal.classList.add('active');
+            
+            // Save workout to backend
+            saveWorkout();
+        }
+        
+        async function saveWorkout() {
+            try {
+                const response = await fetch('/api/workouts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        workoutType: window.workoutType,
+                        intensity: window.workoutIntensity,
+                        duration: window.workoutDuration
+                    })
+                });
+                
+                if (response.ok) {
+                    console.log('Workout saved successfully');
+                } else {
+                    console.error('Failed to save workout:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error saving workout:', error);
+            }
+        }
+
+        function returnToHome() {
+            window.location = '/home';
+        }
+
+        function leaveWorkoutPopUp(event) {
+            window.location = '/home';
+            const exitWorkoutModal = document.getElementById('exitWorkoutModal');
+            exitWorkoutModal.classList.add('active');
+        }
+    
+        async function endWorkout() {
+            // Clear countdown interval if it exists
+            if (window.countdownInterval) {
+                clearInterval(window.countdownInterval);
+                window.countdownInterval = null;
+            }
+
+            // Save workout even if ended early
+            await saveWorkout();
+            
+            window.location = '/home';
+        }
+    
+        function parseDuration(duration) {
+            // Parse duration string like "30s", "1m", "2m", "3m" into seconds
+            if (duration.endsWith('s')) {
+                return parseInt(duration);
+            } else if (duration.endsWith('m')) {
+                return parseInt(duration) * 60;
+            }
+            return 30; // default to 30 seconds
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        async function loadWorkoutFragment(workoutType) {
+            const container = document.getElementById('workoutContentContainer');
+            const fragmentName = `${workoutType.toLowerCase()}-workout.html`;
+            
+            try {
+                const response = await fetch(`/workout-fragments/${fragmentName}`);
+                if (response.ok) {
+                    const html = await response.text();
+                    container.innerHTML = html;
+                    return true;
+                } else {
+                    console.error(`Failed to load workout fragment: ${fragmentName}`);
+                    return false;
+                }
+            } catch (error) {
+                console.error(`Error loading workout fragment: ${fragmentName}`, error);
+                return false;
+            }
+        }
+
+        async function startWorkoutAnimation(workoutType, intensity, duration) {
+            const workoutScreen = document.getElementById('workoutScreen');
+            const whiteOverlay = document.getElementById('whiteOverlay');
+            const goText = document.getElementById('goText');
+            const timer = document.getElementById('timer');
+
+            // Normalize workout type to uppercase for comparison
+            const normalizedWorkoutType = workoutType.toUpperCase();
+
+            console.log(`WORKOUT_TYPE: ${normalizedWorkoutType}`);
+            console.log(`INTENSITY: ${intensity}`);
+            console.log(`DURATION: ${duration}`);
+    
+            // Load the appropriate workout fragment
+            const loaded = await loadWorkoutFragment(workoutType);
+            if (!loaded) {
+                console.error('Failed to load workout fragment');
+                return;
+            }
+    
+            // Step 1: White overlay slides in from top left at 30 degrees
+            setTimeout(() => {
+                whiteOverlay.classList.add('slide-in');
+            }, 100);
+    
+            // Step 2: GO! text pops up
+            setTimeout(() => {
+                goText.classList.add('show');
+            }, 500);
+    
+            // Step 3: GO! dashes out vertically
+            setTimeout(() => {
+                goText.classList.remove('show');
+                goText.classList.add('exit');
+            }, 1300);
+
+            // Step 4: Show end workout button, character, bench, and start timer after GO! exits
+            if (normalizedWorkoutType === "ARMS") {
+                triggerArmsWorkout();
+            } else if (normalizedWorkoutType === "BACK") {
+                triggerBackWorkout();
+            } else if (normalizedWorkoutType === "CHEST") {
+                triggerChestWorkout();
+            } else if (normalizedWorkoutType === "LEGS") {
+                triggerLegsWorkout();
+            }
+
+            setTimeout(() => {
+                setSpeed(intensity);
+            }, 1000);
+
+            setTimeout(randomBlink, 2000);
+            setTimeout(randomEyesLookRight, 4000);
+            // Step 5: Start countdown timer after elements are visible
+            setTimeout(() => {
+                let totalSeconds = parseDuration(duration);
+                timer.textContent = formatTime(totalSeconds);
+                timer.style.opacity = '1';
+
+                // Start countdown
+                const countdownInterval = setInterval(() => {
+                    totalSeconds--;
+                    timer.textContent = formatTime(totalSeconds);
+
+                    if (totalSeconds <= 0) {
+                        clearInterval(countdownInterval);
+                        timer.textContent = '00:00';
+                        // Show workout complete modal with random motivational message
+                        showWorkoutCompleteModal();
+                    }
+                }, 1000);
+
+                // Store interval ID globally so it can be cleared if workout is ended early
+                window.countdownInterval = countdownInterval;
+            }, 1700);
+        } 
+
+        function setSpeed(intensity) {
+            // Set speed for chest workout elements (bench press)
+            const barbell = document.getElementById('barbell');
+            const barbellWeight = document.getElementById('barbellWeight');
+            const upperArmLeft = document.getElementById('upperArmLeft');
+            const lowerArmLeft = document.getElementById('lowerArmLeft');
+            const upperArmRight = document.getElementById('upperArmRight');
+            const lowerArmRight = document.getElementById('lowerArmRight');
+
+            // Set speed for arms workout elements (bicep curls)
+            const barbellArms = document.getElementById('barbellArms');
+            const upperArmLeftArms = document.getElementById('upperArmLeftArms');
+            const lowerArmLeftArms = document.getElementById('lowerArmLeftArms');
+            const upperArmRightArms = document.getElementById('upperArmRightArms');
+            const lowerArmRightArms = document.getElementById('lowerArmRightArms');
+            const dumbbellLeft = document.getElementById('dumbbellLeft');
+            const dumbbellRight = document.getElementById('dumbbellRight');
+
+            // Set speed for legs workout elements (squats)
+            const barbellLegs = document.getElementById('barbellLegs');
+            const headLegs = document.getElementById('headLegs');
+            const eyesLegs = document.getElementById('eyesLegs');
+            const bodyTopFaceLegs = document.getElementById('bodyTopFaceLegs');
+            const upperArmLeftLegs = document.getElementById('upperArmLeftLegs');
+            const upperArmRightLegs = document.getElementById('upperArmRightLegs');
+            const lowerArmLeftLegs = document.getElementById('lowerArmLeftLegs');
+            const lowerArmRightLegs = document.getElementById('lowerArmRightLegs');
+            const upperLegLeftLegs = document.getElementById('upperLegLeftLegs');
+            const upperLegRightLegs = document.getElementById('upperLegRightLegs');
+            const lowerLegLeftLegs = document.getElementById('lowerLegLeftLegs');
+            const lowerLegRightLegs = document.getElementById('lowerLegRightLegs');
+            const legsLegsCrotch = document.getElementById('legsLegsCrotch');
+
+            let duration;
+            if (intensity === 'LOW') {
+                duration = '3.0s';
+            } else if (intensity === 'MEDIUM') {
+                duration = '2.0s';
+            } else if (intensity === 'HIGH') {
+                duration = '1.0s';
+            } else if (intensity === 'MAX') {
+                duration = '0.2s';
+            } else {
+                return;
+            }
+
+            // Apply to chest workout elements if they exist
+            if (barbell) barbell.style.animationDuration = duration;
+            if (barbellWeight) barbellWeight.style.animationDuration = duration;
+            if (upperArmLeft) upperArmLeft.style.animationDuration = duration;
+            if (lowerArmLeft) lowerArmLeft.style.animationDuration = duration;
+            if (upperArmRight) upperArmRight.style.animationDuration = duration;
+            if (lowerArmRight) lowerArmRight.style.animationDuration = duration;
+
+            // Apply to arms workout elements if they exist
+            if (barbellArms) barbellArms.style.animationDuration = duration;
+            if (upperArmLeftArms) upperArmLeftArms.style.animationDuration = duration;
+            if (lowerArmLeftArms) lowerArmLeftArms.style.animationDuration = duration;
+            if (upperArmRightArms) upperArmRightArms.style.animationDuration = duration;
+            if (lowerArmRightArms) lowerArmRightArms.style.animationDuration = duration;
+            if (dumbbellLeft) dumbbellLeft.style.animationDuration = duration;
+            if (dumbbellRight) dumbbellRight.style.animationDuration = duration;
+
+            // Apply to legs workout elements if they exist
+            if (barbellLegs) barbellLegs.style.animationDuration = duration;
+            if (headLegs) headLegs.style.animationDuration = duration;
+            if (eyesLegs) eyesLegs.style.animationDuration = duration;
+            if (bodyTopFaceLegs) bodyTopFaceLegs.style.animationDuration = duration;
+            if (upperArmLeftLegs) upperArmLeftLegs.style.animationDuration = duration;
+            if (upperArmRightLegs) upperArmRightLegs.style.animationDuration = duration;
+            if (lowerArmLeftLegs) lowerArmLeftLegs.style.animationDuration = duration;
+            if (lowerArmRightLegs) lowerArmRightLegs.style.animationDuration = duration;
+            if (upperLegLeftLegs) upperLegLeftLegs.style.animationDuration = duration;
+            if (upperLegRightLegs) upperLegRightLegs.style.animationDuration = duration;
+            if (lowerLegLeftLegs) lowerLegLeftLegs.style.animationDuration = duration;
+            if (lowerLegRightLegs) lowerLegRightLegs.style.animationDuration = duration;
+            if (legsLegsCrotch) legsLegsCrotch.style.animationDuration = duration;
+        }
+
+        function randomBlink() {
+            // Try chest workout eyes first
+            let eyeLeft = document.getElementById('eyeLeft');
+            let eyeRight = document.getElementById('eyeRight');
+            let eyeLeftArms = document.getElementById('eyeLeftArms');
+            let eyeRightArms = document.getElementById('eyeRightArms');
+            
+            // If not found, try arms workout eyes
+            if (!eyeLeft || !eyeRight) {
+                eyeLeft = eyeLeftArms;
+                eyeRight = eyeRightArms;
+            }
+
+            if (!eyeLeft || !eyeRight || !eyeLeftArms || !eyeRightArms) return;
+
+
+            eyeLeft.classList.add('blinking');
+            eyeRight.classList.add('blinking');
+            eyeLeftArms.classList.add('blinking');
+            eyeRightArms.classList.add('blinking');
+            setTimeout(() => {
+                eyeLeft.classList.remove('blinking');
+                eyeRight.classList.remove('blinking');
+                eyeLeftArms.classList.remove('blinking');
+                eyeRightArms.classList.remove('blinking');
+            }, 300);
+
+            const minDelay = 2000;
+            const maxDelay = 5000;
+            const randomDelay = Math.random() * (maxDelay - minDelay) + minDelay;
+            setTimeout(randomBlink, randomDelay);
+        }
+
+        function randomEyesLookRight() {
+            const eyeLeftArms = document.getElementById('eyeLeftArms');
+            const eyeRightArms = document.getElementById('eyeRightArms');
+
+            if (!eyeLeftArms || !eyeRightArms) return;
+                    
+            eyeLeftArms.classList.add('eyes-look-right');
+            eyeRightArms.classList.add('eyes-look-right');
+
+            setTimeout(() => {
+                eyeLeftArms.classList.remove('eyes-look-right');
+                eyeRightArms.classList.remove('eyes-look-right');
+            }, 300);
+
+            const minDelay = 4000;
+            const maxDelay = 12000;
+            const randomDelay = Math.random() * (maxDelay - minDelay) + minDelay;
+            setTimeout(randomEyesLookRight, randomDelay);
+        }
+
+        function triggerChestWorkout() {
+            const endButton = document.getElementById('endWorkoutButton');
+
+            setTimeout(() => {
+                if (endButton) endButton.classList.add('visible');
+                
+                // Show all chest workout elements if they exist
+                const elements = [
+                    'benchTopFace', 'benchBottomEdge', 'benchLeftEdge', 'head',
+                    'bodyTopFace', 'bodyBelly', 'upperArms', 'upperArmLeft',
+                    'upperArmRight', 'lowerArms', 'lowerArmLeft', 'lowerArmRight',
+                    'legs', 'eyes', 'eyeLeft', 'eyeRight', 'rightWeight', 'leftWeight',
+                    'barbell', 'barbellWeight', 'benchFrontLeg', 'benchBackLeg',
+                    'benchFrontLegBase', 'benchBackLegBase'
+                ];
+                
+                elements.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) element.classList.add('visible');
+                });
+            }, 1700);
+        }
+
+        function triggerArmsWorkout() {
+            const endButton = document.getElementById('endWorkoutButton');
+            
+            setTimeout(() => {
+                if (endButton) endButton.classList.add('visible');
+
+                // Show all arms workout elements if they exist
+                const elements = [
+                    'headArms', 'eyesArms', 'eyeLeftArms', 'eyeRightArms',
+                    'bodyTopFaceArms', 'bodyBellyArms', 
+                    'upperArmsLeftArms', 'upperArmLeftArms', 
+                    'upperArmsRightArms', 'upperArmRightArms', 
+                    'lowerArmsLeftArms', 'lowerArmLeftArms',
+                    'lowerArmsRightArms', 'lowerArmRightArms', 
+                    'legsArms', 'legsArmsCrotch', 'barbellArms', 'barbellBar', 'barbellWeightLeft', 'barbellWeightRight'
+                ];
+                
+                elements.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) element.classList.add('visible');
+                });
+            }, 1700);
+        }
+
+        function triggerBackWorkout() {
+            const endButton = document.getElementById('endWorkoutButton');
+            
+            setTimeout(() => {
+                if (endButton) endButton.classList.add('visible');
+
+                // Show all back workout elements if they exist
+                const elements = [
+                    'headBack', 'eyesBack', 'eyeLeftBack', 'eyeRightBack',
+                    'bodyTopFaceBack', 
+                    'upperArmLeftBack', 'upperArmRightBack', 
+                    'lowerArmLeftBack', 'lowerArmRightBack', 
+                    'legsBack', 'legsBackCrotch',
+                    'pullupBarBack', 'pullupBarHorizontal', 'pullupBarSupportLeft', 'pullupBarSupportRight'
+                ];
+                
+                elements.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) element.classList.add('visible');
+                });
+            }, 1700);
+        }
+
+        function triggerLegsWorkout() {
+            const endButton = document.getElementById('endWorkoutButton');
+            
+            setTimeout(() => {
+                if (endButton) endButton.classList.add('visible');
+
+                // Show all legs workout elements if they exist
+                const elements = [
+                    'headLegs', 'eyesLegs', 'eyeLeftLegs', 'eyeRightLegs',
+                    'bodyTopFaceLegs', 
+                    'upperArmLeftLegs', 'upperArmRightLegs', 
+                    'lowerArmLeftLegs', 'lowerArmRightLegs', 
+                    'legsLegs', 'upperLegLeftLegs', 'lowerLegLeftLegs', 
+                    'upperLegRightLegs', 'lowerLegRightLegs', 'legsLegsCrotch',
+                    'barbellLegs', 'barbellBarLegs', 'barbellWeightLeftLegs', 'barbellWeightRightLegs'
+                ];
+                
+                elements.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) element.classList.add('visible');
+                });
+            }, 1700);
+        }
+
+        // Read URL parameters and start workout animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const params = new URLSearchParams(window.location.search);
+
+            const workoutType = params.get('type');
+            const intensity = params.get('intensity');
+            const duration = params.get('duration');
+            
+            if (workoutType && intensity && duration) {
+                // Store workout data globally for saving later
+                window.workoutType = workoutType;
+                window.workoutIntensity = intensity;
+                window.workoutDuration = duration;
+
+                // Start workout animation immediately
+                startWorkoutAnimation(workoutType, intensity, duration);
+            } else {
+                // If parameters are missing, redirect to train page
+                window.location = '/train';
+            }
+        })
+
+    </script>
+</body>
+</html>
+

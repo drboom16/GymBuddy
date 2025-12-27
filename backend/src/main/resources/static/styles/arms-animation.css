@@ -1,0 +1,359 @@
+/* Arms Workout Animation Styles (Bicep Curls) */
+
+/* Character Elements - Standing Position */
+.head-arms {
+    position: fixed;
+    top: 40%;
+    left: 54%;
+    transform: translateX(-50%);
+    width: 180px;
+    height: 180px;
+    background: white;
+    border-radius: 50%;
+    border: 3px solid #333;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1100;
+    clip-path: inset(0 0 6.8% 0);
+}
+
+.head-arms.visible {
+    opacity: 1;
+}
+
+.eyes-arms {
+    position: fixed;
+    top: 42.5%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 40px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2000;
+}
+
+.eyes-arms.visible {
+    opacity: 1;
+    animation: eyes-look-right 8s infinite;
+}
+
+.eye-arms {
+    width: 10px;
+    height: 26px;
+    background: #333;
+    border-radius: 10px;
+    opacity: 1;
+    z-index: 2000;
+}
+
+.eye-arms.blinking {
+    animation: blink-arms 0.5s infinite;
+}
+
+@keyframes blink-arms {
+    0%, 100% {
+        transform: scaleY(1);
+    }
+    50% {
+        transform: scaleY(0.2);
+    }
+}
+
+@keyframes eyes-look-right {
+    0%, 70% {
+        transform: translateX(-50%);
+    }
+    75%, 85% {
+        transform: translateX(30%) translateY(20px);
+    }
+    90%, 100% {
+        transform: translateX(-50%);
+    }
+}
+
+.body-top-face-arms {
+    position: fixed;
+    top: 47.2%;
+    left: 54%;
+    transform: translateX(-50%);
+    width: 90px;
+    height: 160px;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1050;
+    clip-path: inset(0% 0% 15% 0);
+}
+
+.body-top-face-arms.visible {
+    opacity: 1;
+}
+
+.upper-arms-left-arms {
+    position: fixed;
+    top: 47.6%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+}
+
+.upper-arms-left-arms.visible {
+    opacity: 1;
+}
+
+.upper-arms-right-arms {
+    position: fixed;
+    top: 47.6%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1200;
+}
+
+.upper-arms-right-arms.visible {
+    opacity: 1;
+}
+
+.upper-arm-left-arms {
+    position: absolute;
+    top: 0;
+    left: -24px;
+    width: 30px;
+    height: 60px;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 24px;
+    transform-origin: top center;
+}
+
+.upper-arm-right-arms {
+    position: absolute;
+    top: 0;
+    right: -100px;
+    width: 30px;
+    height: 60px;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 24px;
+    transform-origin: top center;
+}
+
+.upper-arm-left-arms.visible {
+    opacity: 1;
+    animation: curl-left-upper-arm 2s infinite;
+}
+
+.upper-arm-right-arms.visible {
+    opacity: 1;
+    animation: curl-right-upper-arm 2s infinite;
+}
+
+@keyframes curl-left-upper-arm {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(10deg);
+    }
+}
+
+@keyframes curl-right-upper-arm {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(10deg);
+    }
+}
+
+.lower-arms-left-arms {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+}
+
+.lower-arms-left-arms.visible {
+    opacity: 1;
+}
+
+.lower-arms-right-arms {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1200;
+}
+
+.lower-arms-right-arms.visible {
+    opacity: 1;
+}
+
+.lower-arm-left-arms {
+    position: absolute;
+    top: 0;
+    left: -24px;
+    width: 30px;
+    height: 60px;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 24px;
+    transform-origin: 50% 0%;
+    clip-path: inset(18% 0% 0% 0%);
+}
+
+.lower-arm-right-arms {
+    position: absolute;
+    top: 0;
+    right: -100px;
+    width: 30px;
+    height: 60px;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 24px;
+    transform-origin: 50% 0%;
+    clip-path: inset(18% 0% 0% 0%);
+}
+
+.lower-arm-left-arms.visible {
+    opacity: 1;
+    animation: curl-lower-arm 2s infinite;
+}
+
+.lower-arm-right-arms.visible {
+    opacity: 1;
+    animation: curl-lower-arm 2s infinite;
+}
+
+@keyframes curl-lower-arm {
+    0%, 100% {
+        transform: translate(0%, -30%) rotate(10deg);
+    }
+    50% {
+        transform: rotate(135deg);
+    }
+}
+
+.legs-arms {
+    position: fixed;
+    top: 51%;
+    left: 54%;
+    transform: translateX(-50%);
+    width: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1100;
+}
+
+.legs-arms.visible {
+    opacity: 1;
+}
+
+.leg-arms {
+    position: absolute;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 12px;
+    width: 40px;
+    height: 100px;
+    clip-path: inset(15% 0 0 0);
+}
+
+.leg-left-arms {
+    top: 0px;
+    left: -40px;
+}
+
+.leg-right-arms {
+    top: 0px;
+    right: -40px;
+}
+
+.legs-arms-crotch {
+    position: fixed;
+    top: 51.7%;
+    left: 54%;
+    transform: translateX(-50%);
+    width: 15px;
+    background: white;
+    border: 2px solid #333;
+    border-radius: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1400;
+}
+
+.legs-arms-crotch.visible {
+    opacity: 1;
+}
+
+/* Barbell */
+.barbell-arms {
+    position: fixed;
+    top: 51.1%;
+    left: 53%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.barbell-arms.visible {
+    opacity: 1;
+    animation: curl-barbell-weight 3s infinite;
+}
+
+.barbell-bar {
+    width: 200px;
+    height: 10px;
+    background: #333;
+    border-radius: 7px;
+    z-index: 1;
+}
+
+.barbell-weight-left {
+    position: absolute;
+    left: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 70px;
+    background: #333;
+    border-radius: 10px;
+    z-index: 0;
+}
+
+.barbell-weight-right {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 70px;
+    background: #333;
+    border-radius: 10px;
+    z-index: 0;
+}
+
+@keyframes curl-barbell-weight {
+    0%, 100% {
+        transform: translateX(-56%) translateY(0%);
+    }
+    50% {
+        transform: translateX(-64%) translateY(-64px);
+    }
+}

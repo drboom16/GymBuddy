@@ -1,0 +1,295 @@
+/* Back Workout Animation Styles (Pull-ups) */
+
+/* Character Elements - Same starting position as legs workout */
+.head-back {
+    position: fixed;
+    top: 38.5%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 180px;
+    height: 180px;
+    background: white;
+    border-radius: 50%;
+    border: 3px solid #333;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1310;
+}
+
+.head-back.visible {
+    opacity: 1;
+    animation: pullup-body-movement 3s infinite;
+}
+
+.eyes-back {
+    position: fixed;
+    top: 41%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 40px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2000;
+}
+
+.eyes-back.visible {
+    opacity: 1;
+    animation: pullup-body-movement 3s infinite;
+}
+
+.eye-back {
+    width: 10px;
+    height: 26px;
+    background: #333;
+    border-radius: 10px;
+    opacity: 1;
+    z-index: 2000;
+}
+
+.body-top-face-back {
+    position: fixed;
+    top: 45.7%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90px;
+    height: 94px;
+    background: white;
+    border: 3px solid #333;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1300;
+}
+
+.body-top-face-back.visible {
+    opacity: 1;
+    animation: pullup-body-movement 3s infinite;
+}
+
+.upper-arm-left-back {
+    position: fixed;
+    top: 44.2%;
+    left: 45.8%;
+    transform: translateX(-50%) rotate(0deg);
+    transform-origin: center bottom;
+    width: 30px;
+    height: 60px;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 24px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1320;
+    clip-path: inset(20% 0% 0% 0%);
+}
+
+.upper-arm-left-back.visible {
+    opacity: 1;
+    animation: pullup-upper-arm-left 3s infinite;
+}
+
+.upper-arm-right-back {
+    position: fixed;
+    top: 44.2%;
+    left: 54.2%;
+    transform: translateX(-50%) rotate(0deg);
+    transform-origin: center bottom;
+    width: 30px;
+    height: 60px;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 24px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1320;
+    clip-path: inset(20% 0% 0% 0%);
+}
+
+.upper-arm-right-back.visible {
+    opacity: 1;
+    animation: pullup-upper-arm-right 3s infinite;
+}
+
+.lower-arm-left-back {
+    position: fixed;
+    top: 44.8%;
+    left: 42.9%;
+    transform: translateX(-50%) rotate(0deg);
+    width: 30px;
+    height: 59px;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 24px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1310;
+}
+
+.lower-arm-left-back.visible {
+    opacity: 1;
+    animation: pullup-lower-arm-left 3s infinite;
+}
+
+.lower-arm-right-back {
+    position: fixed;
+    top: 44.8%;
+    left: 57.1%;
+    transform: translateX(-50%) rotate(0deg);
+    width: 30px;
+    height: 59px;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 24px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1310;
+}
+
+.lower-arm-right-back.visible {
+    opacity: 1;
+    animation: pullup-lower-arm-right 3s infinite;
+}
+
+.legs-back {
+    position: fixed;
+    top: 49.5%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1350;
+}
+
+.legs-back.visible {
+    opacity: 1;
+    animation: pullup-body-movement 3s infinite;
+}
+
+.leg-back {
+    position: absolute;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 12px;
+    width: 40px;
+    height: 100px;
+    clip-path: inset(10% 0% 0% 0%);
+}
+
+.leg-left-back {
+    top: 0px;
+    left: -40px;
+}
+
+.leg-right-back {
+    top: 0px;
+    right: -40px;
+}
+
+/* Pull-up Bar */
+.pullup-bar-back {
+    position: fixed;
+    top: 45%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1500;
+    width: 520px;
+    height: 460px;
+}
+
+.pullup-bar-back.visible {
+    opacity: 1;
+}
+
+.pullup-bar-horizontal {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 520px;
+    height: 10px;
+    background: #333;
+    z-index: 1;
+}
+
+.pullup-bar-support-left {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 16px;
+    height: 400px;
+    border-radius: 6px;
+    background: #333;
+    z-index: 0;
+}
+
+.pullup-bar-support-right { 
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 16px;
+    height: 400px;
+    border-radius: 6px;
+    background: #333;
+    z-index: 0;
+}
+
+/* Pull-up Animations */
+@keyframes pullup-body-movement {
+    0%, 100% {
+        transform: translateX(-50%) translateY(60px);
+    }
+    50% {
+        transform: translateX(-50%) translateY(-10px);
+    }
+}
+
+@keyframes pullup-upper-arm-left {
+    0%, 100% {
+        transform: translateX(-50%) translateY(60px) rotate(-20deg) scaleY(1.28);
+    }
+    50% {
+        transform: translateX(-50%) translateY(-16px) rotate(-112deg) scaleY(0.51);
+    }
+}
+
+@keyframes pullup-upper-arm-right {
+    0%, 100% {
+        transform: translateX(-50%) translateY(60px) rotate(20deg) scaleY(1.28);
+    }
+    50% {
+        transform: translateX(-50%) translateY(-16px) rotate(112deg) scaleY(0.51);
+    }
+}
+
+@keyframes pullup-lower-arm-left {
+    0%, 100% {
+        transform: translateX(-50%) rotate(-20deg) scaleY(1.2);
+        clip-path: inset(0% 0% 10% 0%);
+    }
+    50% {
+        transform: translateX(-50%) scaleY(0.95) translateY(-1.0px);
+        clip-path: inset(0% 0% 0% 0%);
+    }
+    16%, 68% {
+        transform: translateX(-50%) scaleY(1.4) rotate(25deg) translateY(0.7px);
+        clip-path: inset(0% 0% 0% 0%);
+    }
+}
+
+@keyframes pullup-lower-arm-right {
+    0%, 100% {
+        transform: translateX(-50%) rotate(20deg) scaleY(1.2);
+        clip-path: inset(0% 0% 10% 0%);
+    }
+    50% {
+        transform: translateX(-50%) scaleY(0.95) translateY(-1.0px);
+        clip-path: inset(0% 0% 0% 0%);
+    }
+    16%, 68% {
+        transform: translateX(-50%) scaleY(1.4) rotate(-25deg) translateY(0.7px);
+        clip-path: inset(0% 0% 0% 0%);
+    }
+}
