@@ -51,7 +51,6 @@
             box-shadow: var(--shadow-md);
         }
 
-
     </style>
 </head>
 <body>
@@ -63,7 +62,7 @@
     <div class="content-container">
         <!-- Create New Workout Button -->
         <div style="padding: 0 var(--spacing-lg) var(--spacing-lg) var(--spacing-lg);">
-            <button class="btn btn-primary btn-full" style="font-size: var(--font-size-lg); padding: var(--spacing-lg);">
+            <button id="createWorkoutBtn" class="btn btn-primary btn-full" style="font-size: var(--font-size-lg); padding: var(--spacing-lg);">
                 <i data-lucide="plus" style="width: 24px; height: 24px;"></i>
                 Create New Workout
             </button>
@@ -163,6 +162,63 @@
         </a>
     </div>
 
+    <!-- Create New Workout Modal -->
+    <div class="create-workout-modal" id="createWorkoutModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Create New Workout</h2>
+                <button class="modal-close" onclick="closeCreateWorkoutModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <!-- Workout Name Input -->
+                <div class="form-group">
+                    <label class="form-label">Workout Name</label>
+                    <input
+                        type="text"
+                        id="workoutName"
+                        class="form-input"
+                        placeholder="e.g., Morning Routine, Full Body..."
+                        autocomplete="off"
+                    >
+                </div>
+
+                <!-- Exercise Input Section -->
+                <div class="form-group">
+                    <label class="form-label">Add Exercise</label>
+                    <div class="exercise-input-container">
+                        <input
+                            type="text"
+                            id="exerciseName"
+                            class="form-input"
+                            placeholder="e.g., Push-ups, Squats, Chest-press..."
+                            autocomplete="off"
+                        >
+                        <button class="btn btn-primary add-exercise-btn" onclick="addExercise()">
+                            <i data-lucide="plus" style="width: 20px; height: 20px;"></i>
+                            Add
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Exercises List -->
+                <div class="form-group">
+                    <label class="form-label">Exercises</label>
+                    <div id="workoutExercises" class="exercises-list">
+                        <!-- Exercises rendered here -->
+                    </div>
+                </div>
+
+                <!-- Save Button -->
+                <button class="btn btn-primary btn-full save-workout-btn" onclick="saveWorkout()" style="margin-top: var(--spacing-md);">
+                    <i data-lucide="check" style="width: 20px; height: 20px;"></i>
+                    Save Workout
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Intensity/Duration Modal -->
     <div class="intensity-duration-modal" id="intensityDurationModal">
         <div class="modal">
@@ -218,7 +274,43 @@
 
 
     <script>
+
+        const exercises = [];
+
         lucide.createIcons();
+
+        // Create New Workout Modal
+        function openCreateWorkoutModal() {
+            document.getElementById('createWorkoutModal').classList.add('active');
+            renderExercises(); // Initialize exercises list
+            lucide.createIcons();
+        }
+
+        function closeCreateWorkoutModal() {
+            document.getElementById('createWorkoutModal').classList.remove('active');
+            // Reset form when closing
+            document.getElementById('workoutName').value = '';
+            document.getElementById('exerciseName').value = '';
+            exercises.length = 0;
+            renderExercises();
+        }
+
+        // Attach click handler to Create New Workout button
+        document.getElementById('createWorkoutBtn').addEventListener('click', openCreateWorkoutModal);
+
+        // Close modal when clicking outside
+        document.getElementById('createWorkoutModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCreateWorkoutModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('createWorkoutModal').classList.contains('active')) {
+                closeCreateWorkoutModal();
+            }
+        });
 
         // Workout type selection
         let selectedWorkoutType = null;
@@ -274,6 +366,14 @@
             }
         });
 
+        // Enables the 'Enter' key to add exercises
+        document.getElementById('exerciseName').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addExercise();
+            }
+        });
+
         function selectIntensity(element, value) {
             document.querySelectorAll('.intensity-low, .intensity-medium, .intensity-high, .intensity-max').forEach(el => {
                 el.classList.remove('selected');
@@ -318,17 +418,99 @@
                 const href = item.getAttribute('href');
 
                 if (href) {
-                    // Handle home page: only "/home" should activate the Home nav-item
-                    if (currentPath === '/home' && href === '/home') {
+                    // Handle home page: both "/" and "/home" should activate the Home nav-item
+                    if ((currentPath === '/home' || currentPath === '/') && (href === '/' || href === '/home')) {
                         item.classList.add('active');
-                    } else if (currentPath === href || currentPath === href + '.html') {
+                    } 
+                    // For other pages, check exact match
+                    else if (currentPath === href || currentPath === href + '.html') {
                         item.classList.add('active');
                     }
                 }
-            })
+            });
+            
+            // Reinitialize icons to apply stroke color changes
+            lucide.createIcons();
         }
 
         setActiveNavItem();
+
+        function addExercise() {
+            const input = document.getElementById("exerciseName");
+            const name = input.value.trim();
+
+            if (name === '') {
+                alert('Please enter an exercise name');
+                input.focus();
+                return;
+            }
+
+            exercises.push({
+                id: Date.now(),
+                name: name,
+            });
+
+            input.value = ''; // Reset input value to nothing
+            input.focus(); // Focus back on input for quick adding
+            renderExercises();
+        }
+
+        function renderExercises() {
+            const workoutExercises = document.getElementById('workoutExercises');
+            
+            if (exercises.length === 0) {
+                workoutExercises.innerHTML = '<div class="empty-state">No exercises added yet. Add your first exercise above!</div>';
+                return;
+            }
+
+            workoutExercises.innerHTML = exercises.map(exercise => 
+                `<div class="exercise-item">
+                    <div class="exercise-item-content">
+                        <span class="exercise-name">${exercise.name}</span>
+                    </div>
+                    <button class="exercise-delete-btn" onclick="removeExercise(${exercise.id})">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>`
+            ).join('');
+            
+            // Reinitialize icons after rendering
+            lucide.createIcons();
+        }
+
+        function removeExercise(id) {
+            const index = exercises.findIndex(ex => ex.id === id);
+            if (index > -1) {
+                exercises.splice(index, 1);
+                renderExercises();
+            }
+        }
+
+        function saveWorkout() {
+            const workoutName = document.getElementById('workoutName').value.trim();
+            
+            if (!workoutName) {
+                alert('Please enter a workout name');
+                return;
+            }
+            
+            if (exercises.length === 0) {
+                alert('Please add at least one exercise');
+                return;
+            }
+
+            // TODO: Save workout to backend
+            console.log('Saving workout:', { name: workoutName, exercises });
+            
+            // For now, just close the modal and show success
+            alert('Workout saved successfully!');
+            closeCreateWorkoutModal();
+            
+            // Reset form
+            document.getElementById('workoutName').value = '';
+            exercises.length = 0;
+            renderExercises();
+        }
 
     </script>
 </body>

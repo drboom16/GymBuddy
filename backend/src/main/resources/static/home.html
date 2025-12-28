@@ -407,8 +407,8 @@
                 
                 // Check if this nav-item matches the current page
                 if (href) {
-                    // Handle home page: only "/home" should activate the Home nav-item
-                    if (currentPath === '/home' && href === '/home') {
+                    // Handle home page: both "/" and "/home" should activate the Home nav-item
+                    if ((currentPath === '/home' || currentPath === '/') && (href === '/' || href === '/home')) {
                         item.classList.add('active');
                     } 
                     // For other pages, check exact match
