@@ -145,7 +145,7 @@
     padding: 32px;
     max-width: 500px;
     width: 90%;
-    max-height: 80vh;
+    max-height: 60vh;
     overflow-y: auto;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     border: 2px solid #000;
@@ -321,5 +321,293 @@
 
 .go-button:active {
     transform: translateY(0);
+}
+
+/* Create New Workout Modal */
+.create-workout-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.create-workout-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.create-workout-modal .modal {
+    background: var(--background-white);
+    border-radius: 24px;
+    padding: var(--spacing-lg);
+    max-width: 500px;
+    width: 90%;
+    height: 65vh;
+    max-height: 65vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border: 2px solid #000;
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.3s ease;
+    overflow: hidden;
+}
+
+.create-workout-modal.active .modal {
+    transform: scale(1) translateY(0);
+}
+
+.create-workout-modal .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid #000;
+    flex-shrink: 0;
+}
+
+.create-workout-modal .modal-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.create-workout-modal .modal-close {
+    background: none;
+    border: none;
+    border-radius: 8px;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-primary);
+    padding: 8px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.create-workout-modal .modal-close:hover {
+    background: var(--neutral-gray-light);
+    transform: scale(1.05);
+}
+
+.create-workout-modal .modal-close i,
+.create-workout-modal .modal-close svg {
+    width: 24px;
+    height: 24px;
+    stroke: var(--text-primary);
+    stroke-width: 2.5;
+}
+
+.create-workout-modal .modal-content {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    padding-right: 0;
+    padding-left: 0;
+}
+
+/* Form Styles */
+.create-workout-modal .form-group {
+    margin-bottom: var(--spacing-md);
+    flex-shrink: 0;
+}
+
+.create-workout-modal .form-group:last-of-type {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    margin-bottom: 0;
+}
+
+.create-workout-modal .form-label {
+    display: block;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.create-workout-modal .form-input {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-base);
+    font-family: var(--font-family);
+    border: 2px solid #000;
+    border-radius: var(--radius-md);
+    background: var(--background-white);
+    color: var(--text-primary);
+    transition: all 0.2s;
+}
+
+.create-workout-modal .form-input:focus {
+    outline: none;
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.1);
+}
+
+.create-workout-modal .form-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+
+.create-workout-modal .exercise-input-container {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: stretch;
+}
+
+.create-workout-modal .exercise-input-container .form-input {
+    flex: 1;
+}
+
+.create-workout-modal .add-exercise-btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-size: var(--font-size-sm);
+}
+
+/* Exercises List */
+.create-workout-modal .exercises-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: var(--spacing-xs);
+    background: transparent;
+    border-radius: var(--radius-md);
+    width: 100%;
+    /* Smooth scrolling */
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--text-secondary) transparent;
+}
+
+.create-workout-modal .exercises-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.create-workout-modal .exercises-list::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: var(--radius-sm);
+}
+
+.create-workout-modal .exercises-list::-webkit-scrollbar-thumb {
+    background: var(--text-secondary);
+    border-radius: var(--radius-sm);
+}
+
+.create-workout-modal .exercises-list::-webkit-scrollbar-thumb:hover {
+    background: var(--text-primary);
+}
+
+.create-workout-modal .exercise-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--background-white);
+    border: 2px solid #000;
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
+    min-height: 44px;
+}
+
+.create-workout-modal .exercise-item:hover {
+    transform: translateX(4px);
+    box-shadow: var(--shadow-sm);
+}
+
+.create-workout-modal .exercise-item-content {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.create-workout-modal .exercise-name {
+    font-size: var(--font-size-base);
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.create-workout-modal .exercise-delete-btn {
+    background: none;
+    border: none;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    border-radius: var(--radius-sm);
+}
+
+.create-workout-modal .exercise-delete-btn:hover {
+    background: #fee2e2;
+    transform: scale(1.1);
+}
+
+.create-workout-modal .exercise-delete-btn i,
+.create-workout-modal .exercise-delete-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke: var(--text-primary);
+    stroke-width: 2.5;
+}
+
+.create-workout-modal .exercise-delete-btn:hover i,
+.create-workout-modal .exercise-delete-btn:hover svg {
+    stroke: #dc2626;
+}
+
+.create-workout-modal .empty-state {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.create-workout-modal .save-workout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    font-size: var(--font-size-lg);
+    flex-shrink: 0;
+    margin-top: var(--spacing-md);
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 0;
 }
 

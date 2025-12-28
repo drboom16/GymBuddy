@@ -14,6 +14,12 @@ import java.nio.charset.StandardCharsets;
 @RestController
 public class HomeController {
 
+    @GetMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE)
+    public String index() throws IOException {
+        Resource resource = new ClassPathResource("static/index.html");
+        return StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
+    }
+
     @GetMapping(value = "/home", produces = MediaType.TEXT_HTML_VALUE)
     public String home() throws IOException {
         Resource resource = new ClassPathResource("static/home.html");
