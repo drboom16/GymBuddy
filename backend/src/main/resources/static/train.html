@@ -37,18 +37,40 @@
             box-shadow: var(--shadow-md);
         }
 
-        .template-card {
-            background: var(--background-white);
-            border: 2px solid #000;
-            border-radius: var(--radius-xl);
-            padding: var(--spacing-lg);
-            min-width: 200px;
-            transition: transform 0.2s, box-shadow 0.2s;
+
+        /* Exercise Type Dropdown Styling */
+        .exercise-type-select {
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23000' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 12px;
+            padding-right: 36px;
+            position: relative;
+            z-index: 1;
         }
 
-        .template-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+        .exercise-type-select option[value="chest"] {
+            background: #8991fe;
+            color: #000;
+        }
+
+        .exercise-type-select option[value="back"] {
+            background: #f48952;
+            color: #000;
+        }
+
+        .exercise-type-select option[value="arms"] {
+            background: #ffbe1e;
+            color: #000;
+        }
+
+        .exercise-type-select option[value="legs"] {
+            background: #8cea64;
+            color: #000;
         }
 
     </style>
@@ -73,75 +95,11 @@
             <div class="section-header" style="padding: 0 var(--spacing-lg);">
                 <div class="section-title">My Workouts</div>
             </div>
-            <div class="scrollable-row">
-                <div class="scrollable-item">
-                    <div class="workout-card-placeholder">
-                        <i data-lucide="dumbbell" style="width: 48px; height: 48px; stroke: var(--text-primary); margin-bottom: var(--spacing-sm);"></i>
-                        <div style="font-weight: 600; color: var(--text-primary);">Workout 1</div>
-                    </div>
-                </div>
-                <div class="scrollable-item">
-                    <div class="workout-card-placeholder">
-                        <i data-lucide="activity" style="width: 48px; height: 48px; stroke: var(--text-primary); margin-bottom: var(--spacing-sm);"></i>
-                        <div style="font-weight: 600; color: var(--text-primary);">Workout 2</div>
-                    </div>
-                </div>
-                <div class="scrollable-item">
-                    <div class="workout-card-placeholder">
-                        <i data-lucide="heart" style="width: 48px; height: 48px; stroke: var(--text-primary); margin-bottom: var(--spacing-sm);"></i>
-                        <div style="font-weight: 600; color: var(--text-primary);">Workout 3</div>
-                    </div>
-                </div>
+            <div class="scrollable-row" id="myWorkoutsContainer">
+                <!-- Workouts will be loaded here -->
             </div>
         </div>
 
-        <!-- Templates Section -->
-        <div style="margin-bottom: var(--spacing-xl);">
-            <div class="section-header" style="padding: 0 var(--spacing-lg);">
-                <div class="section-title">Templates</div>
-            </div>
-            <div class="scrollable-row">
-                <div class="scrollable-item">
-                    <div class="template-card">
-                        <div style="font-size: var(--font-size-lg); font-weight: 700; color: var(--text-primary); margin-bottom: var(--spacing-md);">Full Body</div>
-                        <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
-                            <div style="font-size: var(--font-size-sm); color: var(--text-secondary);">• Arms</div>
-                            <div style="font-size: var(--font-size-sm); color: var(--text-secondary);">• Back</div>
-                            <div style="font-size: var(--font-size-sm); color: var(--text-secondary);">• Chest</div>
-                            <div style="font-size: var(--font-size-sm); color: var(--text-secondary);">• Legs</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="scrollable-item">
-                    <div class="template-card">
-                        <div style="font-size: var(--font-size-lg); font-weight: 700; color: var(--text-primary); margin-bottom: var(--spacing-md);">Upper Body</div>
-                        <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
-                            <div style="font-size: var(--font-size-sm); color: var(--text-secondary);">• Arms</div>
-                            <div style="font-size: var(--font-size-sm); color: var(--text-secondary);">• Back</div>
-                            <div style="font-size: var(--font-size-sm); color: var(--text-secondary);">• Chest</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="scrollable-item">
-                    <div class="template-card">
-                        <div style="font-size: var(--font-size-lg); font-weight: 700; color: var(--text-primary); margin-bottom: var(--spacing-md);">Lower Body</div>
-                        <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
-                            <div style="font-size: var(--font-size-sm); color: var(--text-secondary);">• Legs</div>
-                            <div style="font-size: var(--font-size-sm); color: var(--text-secondary);">• Core</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="scrollable-item">
-                    <div class="template-card">
-                        <div style="font-size: var(--font-size-lg); font-weight: 700; color: var(--text-primary); margin-bottom: var(--spacing-md);">Cardio Focus</div>
-                        <div style="display: flex; flex-direction: column; gap: var(--spacing-xs);">
-                            <div style="font-size: var(--font-size-sm); color: var(--text-secondary);">• Full Body</div>
-                            <div style="font-size: var(--font-size-sm); color: var(--text-secondary);">• HIIT</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <div class="bottom-nav">
@@ -191,14 +149,32 @@
                         <input
                             type="text"
                             id="exerciseName"
-                            class="form-input"
+                            class="form-input exercise-name-input"
                             placeholder="e.g., Push-ups, Squats, Chest-press..."
                             autocomplete="off"
                         >
-                        <button class="btn btn-primary add-exercise-btn" onclick="addExercise()">
-                            <i data-lucide="plus" style="width: 20px; height: 20px;"></i>
-                            Add
-                        </button>
+                        <div class="exercise-options-row">
+                        <input
+                            type="text"
+                            id="noSets"
+                            class="form-input exercise-sets-input"
+                            placeholder="Sets"
+                            value="0"
+                            autocomplete="off"
+                            inputmode="numeric"
+                            pattern="[0-9]*"
+                        >
+                            <select id="exerciseType" class="form-input exercise-type-select">
+                                <option value="chest">Chest</option>
+                                <option value="back">Back</option>
+                                <option value="arms">Arms</option>
+                                <option value="legs">Legs</option>
+                            </select>
+                            <button class="btn btn-primary add-exercise-btn" onclick="addExercise()">
+                                <i data-lucide="plus" style="width: 20px; height: 20px;"></i>
+                                Add
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -374,6 +350,12 @@
             }
         });
 
+        // Restrict noSets input to numbers only
+        document.getElementById('noSets').addEventListener('input', function(e) {
+            // Remove any non-numeric characters
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
         function selectIntensity(element, value) {
             document.querySelectorAll('.intensity-low, .intensity-medium, .intensity-high, .intensity-max').forEach(el => {
                 el.classList.remove('selected');
@@ -435,23 +417,86 @@
 
         setActiveNavItem();
 
+        // Load and display workouts
+        async function loadMyWorkouts() {
+            const container = document.getElementById('myWorkoutsContainer');
+            
+            try {
+                const response = await fetch('/api/workouts');
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch workouts');
+                }
+                
+                const workouts = await response.json();
+                
+                if (workouts.length === 0) {
+                    container.innerHTML = '<div style="padding: var(--spacing-md); color: var(--text-secondary); text-align: center;">No workouts yet. Create your first workout!</div>';
+                    return;
+                }
+                
+                container.innerHTML = workouts.map(workout => {
+                    const workoutName = workout.workoutName || 'Unnamed Workout';
+                    return `
+                        <div class="scrollable-item">
+                            <div class="workout-card-placeholder">
+                                <i data-lucide="dumbbell" style="width: 48px; height: 48px; stroke: var(--text-primary); margin-bottom: var(--spacing-sm);"></i>
+                                <div style="font-weight: 600; color: var(--text-primary);">${workoutName}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                // Reinitialize icons after rendering
+                lucide.createIcons();
+            } catch (error) {
+                console.error('Error loading workouts:', error);
+                container.innerHTML = '<div style="padding: var(--spacing-md); color: var(--text-secondary); text-align: center;">Error loading workouts</div>';
+            }
+        }
+
+        // Load workouts when page loads
+        loadMyWorkouts();
+
         function addExercise() {
-            const input = document.getElementById("exerciseName");
-            const name = input.value.trim();
+            const exerciseNameInput = document.getElementById("exerciseName");
+            const noSetsInput = document.getElementById("noSets");
+            const exerciseTypeSelect = document.getElementById("exerciseType");
+
+            const name = exerciseNameInput.value.trim();
+            const setsValue = noSetsInput.value.trim();
+            const exerciseType = exerciseTypeSelect.value;
 
             if (name === '') {
                 alert('Please enter an exercise name');
-                input.focus();
+                exerciseNameInput.focus();
+                return;
+            }
+
+            // Parse sets as integer (default to 0 if empty or invalid)
+            // Only allow numeric input
+            const numericValue = setsValue.replace(/[^0-9]/g, '');
+            const sets = numericValue === '' ? 0 : parseInt(numericValue, 10);
+            if (isNaN(sets) || sets < 0) {
+                alert('Please enter a valid number of sets (0 or greater)');
+                noSetsInput.focus();
                 return;
             }
 
             exercises.push({
-                id: Date.now(),
                 name: name,
+                noSets: sets, 
+                type: exerciseType, 
             });
 
-            input.value = ''; // Reset input value to nothing
-            input.focus(); // Focus back on input for quick adding
+            // Reset inputs
+            exerciseNameInput.value = '';
+            noSetsInput.value = '0';
+            exerciseTypeSelect.value = 'chest'; // Reset to default
+
+            // Focus back on exercise name input for quick adding
+            exerciseNameInput.focus();
+
             renderExercises();
         }
 
@@ -463,30 +508,42 @@
                 return;
             }
 
-            workoutExercises.innerHTML = exercises.map(exercise => 
-                `<div class="exercise-item">
-                    <div class="exercise-item-content">
-                        <span class="exercise-name">${exercise.name}</span>
+            workoutExercises.innerHTML = exercises.map((exercise, index) => {
+                const typeColors = {
+                    'chest': '#8991fe',
+                    'back': '#f48952',
+                    'arms': '#ffbe1e',
+                    'legs': '#8cea64'
+                };
+                const typeColor = typeColors[exercise.type] || '#000';
+                const setsText = exercise.noSets === 1 ? `${exercise.noSets} set` : `${exercise.noSets} sets`;
+                
+                return `
+                    <div class="exercise-item">
+                        <div class="exercise-item-content">
+                            <span class="exercise-name">${exercise.name}</span>
+                            <span style="color: var(--text-secondary); margin-left: var(--spacing-sm);">(${setsText})</span>
+                            ${exercise.type ? `<span style="background: ${typeColor}; color: #000; padding: 2px 8px; border-radius: 4px; font-size: var(--font-size-sm); font-weight: 600; margin-left: var(--spacing-sm); text-transform: capitalize;">${exercise.type}</span>` : ''}
+                        </div>
+                        <button class="exercise-delete-btn" onclick="removeExercise(${index})">
+                            <i data-lucide="x"></i>
+                        </button>
                     </div>
-                    <button class="exercise-delete-btn" onclick="removeExercise(${exercise.id})">
-                        <i data-lucide="x"></i>
-                    </button>
-                </div>`
-            ).join('');
+                `;
+            }).join('');
             
             // Reinitialize icons after rendering
             lucide.createIcons();
         }
 
-        function removeExercise(id) {
-            const index = exercises.findIndex(ex => ex.id === id);
-            if (index > -1) {
+        function removeExercise(index) {
+            if (index >= 0 && index < exercises.length) {
                 exercises.splice(index, 1);
                 renderExercises();
             }
         }
 
-        function saveWorkout() {
+        async function saveWorkout() {
             const workoutName = document.getElementById('workoutName').value.trim();
             
             if (!workoutName) {
@@ -499,11 +556,28 @@
                 return;
             }
 
-            // TODO: Save workout to backend
-            console.log('Saving workout:', { name: workoutName, exercises });
-            
-            // For now, just close the modal and show success
-            alert('Workout saved successfully!');
+            try {
+                const response = await fetch('/api/workouts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        workoutName: document.getElementById('workoutName').value,
+                        exercises: exercises
+                    }),
+                });
+
+                if (response.ok) {
+                    console.log("Successfully saved workout");
+                    // Reload workouts to show the new one
+                    loadMyWorkouts();
+                }
+
+            } catch (e) {
+                console.error("There was an error with the API call" + e);
+            }
+
             closeCreateWorkoutModal();
             
             // Reset form
