@@ -1,65 +1,51 @@
 package com.gymbuddy.service;
 
+import com.gymbuddy.model.Exercise;
 import com.gymbuddy.model.Workout;
 import com.gymbuddy.repository.WorkoutRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class WorkoutService {
     
     private final WorkoutRepository workoutRepository;
-    
+
     @Autowired
     public WorkoutService(WorkoutRepository workoutRepository) {
         this.workoutRepository = workoutRepository;
     }
-    
+
+    public Workout createWorkout(String name, List<Exercise> exercises) {
+        Workout workout = new Workout(name, exercises);
+        return workoutRepository.save(workout);
+    }
+
+    public List<Workout> getAllWorkouts() {
+        return workoutRepository.findAllByOrderByIdAsc();
+    }
+
     /**
-     * Save a completed workout
+     * Update workout by ID
      */
-    public Workout saveWorkout(String workoutType, String intensity, String duration) {
-        // Parse duration to seconds for easier querying
-        Integer durationSeconds = parseDurationToSeconds(duration);
+    public Workout updateWorkout(Long id, String name, List<Exercise> exercises) {
+        Workout workout = workoutRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Workout not found"));
         
-        Workout workout = new Workout(
-            workoutType.toUpperCase(),
-            intensity.toUpperCase(),
-            duration,
-            LocalDateTime.now(),
-            durationSeconds
-        );
+        workout.setWorkoutName(name);
+        workout.setExercises(new ArrayList<>(exercises));
         
         return workoutRepository.save(workout);
     }
-    
+
     /**
-     * Get all workouts ordered by completion date (newest first)
+     * Delete a workout by ID
      */
-    public List<Workout> getAllWorkouts() {
-        return workoutRepository.findAllByOrderByCompletedAtDesc();
-    }
-    
-    /**
-     * Parse duration string (e.g., "30s", "1m", "2m", "3m") to seconds
-     */
-    private Integer parseDurationToSeconds(String duration) {
-        if (duration == null || duration.isEmpty()) {
-            return 0;
+    public void deleteWorkout(Long id) {
+        if (!workoutRepository.existsById(id)) {
+            throw new RuntimeException("Workout not found");
         }
-        
-        duration = duration.trim().toLowerCase();
-        
-        if (duration.endsWith("s")) {
-            return Integer.parseInt(duration.substring(0, duration.length() - 1));
-        } else if (duration.endsWith("m")) {
-            return Integer.parseInt(duration.substring(0, duration.length() - 1)) * 60;
-        }
-        
-        return 0;
+        workoutRepository.deleteById(id);
     }
 }
-
