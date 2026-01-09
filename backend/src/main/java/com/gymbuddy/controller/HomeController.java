@@ -5,6 +5,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -12,6 +13,12 @@ import java.nio.charset.StandardCharsets;
 
 @RestController
 public class HomeController {
+
+    @GetMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE)
+    public String index() throws IOException {
+        Resource resource = new ClassPathResource("static/index.html");
+        return StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
+    }
 
     @GetMapping(value = "/home", produces = MediaType.TEXT_HTML_VALUE)
     public String home() throws IOException {
@@ -40,6 +47,24 @@ public class HomeController {
     @GetMapping(value = "/shop", produces = MediaType.TEXT_HTML_VALUE)
     public String shop() throws IOException {
         Resource resource = new ClassPathResource("static/shop.html");
+        return StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
+    }
+
+    @GetMapping(value = "/workout-animation", produces = MediaType.TEXT_HTML_VALUE)
+    public String workoutAnimation() throws IOException {
+        Resource resource = new ClassPathResource("static/workout-animation.html");
+        return StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
+    }
+
+    @GetMapping(value = "/workout-fragments/{fragmentName}", produces = MediaType.TEXT_HTML_VALUE)
+    public String workoutFragment(@PathVariable String fragmentName) throws IOException {
+        Resource resource = new ClassPathResource("static/workout-fragments/" + fragmentName);
+        return StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
+    }
+
+    @GetMapping(value = "/train/{workoutId}", produces = MediaType.TEXT_HTML_VALUE)
+    public String workoutDetail(@PathVariable String workoutId) throws IOException {
+        Resource resource = new ClassPathResource("static/workout-detail.html");
         return StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
     }
 }

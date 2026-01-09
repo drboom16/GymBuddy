@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home - GymBuddy</title>
+    <link rel="stylesheet" href="styles/design-system.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         * {
@@ -13,77 +14,101 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            min-height: 100vh;
-            padding: 20px;
-            padding-bottom: 100px;
+            background: var(--background-light);
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 24px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        }
-
-        h1 {
-            font-size: 36px;
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            border-top: 1px solid #e0e0e0;
-            padding: 14px 0;
+        .workout-card {
+            background: linear-gradient(135deg, var(--primary-green-light) 0%, var(--primary-green) 100%);
+            border-radius: var(--radius-2xl);
+            padding: var(--spacing-xl);
+            color: var(--background-white);
             display: flex;
-            justify-content: space-around;
-            align-items: center;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
+            gap: var(--spacing-lg);
+            min-width: 320px;
+            border: 2px solid #000;
         }
 
-        .nav-item {
+        .workout-card-image {
+            width: 120px;
+            height: 120px;
+            border-radius: var(--radius-lg);
+            background: rgba(255, 255, 255, 0.2);
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
+            border: 2px solid #000;
+        }
+
+        .workout-card-content {
             flex: 1;
-            padding: 4px 8px;
-            cursor: pointer;
-            transition: opacity 0.2s, color 0.2s;
-            color: gray;
-            text-decoration: none;
         }
 
-        .nav-item.active {
-            color: black;
+        .workout-card-title {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
         }
 
-        .nav-item.active .nav-icon {
-            stroke: black;
+        .workout-card-subtitle {
+            font-size: var(--font-size-sm);
+            opacity: 0.9;
+            margin-bottom: var(--spacing-md);
         }
 
-        .nav-icon {
-            width: 24px;
-            height: 24px;
-            margin-bottom: 4px;
-            stroke-width: 2;
-            stroke: currentColor;
-            color: currentColor;
+        .workout-card-details {
+            font-size: var(--font-size-sm);
+            opacity: 0.8;
         }
 
-        .nav-label {
-            font-size: 12px;
-            font-weight: 500;
+        .quick-workout-card {
+            background: var(--background-white);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-lg);
+            min-width: 200px;
             text-align: center;
+            border: 2px solid #000;
         }
+
+        .quick-workout-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto var(--spacing-md);
+            stroke: var(--primary-green);
+            stroke-width: 2;
+        }
+
+        .quick-workout-title {
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .quick-workout-price {
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .book-button {
+            width: 100%;
+            background: var(--background-white);
+            color: var(--text-primary);
+            border: 2px solid #000;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .book-button:hover {
+            background: var(--neutral-gray-light);
+        }
+
 
         .nav-item.pulse {
             animation: pulse 0.3s ease-in-out;
@@ -130,7 +155,7 @@
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 2px solid #000;
             transform: scale(0.9) translateY(20px);
             transition: transform 0.3s ease;
         }
@@ -145,7 +170,6 @@
             align-items: center;
             margin-bottom: 32px;
             padding-bottom: 16px;
-            border-bottom: 1px solid #e5e7eb;
         }
 
         .modal-title {
@@ -210,39 +234,39 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            border: 2px solid transparent;
+            border: 2px solid #000;
         }
 
         .duration-option.selected {
-            border: 3px solid #000;
-            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+            border: 2px solid #000;
+            background: #4ade80;
+            color: white;
         }
 
         .intensity-low.selected,
         .intensity-medium.selected,
         .intensity-high.selected,
         .intensity-max.selected {
-            border: 3px solid #000;
+            border: 2px solid #000;
         }
 
         .go-button {
             width: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-green);
             color: white;
-            border: none;
+            border: 2px solid #000;
             padding: 16px 32px;
             font-size: 18px;
             font-weight: 700;
             border-radius: 16px;
             cursor: pointer;
             margin-top: 24px;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            transition: transform 0.2s;
         }
 
         .go-button:hover {
+            background: var(--primary-green-dark);
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
         }
 
         .go-button:active {
@@ -306,102 +330,62 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            border: 2px solid #000;
         }
 
         .intensity-low {
-            background: linear-gradient(135deg, #c084fc 0%, #a855f7 100%);
+            background: linear-gradient(135deg, #86efac 0%, #4ade80 100%);
         }
 
         .intensity-medium {
-            background: linear-gradient(135deg, #9333ea 0%, #7c3aed 100%);
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
         }
 
         .intensity-high {
-            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
         }
 
         .intensity-max {
-            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
         }
 
     </style>
 </head>
 <body>
+    <!-- iPhone Dynamic Island -->
+    <div class="dynamic-island"></div>
+
+    <!-- Page Title -->
+    <div style="position: relative; padding: var(--spacing-2xl) var(--spacing-lg) var(--spacing-md) var(--spacing-lg); padding-top: calc(var(--spacing-2xl) + env(safe-area-inset-top, 0px) + 45px);">
+        <h1 class="page-title-large" style="padding: 0; margin: 0;">Home</h1>
+        <a href="/" class="exit-door-icon" style="position: absolute; right: var(--spacing-lg); top: 50%; transform: translateY(-50%); margin-left: 0;">
+            <i data-lucide="door-open"></i>
+        </a>
+    </div>
+
+    <!-- Content Container -->
+    <div class="content-container">
+        <!-- Home page content can be added here in the future -->
+    </div>
+
     <div class="bottom-nav">
-        <a href="/" class="nav-item">
+        <a href="/home" class="nav-item">
             <i data-lucide="home" class="nav-icon"></i>
-            <div class="nav-label">Home</div>
         </a>
         <a href="/workouts" class="nav-item">
             <i data-lucide="clipboard-list" class="nav-icon"></i>
-            <div class="nav-label">Workouts</div>
         </a>
-        <a class="nav-item" id="trainButton" onclick="openTrainModal(event)">
+        <a href="/train" class="nav-item" id="trainButton">
             <i data-lucide="dumbbell" class="nav-icon"></i>
-            <div class="nav-label">Train</div>
         </a>
         <a href="/achievements" class="nav-item">
             <i data-lucide="medal" class="nav-icon"></i>
-            <div class="nav-label">Achievements</div>
         </a>
         <a href="/shop" class="nav-item">
             <i data-lucide="shopping-cart" class="nav-icon"></i>
-            <div class="nav-label">Shop</div>
         </a>
     </div>
 
-    <!-- Train Modal -->
-    <div class="modal-overlay" id="trainModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 class="modal-title">Start Training</h2>
-                <button class="modal-close" onclick="closeTrainModal()">
-                    <i data-lucide="x"></i>
-                </button>
-            </div>
-            <div class="modal-content">
-                <div class="selection-group">
-                    <label class="selection-label">Intensity</label>
-                    <div class="intensity-bar">
-                        <div class="intensity-low" onclick="selectIntensity(this, 'low')">
-                            LOW
-                        </div>
-                        <div class="intensity-medium" onclick="selectIntensity(this, 'medium')">
-                            MEDIUM
-                        </div>
-                        <div class="intensity-high" onclick="selectIntensity(this, 'high')">
-                            HIGH
-                        </div>
-                        <div class="intensity-max" onclick="selectIntensity(this, 'max')">
-                            MAX
-                        </div>
-                    </div>
-                </div>
-
-                <div class="selection-group">
-                    <label class="selection-label">Duration</label>
-                    <div class="duration-bar">
-                        <div class="duration-option" onclick="selectDuration(this, '30s')">
-                            30s
-                        </div>
-                        <div class="duration-option" onclick="selectDuration(this, '1m')">
-                            1m
-                        </div>
-                        <div class="duration-option" onclick="selectDuration(this, '2m')">
-                            2m
-                        </div>
-                        <div class="duration-option" onclick="selectDuration(this, '3m')">
-                            3m
-                        </div>
-                    </div>
-                </div>
-
-                <button class="go-button" onclick="startTraining()">
-                    GO!
-                </button>
-            </div>
-        </div>
-    </div>
 
     <script>
         lucide.createIcons();
@@ -434,129 +418,6 @@
 
         // Set active nav-item on page load
         setActiveNavItem();
-
-        function openTrainModal(event) {    
-            event.preventDefault() // In case there were a href in <a> tag, we won't wrongly redirect there
-            
-            // Add pulse animation to button
-            const button = document.getElementById('trainButton');
-            button.classList.add('pulse');
-            
-            // Remove pulse class after animation completes
-            setTimeout(() => {
-                button.classList.remove('pulse');
-            }, 300);
-            
-            // Show modal
-            const modal = document.getElementById('trainModal');
-            modal.classList.add('active');
-            
-            // Reinitialize icons for the close button
-            setTimeout(() => {
-                lucide.createIcons();
-            }, 10);
-        }
-
-        function closeTrainModal() {
-            const modal = document.getElementById('trainModal');
-            modal.classList.remove('active');
-
-            // Deactivate intensity and duration selection
-            document.querySelectorAll('.intensity-low, .intensity-medium, .intensity-high, .intensity-max').forEach(el => {
-                el.classList.remove('selected');
-            });
-
-            document.querySelectorAll('.duration-option').forEach(el => {
-                el.classList.remove('selected');
-            });
-        }
-
-        // Close modal when clicking outside
-        document.getElementById('trainModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeTrainModal();
-            }
-        });
-
-        // Close modal with Escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeTrainModal();
-            }
-        });
-
-        // Selection functions
-        function selectIntensity(element, value) {
-            // Remove selected class from all intensity options
-            document.querySelectorAll('.intensity-low, .intensity-medium, .intensity-high, .intensity-max').forEach(el => {
-                el.classList.remove('selected');
-            });
-            // Add selected class to clicked element
-            element.classList.add('selected');
-        }
-
-        function selectDuration(element, value) {
-            // Remove selected class from all duration options
-            document.querySelectorAll('.duration-option').forEach(el => {
-                el.classList.remove('selected');
-            });
-            // Add selected class to clicked element
-            element.classList.add('selected');
-        }
-
-        function startTraining() {
-            const selectedIntensity = document.querySelector('.intensity-low.selected, .intensity-medium.selected, .intensity-high.selected, .intensity-max.selected');
-            const selectedDuration = document.querySelector('.duration-option.selected');
-
-            if (!selectedIntensity && !selectedDuration) {
-                alert('Please select an intensity and duration!');
-                return;
-            }
-
-            if (!selectedIntensity) {
-                alert('Please select an intensity!');
-                return;
-            }
-
-            if (!selectedDuration) {
-                alert('Please select a duration!');
-                return;
-            }
-
-            const intensityValue = selectedIntensity.textContent.trim();
-            const durationValue = selectedDuration.textContent.trim();
-
-            console.log('Intensity:', intensityValue);
-            console.log('Duration:', durationValue);
-
-            // Start smooth transition
-            startTransition(intensityValue, durationValue);
-        }
-
-        function startTransition(intensity, duration) {
-            // Close modal with smooth fade
-            const modal = document.getElementById('trainModal');
-            modal.classList.remove('active');
-
-            // Create and show transition overlay after modal closes
-            setTimeout(() => {
-                const transitionOverlay = document.createElement('div');
-                transitionOverlay.className = 'transition-overlay';
-                document.body.appendChild(transitionOverlay);
-
-                // Trigger animation on next frame for smooth start
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        transitionOverlay.classList.add('active');
-                    });
-                });
-
-                // Navigate after transition completes
-                setTimeout(() => {
-                    window.location.href = `/train.html?intensity=${encodeURIComponent(intensity)}&duration=${encodeURIComponent(duration)}`;
-                }, 750);
-            }, 250);
-        }
     </script>
 </body>
 </html>
