@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Workouts - GymBuddy</title>
+    <link rel="stylesheet" href="styles/design-system.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         * {
@@ -13,105 +14,713 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            min-height: 100vh;
-            padding: 20px;
-            padding-bottom: 100px;
+            background: var(--background-cream);
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 24px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+
+
+        .workout-list {
+            margin-top: 0;
+            padding: 0 var(--spacing-md);
+            width: 100%;
         }
 
-        h1 {
-            font-size: 36px;
-            color: #333;
-            margin-bottom: 20px;
+        .workout-item {
+            background: var(--background-white);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+            border: 2px solid #000;
+            width: 100%;
         }
 
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            border-top: 1px solid #e0e0e0;
-            padding: 14px 0;
+        .thinking-gif-container {
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
             align-items: center;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
+            padding: var(--spacing-lg) var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
         }
 
-        .nav-item {
+        .thinking-gif-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--radius-lg);
+        }
+
+        .workout-header {
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-sm);
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .workout-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            flex-shrink: 0;
+        }
+
+        .workout-edit-btn,
+        .workout-delete-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: var(--spacing-xs);
+            display: flex;
             align-items: center;
             justify-content: center;
-            flex: 1;
-            padding: 4px 8px;
-            cursor: pointer;
-            transition: opacity 0.2s, color 0.2s;
-            color: gray;
-            text-decoration: none;
+            transition: opacity 0.2s;
         }
 
-        .nav-item.active {
-            color: black;
+        .workout-edit-btn:hover,
+        .workout-delete-btn:hover {
+            opacity: 0.7;
         }
 
-        .nav-item.active .nav-icon {
-            stroke: black;
-        }
-
-        .nav-icon {
+        .workout-edit-btn i,
+        .workout-edit-btn svg,
+        .workout-delete-btn i,
+        .workout-delete-btn svg {
             width: 24px;
             height: 24px;
-            margin-bottom: 4px;
-            stroke-width: 2;
-            stroke: currentColor;
-            color: currentColor;
+            stroke: var(--text-primary);
+            stroke-width: 2.5;
         }
 
-        .nav-label {
-            font-size: 12px;
+        .workout-name {
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .workout-name i,
+        .workout-name svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .exercises-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .exercise-item {
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: var(--background-white);
+            border: 2px solid #000;
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+            color: var(--text-primary);
             font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--spacing-md);
+        }
+
+        .exercise-info {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            flex: 1;
+            min-width: 0;
+        }
+
+        .exercise-name {
+            font-weight: 600;
+            font-size: var(--font-size-sm);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .exercise-sets {
+            color: var(--text-secondary);
+            font-size: var(--font-size-xs);
+            white-space: nowrap;
+            flex-shrink: 0;
+            margin-left: var(--spacing-sm);
+        }
+
+        .exercise-type-badge {
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 700;
+            text-transform: capitalize;
+            border: 2px solid #000;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .exercise-type-chest {
+            background: #8991fe;
+            color: #000;
+        }
+
+        .exercise-type-back {
+            background: #f48952;
+            color: #000;
+        }
+
+        .exercise-type-arms {
+            background: #ffbe1e;
+            color: #000;
+        }
+
+        .exercise-type-legs {
+            background: #8cea64;
+            color: #000;
+        }
+
+        .no-exercises {
+            padding: var(--spacing-sm);
+            color: var(--text-secondary);
+            font-style: italic;
+            font-size: var(--font-size-sm);
+        }
+
+        .empty-state {
             text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 16px;
+            stroke: var(--neutral-gray);
+        }
+
+        .empty-state-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .empty-state-message {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        /* Delete Confirmation Modal */
+        .delete-confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 300;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .delete-confirm-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .delete-confirm-modal .modal {
+            background: var(--background-white);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            max-width: 400px;
+            width: 85%;
+            border: 2px solid #000;
+        }
+
+        .delete-confirm-modal .modal-title {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .delete-confirm-modal .modal-message {
+            font-size: var(--font-size-base);
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-xl);
+            line-height: 1.5;
+        }
+
+        .delete-confirm-modal .modal-actions {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .delete-confirm-modal .btn-cancel {
+            flex: 1;
+            padding: var(--spacing-md);
+            background: var(--background-white);
+            color: var(--text-primary);
+            border: 2px solid #000;
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .delete-confirm-modal .btn-delete {
+            flex: 1;
+            padding: var(--spacing-md);
+            background: #dc2626;
+            color: white;
+            border: 2px solid #000;
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .delete-confirm-modal .btn-delete:hover {
+            background: #b91c1c;
+        }
+
+        /* Edit Workout Modal - Reuse create workout modal styles */
+        .edit-workout-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .edit-workout-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .edit-workout-modal .modal {
+            background: var(--background-white);
+            border-radius: 24px;
+            padding: var(--spacing-lg);
+            max-width: 500px;
+            width: 90%;
+            height: 65vh;
+            max-height: 65vh;
+            border: 2px solid #000;
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s ease;
+            overflow: visible;
+            position: relative;
+        }
+
+        .edit-workout-modal.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .edit-workout-modal .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-md);
+            flex-shrink: 0;
+        }
+
+        .edit-workout-modal .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .edit-workout-modal .modal-close {
+            background: none;
+            border: none;
+            border-radius: 8px;
+            font-size: 24px;
+            cursor: pointer;
+            padding: var(--spacing-xs);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .edit-workout-modal .modal-close:hover {
+            background: var(--neutral-gray-light);
+            transform: scale(1.05);
+        }
+
+        .edit-workout-modal .modal-close i,
+        .edit-workout-modal .modal-close svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--text-primary);
+            stroke-width: 2.5;
+        }
+
+        .edit-workout-modal .modal-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+            overflow: visible;
+            padding-right: 0;
+            padding-left: 0;
+            position: relative;
+        }
+
+        .edit-workout-modal .form-group {
+            margin-bottom: var(--spacing-md);
+            flex-shrink: 0;
+        }
+
+        .edit-workout-modal .form-group:last-of-type {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            margin-bottom: 0;
+        }
+
+        .edit-workout-modal .form-label {
+            display: block;
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .edit-workout-modal .form-input {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            font-size: var(--font-size-sm);
+            font-family: var(--font-family);
+            border: 2px solid #000;
+            border-radius: var(--radius-md);
+            background: var(--background-white);
+            color: var(--text-primary);
+            box-sizing: border-box;
+        }
+
+        .edit-workout-modal .form-input:focus {
+            outline: none;
+            border-color: var(--primary-green);
+        }
+
+        .edit-workout-modal .form-input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.6;
+        }
+
+        .edit-workout-modal .exercise-input-container {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .edit-workout-modal .exercise-name-input {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            font-size: var(--font-size-sm);
+        }
+
+        .edit-workout-modal .exercise-options-row {
+            display: flex;
+            gap: var(--spacing-sm);
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            isolation: isolate;
+        }
+
+        .edit-workout-modal .exercise-sets-input {
+            flex: 0 0 80px;
+            min-width: 80px;
+            padding: var(--spacing-sm) var(--spacing-md);
+            font-size: var(--font-size-sm);
+            height: 40px;
+            box-sizing: border-box;
+        }
+
+        .edit-workout-modal .exercise-type-select {
+            flex: 0 0 100px;
+            min-width: 100px;
+            padding: var(--spacing-sm) 36px var(--spacing-sm) var(--spacing-md);
+            font-size: var(--font-size-sm);
+            position: relative;
+            z-index: 1;
+            height: 40px;
+            box-sizing: border-box;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23000' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 12px;
+        }
+
+        .edit-workout-modal .add-exercise-btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            flex: 1;
+            height: 40px;
+            box-sizing: border-box;
+        }
+
+        .edit-workout-modal .exercises-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: var(--spacing-xs);
+        }
+
+        .edit-workout-modal .exercises-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .edit-workout-modal .exercises-list::-webkit-scrollbar-track {
+            background: transparent;
+            border-radius: var(--radius-sm);
+        }
+
+        .edit-workout-modal .exercises-list::-webkit-scrollbar-thumb {
+            background: var(--text-secondary);
+            border-radius: var(--radius-sm);
+        }
+
+        .edit-workout-modal .exercises-list::-webkit-scrollbar-thumb:hover {
+            background: var(--text-primary);
+        }
+
+        .edit-workout-modal .exercise-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--background-white);
+            border: 2px solid #000;
+            border-radius: var(--radius-md);
+            transition: transform 0.2s;
+        }
+
+        .edit-workout-modal .exercise-item:hover {
+            transform: translateX(4px);
+        }
+
+        .edit-workout-modal .exercise-item-content {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .edit-workout-modal .exercise-name {
+            font-size: var(--font-size-base);
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .edit-workout-modal .exercise-delete-btn {
+            background: none;
+            border: none;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: background 0.2s, transform 0.2s;
+            flex-shrink: 0;
+        }
+
+        .edit-workout-modal .exercise-delete-btn:hover {
+            background: #fee2e2;
+            transform: scale(1.1);
+        }
+
+        .edit-workout-modal .exercise-delete-btn i,
+        .edit-workout-modal .exercise-delete-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--text-primary);
+            stroke-width: 2.5;
+        }
+
+        .edit-workout-modal .exercise-delete-btn:hover i,
+        .edit-workout-modal .exercise-delete-btn:hover svg {
+            stroke: #dc2626;
+        }
+
+        .edit-workout-modal .empty-state {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .edit-workout-modal .save-workout-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md);
+            flex-shrink: 0;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Workouts</h1>
-        <p>Your workout history and routines will appear here.</p>
+    <!-- iPhone Dynamic Island -->
+    <div class="dynamic-island"></div>
+
+    <h1 class="page-title-large">Workouts</h1>
+
+    <div class="content-container">
+        <div id="workoutList" class="workout-list">
+            <div class="loading">Loading workouts...</div>
+        </div>
+    </div>
+
+    <!-- Edit Workout Modal -->
+    <div class="edit-workout-modal" id="editWorkoutModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Edit Workout</h2>
+                <button class="modal-close" onclick="closeEditWorkoutModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <!-- Workout Name Input -->
+                <div class="form-group">
+                    <label class="form-label">Workout Name</label>
+                    <input
+                        type="text"
+                        id="editWorkoutName"
+                        class="form-input"
+                        placeholder="e.g., Morning Routine, Full Body..."
+                        autocomplete="off"
+                        maxlength="50"
+                    >
+                </div>
+
+                <!-- Exercise Input Section -->
+                <div class="form-group">
+                    <label class="form-label">Add Exercise</label>
+                    <div class="exercise-input-container">
+                        <input
+                            type="text"
+                            id="editExerciseName"
+                            class="form-input exercise-name-input"
+                            placeholder="e.g., Push-ups, Squats, Chest-press..."
+                            autocomplete="off"
+                            maxlength="40"
+                        >
+                        <div class="exercise-options-row">
+                            <input
+                                type="text"
+                                id="editNoSets"
+                                class="form-input exercise-sets-input"
+                                placeholder="Sets"
+                                value="0"
+                                autocomplete="off"
+                                inputmode="numeric"
+                                pattern="[0-9]*"
+                            >
+                            <select id="editExerciseType" class="form-input exercise-type-select">
+                                <option value="chest">Chest</option>
+                                <option value="back">Back</option>
+                                <option value="arms">Arms</option>
+                                <option value="legs">Legs</option>
+                            </select>
+                            <button class="btn btn-primary add-exercise-btn" onclick="addEditExercise()">
+                                <i data-lucide="plus" style="width: 20px; height: 20px;"></i>
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exercises List -->
+                <div class="form-group">
+                    <label class="form-label">Exercises</label>
+                    <div id="editWorkoutExercises" class="exercises-list">
+                        <!-- Exercises rendered here -->
+                    </div>
+                </div>
+
+                <!-- Save Button -->
+                <button class="btn btn-primary btn-full save-workout-btn" onclick="saveEditedWorkout()" style="margin-top: var(--spacing-md);">
+                    <i data-lucide="check" style="width: 20px; height: 20px;"></i>
+                    Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="delete-confirm-modal" id="deleteConfirmModal">
+        <div class="modal">
+            <h2 class="modal-title">Delete Workout?</h2>
+            <div class="modal-message" id="deleteConfirmMessage">
+                Are you sure you want to delete this workout?
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeDeleteModal()">Cancel</button>
+                <button class="btn-delete" id="confirmDeleteBtn">Delete</button>
+            </div>
+        </div>
     </div>
 
     <div class="bottom-nav">
         <a href="/home" class="nav-item">
             <i data-lucide="home" class="nav-icon"></i>
-            <div class="nav-label">Home</div>
         </a>
         <a href="/workouts" class="nav-item">
             <i data-lucide="clipboard-list" class="nav-icon"></i>
-            <div class="nav-label">Workouts</div>
         </a>
-        <a href="/home" class="nav-item" onclick="event.preventDefault(); alert('Use the Train button on the Home page!');">
+        <a href="/train" class="nav-item" id="trainButton">
             <i data-lucide="dumbbell" class="nav-icon"></i>
-            <div class="nav-label">Train</div>
         </a>
         <a href="/achievements" class="nav-item">
             <i data-lucide="medal" class="nav-icon"></i>
-            <div class="nav-label">Achievements</div>
         </a>
         <a href="/shop" class="nav-item">
             <i data-lucide="shopping-cart" class="nav-icon"></i>
-            <div class="nav-label">Shop</div>
         </a>
     </div>
 
@@ -146,6 +755,330 @@
 
         // Set active nav-item on page load
         setActiveNavItem();
+
+        // Fetch and display workouts
+        async function loadWorkouts() {
+            const workoutList = document.getElementById('workoutList');
+            
+            try {
+                const response = await fetch('/api/workouts');
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch workouts');
+                }
+                
+                const workouts = await response.json();
+                
+                if (workouts.length === 0) {
+                    workoutList.innerHTML = `
+                        <div class="empty-state">
+                            <i data-lucide="clipboard-list" class="empty-state-icon"></i>
+                            <div class="empty-state-title">No workouts yet</div>
+                            <div class="empty-state-message">Complete your first workout to see it here!</div>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                    return;
+                }
+                
+                workoutList.innerHTML = workouts.map(workout => {
+                    const workoutName = workout.workoutName || 'Unnamed Workout';
+                    const exercises = workout.exercises || [];
+                    
+                    const exercisesList = exercises.map(exercise => {
+                        const exerciseName = exercise.name || 'Unknown Exercise';
+                        const sets = exercise.noSets || 0;
+                        const exerciseType = exercise.type || '';
+                        const setsText = sets === 1 ? `${sets} set` : `${sets} sets`;
+                        const typeClass = exerciseType ? `exercise-type-${exerciseType}` : '';
+                        const typeBadge = exerciseType 
+                            ? `<span class="exercise-type-badge ${typeClass}">${exerciseType}</span>` 
+                            : '';
+                        
+                        return `
+                            <div class="exercise-item">
+                                <div class="exercise-info">
+                                    <span class="exercise-name">${exerciseName}</span>
+                                    <span class="exercise-sets">${setsText}</span>
+                                </div>
+                                ${typeBadge}
+                            </div>
+                        `;
+                    }).join('');
+                    
+                    return `
+                        <div class="workout-item" data-workout-id="${workout.id}">
+                            <div class="workout-header">
+                                <h2 class="workout-name">
+                                    <i data-lucide="dumbbell" style="width: 20px; height: 20px; stroke: var(--text-primary);"></i>
+                                    ${workoutName}
+                                </h2>
+                                <div class="workout-actions">
+                                    <button class="workout-edit-btn" onclick="editWorkout(${workout.id})">
+                                        <i data-lucide="pencil"></i>
+                                    </button>
+                                    <button class="workout-delete-btn" onclick="confirmDeleteWorkout(${workout.id}, '${workoutName.replace(/'/g, "\\'")}')">
+                                        <i data-lucide="x"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="exercises-list">
+                                ${exercisesList || '<div class="no-exercises">No exercises</div>'}
+                            </div>
+                        </div>
+                    `;
+                }).join('') + `
+                    <div class="thinking-gif-container">
+                        <img src="/public/thinking.gif" alt="Thinking">
+                    </div>
+                `;
+                
+                lucide.createIcons();
+            } catch (error) {
+                console.error('Error loading workouts:', error);
+                console.error('Error details:', error.message, error.stack);
+                workoutList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-title">Error loading workouts</div>
+                        <div class="empty-state-message">${error.message || 'Please try refreshing the page.'}</div>
+                    </div>
+                `;
+            }
+        }
+
+
+        // Delete workout functionality
+        let workoutToDelete = null;
+
+        function confirmDeleteWorkout(workoutId, workoutName) {
+            workoutToDelete = workoutId;
+            const messageEl = document.getElementById('deleteConfirmMessage');
+            messageEl.textContent = `Are you sure you want to delete "${workoutName}"?`;
+            document.getElementById('deleteConfirmModal').classList.add('active');
+            lucide.createIcons();
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteConfirmModal').classList.remove('active');
+            workoutToDelete = null;
+        }
+
+        let editWorkoutId = null;
+        let editExercises = [];
+
+        function capitalizeFirstWord(text) {
+            if (!text) return text;
+            const trimmed = text.trim();
+            if (trimmed.length === 0) return trimmed;
+            return trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase();
+        }
+
+        async function editWorkout(workoutId) {
+            editWorkoutId = workoutId;
+            editExercises = [];
+
+            try {
+                // Fetch workout data
+                const response = await fetch(`/api/workouts`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch workouts');
+                }
+
+                const workouts = await response.json();
+                const workout = workouts.find(w => w.id === workoutId);
+
+                if (!workout) {
+                    alert('Workout not found');
+                    return;
+                }
+
+                // Populate modal with workout data
+                document.getElementById('editWorkoutName').value = workout.workoutName || '';
+
+                // Populate exercises array
+                if (workout.exercises && workout.exercises.length > 0) {
+                    editExercises = workout.exercises.map(ex => ({
+                        name: ex.name || '',
+                        noSets: ex.noSets || 0,
+                        type: ex.type || ''
+                    }));
+                }
+
+                // Render exercises
+                renderEditExercises();
+
+                // Open modal
+                document.getElementById('editWorkoutModal').classList.add('active');
+                lucide.createIcons();
+
+                // Focus on workout name input
+                document.getElementById('editWorkoutName').focus();
+            } catch (error) {
+                console.error('Error loading workout for edit:', error);
+                alert('Failed to load workout');
+            }
+        }
+
+        function closeEditWorkoutModal() {
+            document.getElementById('editWorkoutModal').classList.remove('active');
+            editWorkoutId = null;
+            editExercises = [];
+            
+            // Clear inputs
+            document.getElementById('editWorkoutName').value = '';
+            document.getElementById('editExerciseName').value = '';
+            document.getElementById('editNoSets').value = '0';
+            document.getElementById('editExerciseType').value = 'chest';
+        }
+
+        function addEditExercise() {
+            const exerciseNameInput = document.getElementById('editExerciseName');
+            const setsInput = document.getElementById('editNoSets');
+            const typeSelect = document.getElementById('editExerciseType');
+
+            const exerciseName = capitalizeFirstWord(exerciseNameInput.value.trim());
+            const setsValue = setsInput.value.trim();
+
+            if (exerciseName === '') {
+                alert('Please enter an exercise name');
+                return;
+            }
+
+            const sets = setsValue === '' ? 0 : parseInt(setsValue, 10);
+            if (isNaN(sets) || sets < 0) {
+                alert('Please enter a valid number of sets');
+                return;
+            }
+
+            const type = typeSelect.value || '';
+
+            // Add exercise to array
+            editExercises.push({
+                name: exerciseName,
+                noSets: sets,
+                type: type
+            });
+
+            // Clear inputs
+            exerciseNameInput.value = '';
+            setsInput.value = '0';
+            typeSelect.value = 'chest';
+
+            // Re-render exercises
+            renderEditExercises();
+
+            // Focus back on exercise name input
+            exerciseNameInput.focus();
+        }
+
+        function removeEditExercise(index) {
+            editExercises.splice(index, 1);
+            renderEditExercises();
+        }
+
+        function renderEditExercises() {
+            const exercisesList = document.getElementById('editWorkoutExercises');
+
+            if (editExercises.length === 0) {
+                exercisesList.innerHTML = '<div class="empty-state">No exercises added yet</div>';
+                lucide.createIcons();
+                return;
+            }
+
+            exercisesList.innerHTML = editExercises.map((exercise, index) => {
+                const setsText = exercise.noSets === 1 ? `${exercise.noSets} set` : `${exercise.noSets} sets`;
+                return `
+                    <div class="exercise-item">
+                        <div class="exercise-item-content">
+                            <span class="exercise-name">${exercise.name}</span>
+                            <span style="margin-left: var(--spacing-sm); color: var(--text-secondary); font-size: var(--font-size-sm);">${setsText}</span>
+                            ${exercise.type ? `<span class="exercise-type-badge exercise-type-${exercise.type}" style="margin-left: var(--spacing-sm);">${exercise.type}</span>` : ''}
+                        </div>
+                        <button class="exercise-delete-btn" onclick="removeEditExercise(${index})">
+                            <i data-lucide="x"></i>
+                        </button>
+                    </div>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        async function saveEditedWorkout() {
+            if (!editWorkoutId) return;
+
+            const workoutNameInput = document.getElementById('editWorkoutName');
+            const workoutName = capitalizeFirstWord(workoutNameInput.value.trim());
+            
+            if (workoutName === '') {
+                alert('Please enter a workout name');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/workouts/${editWorkoutId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        workoutName: workoutName,
+                        exercises: editExercises
+                    })
+                });
+
+                if (response.ok) {
+                    closeEditWorkoutModal();
+                    loadWorkouts(); // Reload the list
+                } else {
+                    const error = await response.json();
+                    alert('Failed to update workout: ' + (error.error || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error updating workout:', error);
+                alert('Error updating workout');
+            }
+        }
+
+        async function deleteWorkout() {
+            if (!workoutToDelete) return;
+
+            try {
+                const response = await fetch(`/api/workouts/${workoutToDelete}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    closeDeleteModal();
+                    loadWorkouts();
+                } else {
+                    alert('Failed to delete workout');
+                }
+            } catch (error) {
+                console.error('Error deleting workout:', error);
+                alert('Error deleting workout');
+            }
+        }
+
+        // Attach delete handler
+        document.getElementById('confirmDeleteBtn').addEventListener('click', deleteWorkout);
+
+        // Close modal when clicking outside
+        document.getElementById('deleteConfirmModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDeleteModal();
+            }
+        });
+
+        // Close edit modal when clicking outside
+        document.getElementById('editWorkoutModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditWorkoutModal();
+            }
+        });
+
+        // Load workouts when page loads
+        loadWorkouts();
     </script>
 </body>
 </html>
