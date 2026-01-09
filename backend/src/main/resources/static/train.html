@@ -22,19 +22,32 @@
             background: var(--background-white);
             border: 2px solid #000;
             border-radius: var(--radius-xl);
-            padding: var(--spacing-lg);
-            min-width: 160px;
+            padding: var(--spacing-xl);
+            min-width: 200px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s;
         }
 
         .workout-card-placeholder:hover {
             transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+        }
+
+        .stretching-gif-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: var(--spacing-lg) 0;
+            margin-top: var(--spacing-md);
+        }
+
+        .stretching-gif-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--radius-lg);
         }
 
 
@@ -73,6 +86,114 @@
             color: #000;
         }
 
+        /* Begin Workout Confirmation Modal - Enhanced Design */
+        .begin-workout-confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 300;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s ease;
+        }
+
+        .begin-workout-confirm-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .begin-workout-confirm-modal .modal {
+            background: var(--background-white);
+            border-radius: var(--radius-2xl);
+            padding: var(--spacing-2xl);
+            max-width: 420px;
+            width: 90%;
+            border: 3px solid #000;
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .begin-workout-confirm-modal.active .modal {
+            transform: scale(1);
+        }
+
+        .begin-workout-confirm-modal .modal-icon {
+            display: flex;
+            justify-content: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .begin-workout-confirm-modal .modal-icon i {
+            width: 64px;
+            height: 64px;
+            color: var(--primary-green);
+        }
+
+        .begin-workout-confirm-modal .modal-title {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+            text-align: center;
+        }
+
+        .begin-workout-confirm-modal .modal-message {
+            font-size: var(--font-size-base);
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-2xl);
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .begin-workout-confirm-modal .modal-actions {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .begin-workout-confirm-modal .btn-cancel {
+            flex: 1;
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: var(--background-white);
+            color: var(--text-primary);
+            border: 2px solid #000;
+            border-radius: var(--radius-lg);
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .begin-workout-confirm-modal .btn-cancel:hover {
+            background: var(--neutral-gray-light);
+            transform: translateY(-1px);
+        }
+
+        .begin-workout-confirm-modal .btn-begin {
+            flex: 1;
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
+            color: white;
+            border: 2px solid #000;
+            border-radius: var(--radius-lg);
+            font-size: var(--font-size-base);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .begin-workout-confirm-modal .btn-begin:hover {
+            background: linear-gradient(135deg, var(--primary-green-dark) 0%, #16a34a 100%);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
     </style>
 </head>
 <body>
@@ -83,20 +204,23 @@
 
     <div class="content-container">
         <!-- Create New Workout Button -->
-        <div style="padding: 0 var(--spacing-lg) var(--spacing-lg) var(--spacing-lg);">
-            <button id="createWorkoutBtn" class="btn btn-primary btn-full" style="font-size: var(--font-size-lg); padding: var(--spacing-lg);">
-                <i data-lucide="plus" style="width: 24px; height: 24px;"></i>
+        <div style="padding: 0 0 var(--spacing-lg) 0;">
+            <button id="createWorkoutBtn" class="btn btn-primary btn-full" style="font-size: var(--font-size-sm); padding: var(--spacing-md);">
+                <i data-lucide="plus" style="width: 18px; height: 18px;"></i>
                 Create New Workout
             </button>
         </div>
 
         <!-- My Workouts Section -->
         <div style="margin-bottom: var(--spacing-xl);">
-            <div class="section-header" style="padding: 0 var(--spacing-lg);">
+            <div class="section-header" style="padding: 0; padding-right: var(--spacing-lg);">
                 <div class="section-title">My Workouts</div>
             </div>
-            <div class="scrollable-row" id="myWorkoutsContainer">
+            <div class="scrollable-row" id="myWorkoutsContainer" style="padding-left: 0;">
                 <!-- Workouts will be loaded here -->
+            </div>
+            <div class="stretching-gif-container">
+                <img src="/public/stretching.gif" alt="Stretching">
             </div>
         </div>
 
@@ -139,6 +263,7 @@
                         class="form-input"
                         placeholder="e.g., Morning Routine, Full Body..."
                         autocomplete="off"
+                        maxlength="50"
                     >
                 </div>
 
@@ -152,6 +277,7 @@
                             class="form-input exercise-name-input"
                             placeholder="e.g., Push-ups, Squats, Chest-press..."
                             autocomplete="off"
+                            maxlength="40"
                         >
                         <div class="exercise-options-row">
                         <input
@@ -248,6 +374,22 @@
         </div>
     </div>
 
+    <!-- Begin Workout Confirmation Modal -->
+    <div class="begin-workout-confirm-modal" id="beginWorkoutConfirmationModal">
+        <div class="modal">
+            <div class="modal-icon">
+                <i data-lucide="play-circle"></i>
+            </div>
+            <h2 class="modal-title">Begin Workout?</h2>
+            <div class="modal-message" id="beginWorkoutConfirmationMessage">
+                Ready to start your workout? The timer will begin once you start your first set.
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeBeginWorkoutModal()">Cancel</button>
+                <button class="btn-begin" onclick="beginWorkout()">Begin Workout</button>
+            </div>
+        </div>
+    </div>
 
     <script>
 
@@ -350,6 +492,12 @@
             }
         });
 
+        document.getElementById('beginWorkoutConfirmationModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeBeginWorkoutModal();
+            }
+        })
+
         // Restrict noSets input to numbers only
         document.getElementById('noSets').addEventListener('input', function(e) {
             // Remove any non-numeric characters
@@ -438,10 +586,10 @@
                 container.innerHTML = workouts.map(workout => {
                     const workoutName = workout.workoutName || 'Unnamed Workout';
                     return `
-                        <div class="scrollable-item">
+                        <div class="scrollable-item" data-workout-id="${workout.id}" onclick="confirmBeginWorkout(${workout.id})">
                             <div class="workout-card-placeholder">
-                                <i data-lucide="dumbbell" style="width: 48px; height: 48px; stroke: var(--text-primary); margin-bottom: var(--spacing-sm);"></i>
-                                <div style="font-weight: 600; color: var(--text-primary);">${workoutName}</div>
+                                <i data-lucide="dumbbell" style="width: 64px; height: 64px; stroke: var(--text-primary); margin-bottom: var(--spacing-md);"></i>
+                                <div style="font-weight: 600; color: var(--text-primary); font-size: var(--font-size-base);">${workoutName}</div>
                             </div>
                         </div>
                     `;
@@ -458,12 +606,19 @@
         // Load workouts when page loads
         loadMyWorkouts();
 
+        function capitalizeFirstWord(text) {
+            if (!text) return text;
+            const trimmed = text.trim();
+            if (trimmed.length === 0) return trimmed;
+            return trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase();
+        }
+
         function addExercise() {
             const exerciseNameInput = document.getElementById("exerciseName");
             const noSetsInput = document.getElementById("noSets");
             const exerciseTypeSelect = document.getElementById("exerciseType");
 
-            const name = exerciseNameInput.value.trim();
+            const name = capitalizeFirstWord(exerciseNameInput.value.trim());
             const setsValue = noSetsInput.value.trim();
             const exerciseType = exerciseTypeSelect.value;
 
@@ -544,7 +699,8 @@
         }
 
         async function saveWorkout() {
-            const workoutName = document.getElementById('workoutName').value.trim();
+            const workoutNameInput = document.getElementById('workoutName');
+            const workoutName = capitalizeFirstWord(workoutNameInput.value.trim());
             
             if (!workoutName) {
                 alert('Please enter a workout name');
@@ -563,7 +719,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        workoutName: document.getElementById('workoutName').value,
+                        workoutName: workoutName,
                         exercises: exercises
                     }),
                 });
@@ -584,6 +740,25 @@
             document.getElementById('workoutName').value = '';
             exercises.length = 0;
             renderExercises();
+        }
+
+        let selectedWorkoutId = null;
+
+        function confirmBeginWorkout(workoutId) {
+            selectedWorkoutId = workoutId;
+            document.getElementById('beginWorkoutConfirmationModal').classList.add('active');
+            lucide.createIcons();
+        }
+
+        function closeBeginWorkoutModal() {
+            document.getElementById('beginWorkoutConfirmationModal').classList.remove('active');
+            selectedWorkoutId = null;
+        }
+
+        function beginWorkout() {
+            if (selectedWorkoutId) {
+                window.location.href = `/train/${selectedWorkoutId}`;            
+            }
         }
 
     </script>

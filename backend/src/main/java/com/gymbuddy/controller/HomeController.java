@@ -61,5 +61,11 @@ public class HomeController {
         Resource resource = new ClassPathResource("static/workout-fragments/" + fragmentName);
         return StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
     }
+
+    @GetMapping(value = "/train/{workoutId}", produces = MediaType.TEXT_HTML_VALUE)
+    public String workoutDetail(@PathVariable String workoutId) throws IOException {
+        Resource resource = new ClassPathResource("static/workout-detail.html");
+        return StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
+    }
 }
 

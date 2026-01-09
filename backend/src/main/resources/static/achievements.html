@@ -11,6 +11,160 @@
             background: var(--background-cream);
         }
 
+        .achievements-container {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+            padding-bottom: var(--spacing-xl);
+        }
+
+        .achievement-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid #e5e7eb;
+        }
+
+        .achievement-card.completed {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 2px solid #f59e0b;
+        }
+
+        .achievement-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .achievement-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: var(--background-cream);
+        }
+
+        .achievement-card.completed .achievement-icon {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .achievement-icon i,
+        .achievement-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--text-primary);
+        }
+
+        .achievement-card.completed .achievement-icon i,
+        .achievement-card.completed .achievement-icon svg {
+            stroke: #f59e0b;
+        }
+
+        .achievement-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+
+        .achievement-name {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .achievement-progress {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .achievement-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-xs);
+            margin-top: var(--spacing-xs);
+        }
+
+        .achievement-tag {
+            font-size: var(--font-size-xs);
+            padding: 4px 8px;
+            background: var(--background-cream);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+        }
+
+        .achievement-card.completed .achievement-tag {
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: var(--background-cream);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            margin-top: var(--spacing-sm);
+        }
+
+        .achievement-card.completed .progress-bar-container {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%);
+            border-radius: var(--radius-full);
+            transition: width 0.3s ease;
+        }
+
+        .achievement-card.completed .progress-bar {
+            background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .completion-badge {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            color: #f59e0b;
+            margin-top: var(--spacing-xs);
+        }
+
+        .completion-badge i,
+        .completion-badge svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: var(--spacing-2xl);
+            color: var(--text-secondary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-2xl);
+            color: var(--text-secondary);
+        }
+
+        .empty-state i,
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: var(--spacing-md);
+            stroke: var(--text-secondary);
+            opacity: 0.5;
+        }
     </style>
 </head>
 <body>
@@ -20,8 +174,8 @@
     <h1 class="page-title-large">Achievements</h1>
 
     <div class="content-container">
-        <div class="card card-large">
-            <p style="color: var(--text-secondary);">Your achievements and milestones will appear here.</p>
+        <div id="achievementsList" class="achievements-container">
+            <div class="loading">Loading achievements...</div>
         </div>
     </div>
 
@@ -74,6 +228,91 @@
 
         // Set active nav-item on page load
         setActiveNavItem();
+
+        // Fetch and render achievements
+        async function loadAchievements() {
+            const achievementsList = document.getElementById('achievementsList');
+            
+            try {
+                const response = await fetch('/api/achievements');
+                if (!response.ok) {
+                    throw new Error('Failed to load achievements');
+                }
+                
+                const achievements = await response.json();
+                
+                if (achievements.length === 0) {
+                    achievementsList.innerHTML = `
+                        <div class="empty-state">
+                            <i data-lucide="medal"></i>
+                            <p>No achievements yet. Start working out to unlock achievements!</p>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                    return;
+                }
+                
+                achievementsList.innerHTML = achievements.map(achievement => {
+                    const isCompleted = achievement.current >= achievement.target;
+                    const progressPercentage = Math.min((achievement.current / achievement.target) * 100, 100);
+                    
+                    // Build tags string
+                    const tags = [];
+                    if (achievement.exerciseType) {
+                        tags.push(`<span class="achievement-tag">${achievement.exerciseType}</span>`);
+                    }
+                    if (achievement.intensity) {
+                        tags.push(`<span class="achievement-tag">${achievement.intensity}</span>`);
+                    }
+                    if (achievement.duration) {
+                        const minutes = Math.floor(achievement.duration / 60);
+                        const seconds = achievement.duration % 60;
+                        const durationStr = minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
+                        tags.push(`<span class="achievement-tag">${durationStr}</span>`);
+                    }
+                    
+                    return `
+                        <div class="achievement-card ${isCompleted ? 'completed' : ''}">
+                            <div class="achievement-header">
+                                <div class="achievement-icon">
+                                    <i data-lucide="${isCompleted ? 'award' : 'target'}"></i>
+                                </div>
+                                <div class="achievement-info">
+                                    <h3 class="achievement-name">${achievement.achievementName}</h3>
+                                    <div class="achievement-progress">
+                                        ${achievement.current} / ${achievement.target}
+                                    </div>
+                                    ${tags.length > 0 ? `<div class="achievement-tags">${tags.join('')}</div>` : ''}
+                                </div>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" style="width: ${progressPercentage}%"></div>
+                            </div>
+                            ${isCompleted ? `
+                                <div class="completion-badge">
+                                    <i data-lucide="check-circle"></i>
+                                    <span>Completed!</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }).join('');
+                
+                lucide.createIcons();
+            } catch (error) {
+                console.error('Error loading achievements:', error);
+                achievementsList.innerHTML = `
+                    <div class="empty-state">
+                        <i data-lucide="alert-circle"></i>
+                        <p>Failed to load achievements. Please try again later.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+            }
+        }
+
+        // Load achievements on page load
+        loadAchievements();
     </script>
 </body>
 </html>

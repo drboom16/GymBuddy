@@ -31,14 +31,26 @@
             padding: var(--spacing-md);
             margin-bottom: var(--spacing-xl);
             border: 2px solid #000;
-            box-shadow: var(--shadow-sm);
             width: 100%;
+        }
+
+        .thinking-gif-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: var(--spacing-lg) var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .thinking-gif-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--radius-lg);
         }
 
         .workout-header {
             margin-bottom: var(--spacing-md);
             padding-bottom: var(--spacing-sm);
-            border-bottom: 2px solid #000;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -238,7 +250,6 @@
             max-width: 400px;
             width: 85%;
             border: 2px solid #000;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
 
         .delete-confirm-modal .modal-title {
@@ -317,13 +328,15 @@
             padding: var(--spacing-lg);
             max-width: 500px;
             width: 90%;
-            max-height: 85vh;
+            height: 65vh;
+            max-height: 65vh;
             border: 2px solid #000;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             display: flex;
             flex-direction: column;
             transform: scale(0.9) translateY(20px);
             transition: transform 0.3s ease;
+            overflow: visible;
+            position: relative;
         }
 
         .edit-workout-modal.active .modal {
@@ -336,7 +349,7 @@
             align-items: center;
             margin-bottom: var(--spacing-lg);
             padding-bottom: var(--spacing-md);
-            border-bottom: 2px solid #000;
+            flex-shrink: 0;
         }
 
         .edit-workout-modal .modal-title {
@@ -380,6 +393,9 @@
             flex: 1;
             min-height: 0;
             overflow: visible;
+            padding-right: 0;
+            padding-left: 0;
+            position: relative;
         }
 
         .edit-workout-modal .form-group {
@@ -418,7 +434,6 @@
         .edit-workout-modal .form-input:focus {
             outline: none;
             border-color: var(--primary-green);
-            box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.1);
         }
 
         .edit-workout-modal .form-input::placeholder {
@@ -520,12 +535,11 @@
             background: var(--background-white);
             border: 2px solid #000;
             border-radius: var(--radius-md);
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s;
         }
 
         .edit-workout-modal .exercise-item:hover {
             transform: translateX(4px);
-            box-shadow: var(--shadow-sm);
         }
 
         .edit-workout-modal .exercise-item-content {
@@ -585,6 +599,7 @@
             justify-content: center;
             gap: var(--spacing-sm);
             padding: var(--spacing-md);
+            flex-shrink: 0;
         }
     </style>
 </head>
@@ -619,6 +634,7 @@
                         class="form-input"
                         placeholder="e.g., Morning Routine, Full Body..."
                         autocomplete="off"
+                        maxlength="50"
                     >
                 </div>
 
@@ -632,6 +648,7 @@
                             class="form-input exercise-name-input"
                             placeholder="e.g., Push-ups, Squats, Chest-press..."
                             autocomplete="off"
+                            maxlength="40"
                         >
                         <div class="exercise-options-row">
                             <input
@@ -810,7 +827,11 @@
                             </div>
                         </div>
                     `;
-                }).join('');
+                }).join('') + `
+                    <div class="thinking-gif-container">
+                        <img src="/public/thinking.gif" alt="Thinking">
+                    </div>
+                `;
                 
                 lucide.createIcons();
             } catch (error) {
@@ -844,6 +865,13 @@
 
         let editWorkoutId = null;
         let editExercises = [];
+
+        function capitalizeFirstWord(text) {
+            if (!text) return text;
+            const trimmed = text.trim();
+            if (trimmed.length === 0) return trimmed;
+            return trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase();
+        }
 
         async function editWorkout(workoutId) {
             editWorkoutId = workoutId;
@@ -908,7 +936,7 @@
             const setsInput = document.getElementById('editNoSets');
             const typeSelect = document.getElementById('editExerciseType');
 
-            const exerciseName = exerciseNameInput.value.trim();
+            const exerciseName = capitalizeFirstWord(exerciseNameInput.value.trim());
             const setsValue = setsInput.value.trim();
 
             if (exerciseName === '') {
@@ -979,7 +1007,8 @@
         async function saveEditedWorkout() {
             if (!editWorkoutId) return;
 
-            const workoutName = document.getElementById('editWorkoutName').value.trim();
+            const workoutNameInput = document.getElementById('editWorkoutName');
+            const workoutName = capitalizeFirstWord(workoutNameInput.value.trim());
             
             if (workoutName === '') {
                 alert('Please enter a workout name');

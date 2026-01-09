@@ -3,6 +3,8 @@ package com.gymbuddy.model;
 import jakarta.persistence.*;
 import java.util.*;
 
+import com.gymbuddy.model.Exercises.*;
+
 @Entity
 public class Workout {
 
@@ -26,7 +28,7 @@ public class Workout {
         this.workoutName = workoutName;
         this.exercises = new ArrayList<>(exercises);
     }
-
+    
     // Getters and Setters
     public Long getId() {
         return id;

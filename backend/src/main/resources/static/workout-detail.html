@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout - GymBuddy</title>
+    <link rel="stylesheet" href="../styles/design-system.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--background-light);
+        }
+
+        .workout-header-card {
+            background: var(--background-white);
+            border: 2px solid #000;
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-sm) var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .workout-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .workout-name {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            color: var(--text-primary);
+            text-align: left;
+        }
+
+        .timer-display {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            color: var(--text-primary);
+            text-align: right;
+        }
+
+        .workout-meta {
+            display: flex;
+            justify-content: flex-start;
+            gap: var(--spacing-lg);
+            color: var(--text-secondary);
+            font-size: var(--font-size-xs);
+            margin-top: var(--spacing-sm);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .workout-meta-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .workout-header-actions {
+            display: flex;
+            justify-content: center;
+            margin-top: var(--spacing-xs);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .exercises-section {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .exercise-card {
+            background: var(--background-white);
+            border: 2px solid #000;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-md) var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .exercise-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0;
+            cursor: pointer;
+            min-height: 40px;
+        }
+
+        .exercise-header-left {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            flex: 1;
+        }
+
+        .exercise-name {
+            font-weight: 600;
+            font-size: var(--font-size-base);
+            color: var(--text-primary);
+        }
+
+        .exercise-dropdown-arrow {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            stroke: var(--text-primary);
+            stroke-width: 2;
+        }
+
+        .exercise-dropdown-arrow.expanded {
+            transform: rotate(180deg);
+        }
+
+        .exercise-content {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            padding-top: 0;
+            transition: max-height 0.3s ease, opacity 0.3s ease, padding-top 0.3s ease;
+        }
+
+        .exercise-content.expanded {
+            max-height: 1000px;
+            opacity: 1;
+            padding-top: var(--spacing-md);
+        }
+
+        .exercise-type-badge {
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 700;
+            text-transform: capitalize;
+            border: 2px solid #000;
+        }
+
+        .exercise-type-chest {
+            background: #8991fe;
+            color: #000;
+        }
+
+        .exercise-type-back {
+            background: #f48952;
+            color: #000;
+        }
+
+        .exercise-type-arms {
+            background: #ffbe1e;
+            color: #000;
+        }
+
+        .exercise-type-legs {
+            background: #8cea64;
+            color: #000;
+        }
+
+        .sets-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-sm);
+        }
+
+        .set-button {
+            min-width: 60px;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 2px solid #000;
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .set-button.incomplete {
+            background: #f87171;
+            color: white;
+        }
+
+        .set-button.complete {
+            background: #22c55e;
+            color: white;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .set-button:hover:not(.complete) {
+            transform: translateY(-2px);
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .back-button:hover {
+            opacity: 0.7;
+            transform: translateX(-2px);
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-2xl) var(--spacing-lg) var(--spacing-md) var(--spacing-lg);
+            padding-top: calc(var(--spacing-2xl) + env(safe-area-inset-top, 0px) + 45px);
+        }
+
+        .page-title {
+            font-size: var(--font-size-4xl);
+            font-weight: 700;
+            color: var(--text-primary);
+            flex: 1;
+            line-height: 1.2;
+        }
+
+        .end-workout-btn {
+            background: #f87171;
+            color: white;
+            border: 2px solid #000;
+            border-radius: var(--radius-md);
+            padding: var(--spacing-xs) var(--spacing-lg);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            width: 100%;
+        }
+
+        .end-workout-btn:hover {
+            background: #ef4444;
+            transform: translateY(-2px);
+        }
+
+        /* Set Configuration Modal */
+        .set-config-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 300;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .set-config-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .set-config-modal .modal {
+            background: var(--background-white);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            max-width: 400px;
+            width: 85%;
+            border: 2px solid #000;
+        }
+
+        .set-config-modal .modal-title {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .selection-group {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .selection-label {
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+            display: block;
+        }
+
+        .intensity-bar {
+            height: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: var(--spacing-sm);
+        }
+
+        .intensity-low,
+        .intensity-medium,
+        .intensity-high,
+        .intensity-max {
+            transition: all 0.3s ease;
+            color: white;
+            font-weight: 600;
+            font-size: var(--font-size-sm);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid #000;
+        }
+
+        .intensity-low {
+            background: linear-gradient(135deg, #86efac 0%, #4ade80 100%);
+        }
+
+        .intensity-medium {
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+        }
+
+        .intensity-high {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        }
+
+        .intensity-max {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+        }
+
+        .intensity-low.selected,
+        .intensity-medium.selected,
+        .intensity-high.selected,
+        .intensity-max.selected {
+            border: 3px solid #000;
+            transform: scale(1.05);
+        }
+
+        .duration-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: var(--spacing-sm);
+            height: 40px;
+        }
+
+        .duration-option {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            transition: all 0.3s ease;
+            color: #333;
+            font-weight: 600;
+            font-size: var(--font-size-sm);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid #000;
+        }
+
+        .duration-option.selected {
+            background: var(--primary-green);
+            color: white;
+            border: 3px solid #000;
+            transform: scale(1.05);
+        }
+
+        .go-button {
+            width: 100%;
+            background: var(--primary-green);
+            color: white;
+            border: 2px solid #000;
+            padding: var(--spacing-lg);
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            margin-top: var(--spacing-lg);
+            transition: all 0.2s;
+        }
+
+        .go-button:hover {
+            background: var(--primary-green-dark);
+            transform: translateY(-2px);
+        }
+
+        .go-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Completion Modal */
+        .completion-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 400;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .completion-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .completion-modal .modal {
+            background: var(--background-white);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            max-width: 400px;
+            width: 85%;
+            border: 2px solid #000;
+            text-align: center;
+        }
+
+        .completion-modal .modal-title {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .completion-modal .modal-message {
+            font-size: var(--font-size-base);
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .completion-modal .btn-go-back {
+            width: 100%;
+            background: var(--primary-green);
+            color: white;
+            border: 2px solid #000;
+            padding: var(--spacing-md);
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .completion-modal .btn-go-back:hover {
+            background: var(--primary-green-dark);
+            transform: translateY(-2px);
+        }
+
+        .loading-state,
+        .error-state {
+            text-align: center;
+            padding: var(--spacing-2xl);
+            color: var(--text-secondary);
+        }
+
+        .loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .error-state {
+            color: #dc2626;
+        }
+
+        /* Leave Workout Warning Modal */
+        .leave-workout-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 500;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s ease;
+        }
+
+        .leave-workout-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .leave-workout-modal .modal {
+            background: var(--background-white);
+            border-radius: var(--radius-2xl);
+            padding: var(--spacing-2xl);
+            max-width: 420px;
+            width: 90%;
+            border: 3px solid #000;
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .leave-workout-modal.active .modal {
+            transform: scale(1);
+        }
+
+        .leave-workout-modal .modal-icon {
+            display: flex;
+            justify-content: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .leave-workout-modal .modal-icon i {
+            width: 64px;
+            height: 64px;
+            color: #dc2626;
+        }
+
+        .leave-workout-modal .modal-title {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+            text-align: center;
+        }
+
+        .leave-workout-modal .modal-message {
+            font-size: var(--font-size-base);
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-2xl);
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .leave-workout-modal .modal-actions {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .leave-workout-modal .btn-stay {
+            flex: 1;
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: var(--background-white);
+            color: var(--text-primary);
+            border: 2px solid #000;
+            border-radius: var(--radius-lg);
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .leave-workout-modal .btn-stay:hover {
+            background: var(--neutral-gray-light);
+            transform: translateY(-1px);
+        }
+
+        .leave-workout-modal .btn-leave {
+            flex: 1;
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+            color: white;
+            border: 2px solid #000;
+            border-radius: var(--radius-lg);
+            font-size: var(--font-size-base);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .leave-workout-modal .btn-leave:hover {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            transform: translateY(-2px);
+        }
+
+        /* End Workout Confirmation Modal */
+        .end-workout-confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 500;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s ease;
+        }
+
+        .end-workout-confirm-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .end-workout-confirm-modal .modal {
+            background: var(--background-white);
+            border-radius: var(--radius-2xl);
+            padding: var(--spacing-2xl);
+            max-width: 420px;
+            width: 90%;
+            border: 3px solid #000;
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .end-workout-confirm-modal.active .modal {
+            transform: scale(1);
+        }
+
+        .end-workout-confirm-modal .modal-icon {
+            display: flex;
+            justify-content: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .end-workout-confirm-modal .modal-icon i {
+            width: 64px;
+            height: 64px;
+            color: #f87171;
+        }
+
+        .end-workout-confirm-modal .modal-title {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+            text-align: center;
+        }
+
+        .end-workout-confirm-modal .modal-message {
+            font-size: var(--font-size-base);
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-2xl);
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .end-workout-confirm-modal .modal-actions {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .end-workout-confirm-modal .btn-cancel {
+            flex: 1;
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: var(--background-white);
+            color: var(--text-primary);
+            border: 2px solid #000;
+            border-radius: var(--radius-lg);
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .end-workout-confirm-modal .btn-cancel:hover {
+            background: var(--neutral-gray-light);
+            transform: translateY(-1px);
+        }
+
+        .end-workout-confirm-modal .btn-confirm {
+            flex: 1;
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+            color: white;
+            border: 2px solid #000;
+            border-radius: var(--radius-lg);
+            font-size: var(--font-size-base);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .end-workout-confirm-modal .btn-confirm:hover {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- iPhone Dynamic Island -->
+    <div class="dynamic-island"></div>
+
+    <div class="page-header">
+        <a href="/train" class="back-button">
+            <i data-lucide="arrow-left"></i>
+        </a>
+        <h1 class="page-title">Workout</h1>
+    </div>
+
+    <div class="content-container">
+        <!-- Loading State -->
+        <div id="loadingState" class="loading-state">
+            <i data-lucide="loader-2" style="width: 48px; height: 48px; animation: spin 1s linear infinite;"></i>
+            <div>Loading workout...</div>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="error-state" style="display: none;">
+            <i data-lucide="alert-circle" style="width: 48px; height: 48px; margin-bottom: var(--spacing-md);"></i>
+            <div>Failed to load workout. Please try again.</div>
+        </div>
+
+        <!-- Workout Content -->
+        <div id="workoutContent" style="display: none;">
+            <!-- Workout Header with Timer, Name, Exercise Count -->
+            <div class="workout-header-card">
+                <div class="workout-header-top">
+                    <h2 id="workoutName" class="workout-name">Workout Name</h2>
+                    <div class="timer-display" id="timerDisplay">00:00:00</div>
+                </div>
+                <div class="workout-meta">
+                    <div class="workout-meta-item">
+                        <i data-lucide="check-circle" style="width: 18px; height: 18px;"></i>
+                        <span id="completedSetsCount">0 sets completed</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- End Workout Button -->
+            <div class="workout-header-actions">
+                <button class="end-workout-btn" id="endWorkoutBtn">
+                    <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+                    End Workout
+                </button>
+            </div>
+
+            <!-- Exercises Section -->
+            <div class="exercises-section">
+                <div class="section-header" style="padding: 0;">
+                    <div class="section-title">Exercises</div>
+                </div>
+                <div id="exercisesList" class="exercises-list">
+                    <!-- Exercises will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Set Configuration Modal -->
+    <div class="set-config-modal" id="setConfigModal">
+        <div class="modal">
+            <h2 class="modal-title">Configure Set</h2>
+            <div class="modal-content">
+                <div class="selection-group">
+                    <label class="selection-label">Intensity</label>
+                    <div class="intensity-bar">
+                        <div class="intensity-low" onclick="selectIntensity(this, 'low')">LOW</div>
+                        <div class="intensity-medium" onclick="selectIntensity(this, 'medium')">MEDIUM</div>
+                        <div class="intensity-high" onclick="selectIntensity(this, 'high')">HIGH</div>
+                        <div class="intensity-max" onclick="selectIntensity(this, 'max')">MAX</div>
+                    </div>
+                </div>
+
+                <div class="selection-group">
+                    <label class="selection-label">Duration</label>
+                    <div class="duration-bar">
+                        <div class="duration-option" onclick="selectDuration(this, '30s')">30s</div>
+                        <div class="duration-option" onclick="selectDuration(this, '1m')">1m</div>
+                        <div class="duration-option" onclick="selectDuration(this, '2m')">2m</div>
+                        <div class="duration-option" onclick="selectDuration(this, '3m')">3m</div>
+                    </div>
+                </div>
+
+                <button class="go-button" id="goButton" onclick="startSetAnimation()">GO!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Completion Modal -->
+    <div class="completion-modal" id="completionModal">
+        <div class="modal">
+            <h2 class="modal-title">Set Complete!</h2>
+            <div class="modal-message">Great work! Ready for the next set?</div>
+            <button class="btn-go-back" onclick="closeCompletionModal()">Go Back</button>
+        </div>
+    </div>
+
+    <!-- Leave Workout Warning Modal -->
+    <div class="leave-workout-modal" id="leaveWorkoutModal">
+        <div class="modal">
+            <div class="modal-icon">
+                <i data-lucide="alert-triangle"></i>
+            </div>
+            <h2 class="modal-title">Leave Workout?</h2>
+            <div class="modal-message">
+                Your workout progress will not be saved. Are you sure you want to leave?
+            </div>
+            <div class="modal-actions">
+                <button class="btn-stay" onclick="closeLeaveWorkoutModal()">Stay</button>
+                <button class="btn-leave" onclick="confirmLeaveWorkout()">Leave</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- End Workout Confirmation Modal -->
+    <div class="end-workout-confirm-modal" id="endWorkoutConfirmModal">
+        <div class="modal">
+            <div class="modal-icon">
+                <i data-lucide="power"></i>
+            </div>
+            <h2 class="modal-title">End Workout?</h2>
+            <div class="modal-message">
+                Are you sure you want to end this workout?
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeEndWorkoutModal()">Cancel</button>
+                <button class="btn-confirm" onclick="confirmEndWorkout()">End Workout</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const pathName = window.location.pathname;
+        const path = pathName.split('/');
+        const workoutId = path[path.length - 1];
+
+        let workoutData = null;
+        let workoutState = {}; // Track exercise and set states
+        let timerInterval = null;
+        let startTime = null;
+        let currentSetConfig = null; // {exerciseIndex, setIndex, intensity, duration, exerciseType}
+        let workoutStarted = false; // Track if workout has begun
+        
+        // Load timer state from localStorage
+        const TIMER_STORAGE_KEY = `workout_timer_${workoutId}`;
+        const savedStartTime = localStorage.getItem(TIMER_STORAGE_KEY);
+        if (savedStartTime) {
+            startTime = parseInt(savedStartTime);
+        }
+
+        // Load workout data
+        async function loadWorkout() {
+            const loadingState = document.getElementById('loadingState');
+            const errorState = document.getElementById('errorState');
+            const workoutContent = document.getElementById('workoutContent');
+
+            try {
+                const response = await fetch(`/api/workouts/${workoutId}`);
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch workout');
+                }
+
+                workoutData = await response.json();
+                loadingState.style.display = 'none';
+                workoutContent.style.display = 'block';
+                renderWorkout(workoutData);
+                startTimer(); // Start timer but don't mark workout as started yet
+                // Update timer display immediately
+                updateTimer();
+                
+                // Process any pending set complete after workout is loaded
+                await processPendingSetComplete();
+                
+            } catch (error) {
+                console.error('Error loading workout:', error);
+                loadingState.style.display = 'none';
+                errorState.style.display = 'block';
+            }
+        }
+
+        function renderWorkout(workout) {
+            // Set workout name
+            document.getElementById('workoutName').textContent = workout.workoutName || 'Unnamed Workout';
+            
+            // Update completed sets count
+            updateCompletedSetsCount(workout);
+            
+            // Initialize workout state - use sets from workout data, no configuration
+            workout.exercises.forEach((exercise, exIndex) => {
+                if (!workoutState[exIndex]) {
+                    const noSets = exercise.noSets || 1;
+                    workoutState[exIndex] = {
+                        noSets: noSets,
+                        sets: {}
+                    };
+                    // Initialize all sets as incomplete
+                    for (let i = 0; i < noSets; i++) {
+                        workoutState[exIndex].sets[i] = false; // false = incomplete
+                    }
+                }
+            });
+            
+            // Render exercises
+            const exercisesList = document.getElementById('exercisesList');
+            if (!workout.exercises || workout.exercises.length === 0) {
+                exercisesList.innerHTML = `
+                    <div class="empty-exercises">
+                        <i data-lucide="info" style="width: 48px; height: 48px; margin-bottom: var(--spacing-md);"></i>
+                        <div>No exercises in this workout yet.</div>
+                    </div>
+                `;
+            } else {
+                exercisesList.innerHTML = workout.exercises.map((exercise, exIndex) => {
+                    const typeClass = exercise.type ? `exercise-type-${exercise.type}` : '';
+                    const noSets = workoutState[exIndex].noSets;
+                    const sets = workoutState[exIndex].sets;
+                    
+                    // Generate sets buttons
+                    const setsButtons = Array.from({ length: noSets }, (_, setIndex) => {
+                        const isComplete = sets[setIndex] === true;
+                        return `
+                            <button class="set-button ${isComplete ? 'complete' : 'incomplete'}" 
+                                    onclick="openSetConfig(${exIndex}, ${setIndex}, '${exercise.type || ''}')"
+                                    ${isComplete ? 'disabled' : ''}>
+                                Set ${setIndex + 1}
+                            </button>
+                        `;
+                    }).join('');
+                    
+                    return `
+                        <div class="exercise-card">
+                            <div class="exercise-header" onclick="toggleExerciseDropdown(${exIndex})">
+                                <div class="exercise-header-left">
+                                    <div class="exercise-name">${exercise.name}</div>
+                                    ${exercise.type ? `
+                                        <div class="exercise-type-badge ${typeClass}">
+                                            ${exercise.type}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                                <i data-lucide="chevron-down" class="exercise-dropdown-arrow" id="arrow-${exIndex}"></i>
+                            </div>
+                            <div class="exercise-content" id="content-${exIndex}">
+                                <div class="sets-container">
+                                    ${setsButtons}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            
+            lucide.createIcons();
+            // Update completed sets count after rendering
+            updateCompletedSetsCount(workout);
+        }
+
+        function updateCompletedSetsCount(workout) {
+            let completedCount = 0;
+            
+            // Count completed sets from workoutState
+            Object.keys(workoutState).forEach(exIndex => {
+                const exerciseState = workoutState[exIndex];
+                if (exerciseState && exerciseState.sets) {
+                    Object.keys(exerciseState.sets).forEach(setIndex => {
+                        if (exerciseState.sets[setIndex] === true) {
+                            completedCount++;
+                        }
+                    });
+                }
+            });
+            
+            // Update display
+            const completedSetsElement = document.getElementById('completedSetsCount');
+
+            const totalSets = workout.exercises.reduce((total, exercise, exIndex) => {
+                return total + (workoutState[exIndex]?.noSets || exercise.noSets || 1);
+            }, 0);
+
+            if (completedSetsElement) {
+                completedSetsElement.textContent = `${completedCount}/${totalSets} sets completed`;
+            }
+        }
+
+        function openSetConfig(exIndex, setIndex, exerciseType) {
+            // Mark workout as started when first set is clicked
+            markWorkoutStarted();
+            
+            currentSetConfig = {
+                exerciseIndex: exIndex,
+                setIndex: setIndex,
+                exerciseType: exerciseType
+            };
+            
+            // Reset selections
+            document.querySelectorAll('.intensity-low, .intensity-medium, .intensity-high, .intensity-max').forEach(el => {
+                el.classList.remove('selected');
+            });
+            document.querySelectorAll('.duration-option').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            document.getElementById('setConfigModal').classList.add('active');
+            lucide.createIcons();
+        }
+
+        function selectIntensity(element, value) {
+            document.querySelectorAll('.intensity-low, .intensity-medium, .intensity-high, .intensity-max').forEach(el => {
+                el.classList.remove('selected');
+            });
+            element.classList.add('selected');
+        }
+
+        function selectDuration(element, value) {
+            document.querySelectorAll('.duration-option').forEach(el => {
+                el.classList.remove('selected');
+            });
+            element.classList.add('selected');
+        }
+
+        function startSetAnimation() {
+            const selectedIntensity = document.querySelector('.intensity-low.selected, .intensity-medium.selected, .intensity-high.selected, .intensity-max.selected');
+            const selectedDuration = document.querySelector('.duration-option.selected');
+            
+            if (!selectedIntensity || !selectedDuration) {
+                alert('Please select intensity and duration!');
+                return;
+            }
+            
+            const intensity = selectedIntensity.textContent.trim().toLowerCase();
+            const duration = selectedDuration.textContent.trim();
+            const exerciseType = currentSetConfig.exerciseType || 'chest';
+            
+            // Close config modal
+            document.getElementById('setConfigModal').classList.remove('active');
+            
+            // Navigate to workout animation
+            window.location.href = `/workout-animation?type=${encodeURIComponent(exerciseType)}&intensity=${encodeURIComponent(intensity)}&duration=${encodeURIComponent(duration)}&workoutId=${workoutId}&exerciseIndex=${currentSetConfig.exerciseIndex}&setIndex=${currentSetConfig.setIndex}`;
+        }
+
+        // Handle return from animation
+        let pendingSetComplete = null;
+        
+        window.addEventListener('load', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('setComplete') === 'true') {
+                const exIndex = parseInt(urlParams.get('exerciseIndex'));
+                const setIndex = parseInt(urlParams.get('setIndex'));
+                
+                if (!isNaN(exIndex) && !isNaN(setIndex)) {
+                    // Store for processing after workout loads
+                    pendingSetComplete = { exIndex, setIndex };
+                    
+                    // Clean URL immediately
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
+            }
+        });
+        
+        // Process pending set complete after workout loads
+        async function processPendingSetComplete() {
+            if (pendingSetComplete && workoutData && workoutState[pendingSetComplete.exIndex]) {
+                const { exIndex, setIndex } = pendingSetComplete;
+                
+                // Mark workout as started if not already
+                if (!workoutStarted) {
+                    workoutStarted = true;
+                }
+                
+                // Ensure workoutState is initialized for this exercise
+                if (!workoutState[exIndex]) {
+                    const exercise = workoutData.exercises[exIndex];
+                    const noSets = exercise.noSets || 1;
+                    workoutState[exIndex] = {
+                        noSets: noSets,
+                        sets: {}
+                    };
+                    for (let i = 0; i < noSets; i++) {
+                        workoutState[exIndex].sets[i] = false;
+                    }
+                }
+                
+                // Mark set as complete
+                if (workoutState[exIndex].sets) {
+                    workoutState[exIndex].sets[setIndex] = true;
+                    renderWorkout(workoutData);
+                    updateCompletedSetsCount(workoutData);
+                    
+                    // Show completion modal
+                    document.getElementById('completionModal').classList.add('active');
+                }
+                
+                pendingSetComplete = null;
+            }
+        }
+
+        function closeCompletionModal() {
+            document.getElementById('completionModal').classList.remove('active');
+        }
+
+        function startTimer() {
+            // Always check localStorage first to ensure we have the latest saved time
+            const savedStartTime = localStorage.getItem(TIMER_STORAGE_KEY);
+            if (savedStartTime) {
+                const savedTime = parseInt(savedStartTime);
+                // Use saved time if we don't have one, or if saved time is older (shouldn't happen, but safety check)
+                if (!startTime || savedTime <= startTime) {
+                    startTime = savedTime;
+                }
+            }
+            
+            // If still no startTime, create a new one
+            if (!startTime) {
+                startTime = Date.now();
+                localStorage.setItem(TIMER_STORAGE_KEY, startTime.toString());
+            } else {
+                // Ensure localStorage is up to date
+                localStorage.setItem(TIMER_STORAGE_KEY, startTime.toString());
+            }
+            
+            if (!timerInterval) {
+                timerInterval = setInterval(updateTimer, 1000);
+            }
+        }
+
+        function markWorkoutStarted() {
+            if (!workoutStarted) {
+                workoutStarted = true;
+            }
+        }
+
+        function toggleExerciseDropdown(exIndex) {
+            const content = document.getElementById(`content-${exIndex}`);
+            const arrow = document.getElementById(`arrow-${exIndex}`);
+            
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                arrow.classList.remove('expanded');
+            } else {
+                content.classList.add('expanded');
+                arrow.classList.add('expanded');
+            }
+            
+            // Reinitialize icons after toggle
+            lucide.createIcons();
+        }
+
+        function updateTimer() {
+            if (!startTime) return;
+            
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const hours = Math.floor(elapsed / 3600);
+            const minutes = Math.floor((elapsed % 3600) / 60);
+            const seconds = elapsed % 60;
+            
+            const timeString = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            document.getElementById('timerDisplay').textContent = timeString;
+        }
+
+        function showEndWorkoutModal() {
+            document.getElementById('endWorkoutConfirmModal').classList.add('active');
+            lucide.createIcons();
+        }
+
+        function closeEndWorkoutModal() {
+            document.getElementById('endWorkoutConfirmModal').classList.remove('active');
+        }
+
+        async function confirmEndWorkout() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            // Clear timer from localStorage
+            localStorage.removeItem(TIMER_STORAGE_KEY);
+            startTime = null;
+
+            const response = await fetch('/api/achievements/update', {
+                method: 'PUT'
+            });
+
+            if (response.ok) {
+                window.location.href = '/train';
+            } else {
+                console.error("There was an error updating achievements");
+            }
+        }
+
+        // Close modals when clicking outside
+        document.getElementById('setConfigModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('active');
+            }
+        });
+
+        document.getElementById('completionModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCompletionModal();
+            }
+        });
+
+        // End workout button
+        document.getElementById('endWorkoutBtn').addEventListener('click', showEndWorkoutModal);
+
+        // Intercept back button click
+        document.querySelector('.back-button').addEventListener('click', function(e) {
+            e.preventDefault();
+            showLeaveWorkoutModal();
+        });
+
+        // Leave workout modal functions
+        function showLeaveWorkoutModal() {
+            document.getElementById('leaveWorkoutModal').classList.add('active');
+            lucide.createIcons();
+        }
+
+        function closeLeaveWorkoutModal() {
+            document.getElementById('leaveWorkoutModal').classList.remove('active');
+        }
+
+        function confirmLeaveWorkout() {
+            // Clear timer from localStorage
+            localStorage.removeItem(TIMER_STORAGE_KEY);
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            // Navigate back to train page
+            window.location.href = '/train';
+        }
+
+        // Close leave workout modal when clicking outside
+        document.getElementById('leaveWorkoutModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLeaveWorkoutModal();
+            }
+        });
+
+        // Close end workout modal when clicking outside
+        document.getElementById('endWorkoutConfirmModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEndWorkoutModal();
+            }
+        });
+
+        // Initialize
+        loadWorkout();
+
+        // Add spin animation for loader
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

@@ -70,7 +70,6 @@
 
 .workout-type-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(74, 222, 128, 0.2);
     border-color: #4ade80;
 }
 
@@ -147,7 +146,6 @@
     width: 90%;
     max-height: 60vh;
     overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     border: 2px solid #000;
     transform: scale(0.9) translateY(20px);
     transition: transform 0.3s ease;
@@ -163,7 +161,6 @@
     align-items: center;
     margin-bottom: 32px;
     padding-bottom: 16px;
-    border-bottom: 1px solid #e5e7eb;
 }
 
 .intensity-duration-modal .modal-title {
@@ -308,7 +305,7 @@
     border-radius: 16px;
     cursor: pointer;
     margin-top: 24px;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s;
     width: 100%;
 }
 
@@ -316,7 +313,6 @@
     background: #22c55e;
     border-color: #22c55e;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(74, 222, 128, 0.4);
 }
 
 .go-button:active {
@@ -357,7 +353,6 @@
     max-height: 65vh;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     border: 2px solid #000;
     transform: scale(0.9) translateY(20px);
     transition: transform 0.3s ease;
@@ -375,7 +370,6 @@
     align-items: center;
     margin-bottom: var(--spacing-lg);
     padding-bottom: var(--spacing-md);
-    border-bottom: 2px solid #000;
     flex-shrink: 0;
 }
 
@@ -466,7 +460,6 @@
 .create-workout-modal .form-input:focus {
     outline: none;
     border-color: var(--primary-green);
-    box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.1);
 }
 
 .create-workout-modal .form-input::placeholder {
@@ -587,7 +580,6 @@
 
 .create-workout-modal .exercise-item:hover {
     transform: translateX(4px);
-    box-shadow: var(--shadow-sm);
 }
 
 .create-workout-modal .exercise-item-content {

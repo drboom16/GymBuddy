@@ -25,7 +25,6 @@
             display: flex;
             gap: var(--spacing-lg);
             min-width: 320px;
-            box-shadow: var(--shadow-lg);
             border: 2px solid #000;
         }
 
@@ -66,7 +65,6 @@
             background: var(--background-white);
             border-radius: var(--radius-xl);
             padding: var(--spacing-lg);
-            box-shadow: var(--shadow-sm);
             min-width: 200px;
             text-align: center;
             border: 2px solid #000;
@@ -157,7 +155,6 @@
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             border: 2px solid #000;
             transform: scale(0.9) translateY(20px);
             transition: transform 0.3s ease;
@@ -173,7 +170,6 @@
             align-items: center;
             margin-bottom: 32px;
             padding-bottom: 16px;
-            border-bottom: 1px solid #e5e7eb;
         }
 
         .modal-title {
@@ -265,14 +261,12 @@
             border-radius: 16px;
             cursor: pointer;
             margin-top: 24px;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 12px rgba(74, 222, 128, 0.4);
+            transition: transform 0.2s;
         }
 
         .go-button:hover {
             background: var(--primary-green-dark);
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(74, 222, 128, 0.5);
         }
 
         .go-button:active {
@@ -362,9 +356,9 @@
     <div class="dynamic-island"></div>
 
     <!-- Page Title -->
-    <div class="page-title-container">
-        <h1 class="page-title-large">Home</h1>
-        <a href="/" class="exit-door-icon">
+    <div style="position: relative; padding: var(--spacing-2xl) var(--spacing-lg) var(--spacing-md) var(--spacing-lg); padding-top: calc(var(--spacing-2xl) + env(safe-area-inset-top, 0px) + 45px);">
+        <h1 class="page-title-large" style="padding: 0; margin: 0;">Home</h1>
+        <a href="/" class="exit-door-icon" style="position: absolute; right: var(--spacing-lg); top: 50%; transform: translateY(-50%); margin-left: 0;">
             <i data-lucide="door-open"></i>
         </a>
     </div>

@@ -5,8 +5,8 @@
     <title>Workout - GymBuddy</title>
     <link rel="stylesheet" href="styles/chest-animation.css">
     <link rel="stylesheet" href="styles/arms-animation.css">
-    <link rel="stylesheet" href="styles/legs-animation.css">
     <link rel="stylesheet" href="styles/back-animation.css">
+    <link rel="stylesheet" href="styles/design-system.css">
     <style>
         * {
             margin: 0;
@@ -19,7 +19,7 @@
             padding: 0;
             overflow: hidden;
             background: white;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
 
         .workout-screen {
@@ -156,7 +156,6 @@
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             transform: scale(0.9) translateY(20px);
             transition: transform 0.3s ease;
         }
@@ -171,7 +170,6 @@
             align-items: center;
             margin-bottom: 32px;
             padding-bottom: 16px;
-            border-bottom: 1px solid #e5e7eb;
         }
 
         .modal-title {
@@ -251,7 +249,7 @@
             border-radius: 16px;
             cursor: pointer;
             margin-top: 0;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s;
             width: 100%;
             max-width: 300px;
         }
@@ -262,6 +260,31 @@
 
         .modal-button:active {
             transform: translateY(0);
+        }
+
+        /* Legs GIF Container */
+        .legs-gif-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .legs-gif-container.visible {
+            opacity: 1;
+        }
+
+        .legs-gif-container img {
+            max-width: 100%;
+            max-height: 80vh;
+            width: auto;
+            height: auto;
         }
 
     </style>
@@ -275,21 +298,31 @@
 
         <!-- Dynamic workout content container -->
         <div id="workoutContentContainer"></div>
+        
+        <!-- Legs GIF Container -->
+        <div class="legs-gif-container" id="legsGifContainer">
+            <img src="/public/legs.gif" alt="Legs Workout Animation" id="legsGif">
+        </div>
 
         <div>
-            <button class="end-workout-button" id="endWorkoutButton" onclick="leaveWorkoutPopUp(event)">End Workout</button>
+            <button class="end-workout-button" id="endExerciseButton" onclick="leaveWorkoutPopUp(event)">End Workout</button>
         </div>
     </div>
 
     <!-- Exit Training Modal -->
-    <div class="modal-overlay" id="exitWorkoutModal">
-        <div class="modal-header">
-            <h2 class="modal-title">Are you sure you want to leave?</h2>
-        </div>
-        <div class="modal-content">
-            <button onclick="endWorkout()">
-                Leave
-            </button>
+    <div class="modal-overlay" id="exitExerciseModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Are you sure you want to leave?</h2>
+            </div>
+            <div class="modal-content">
+                <button class="modal-button" onclick="endExercise()">
+                    Leave
+                </button>
+                <button class="modal-button" onclick="document.getElementById('exitExerciseModal').classList.remove('active')">
+                    Cancel
+                </button>
+            </div>
         </div>
     </div>
 
@@ -351,27 +384,34 @@
             modal.classList.add('active');
             
             // Save workout to backend
-            saveWorkout();
+            saveWorkoutExercise();
         }
         
-        async function saveWorkout() {
+        async function saveWorkoutExercise() {
             try {
-                const response = await fetch('/api/workouts', {
-                    method: 'POST',
+                const params = new URLSearchParams(window.location.search);
+                const durationString = params.get("duration");
+                const durationInSeconds = parseDuration(durationString || "30s");
+                
+                const exerciseResponse = {
+                    type: params.get("type"),
+                    intensity: params.get("intensity"),
+                    duration: durationInSeconds,
+                };
+
+                // Saves an ExerciseResponse
+                const request = await fetch(`/api/achievements/exercise-response`, {
+                    method: 'PUT',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        workoutType: window.workoutType,
-                        intensity: window.workoutIntensity,
-                        duration: window.workoutDuration
-                    })
+                    body: JSON.stringify(exerciseResponse),
                 });
                 
-                if (response.ok) {
+                if (request.ok) {
                     console.log('Workout saved successfully');
                 } else {
-                    console.error('Failed to save workout:', response.statusText);
+                    console.error('Failed to save workout:', request.statusText);
                 }
             } catch (error) {
                 console.error('Error saving workout:', error);
@@ -379,24 +419,45 @@
         }
 
         function returnToHome() {
-            window.location = '/home';
+            // Check if we came from a workout detail page
+            const params = new URLSearchParams(window.location.search);
+            const workoutId = params.get('workoutId');
+            const exerciseIndex = params.get('exerciseIndex');
+            const setIndex = params.get('setIndex');
+            
+            if (workoutId && exerciseIndex !== null && setIndex !== null) {
+                // Return to workout detail page with completion flag
+                window.location.href = `/train/${workoutId}?setComplete=true&exerciseIndex=${exerciseIndex}&setIndex=${setIndex}`;
+            } else {
+                // Default behavior: return to home
+                window.location = '/home';
+            }
         }
 
         function leaveWorkoutPopUp(event) {
-            window.location = '/home';
-            const exitWorkoutModal = document.getElementById('exitWorkoutModal');
-            exitWorkoutModal.classList.add('active');
+            const exitExerciseModal = document.getElementById('exitExerciseModal');
+            exitExerciseModal.classList.add('active');
         }
     
-        async function endWorkout() {
+        async function endExercise() {
             // Clear countdown interval if it exists
             if (window.countdownInterval) {
                 clearInterval(window.countdownInterval);
                 window.countdownInterval = null;
             }
 
+            // Check if we came from a workout detail page
+            const params = new URLSearchParams(window.location.search);
+            const workoutId = params.get('workoutId');
+            
+            if (workoutId) {
+                // Return to workout detail page without completion
+                window.location.href = `/train/${workoutId}`;
+                return;
+            }
+
             // Save workout even if ended early
-            await saveWorkout();
+            await saveWorkoutExercise();
             
             window.location = '/home';
         }
@@ -532,20 +593,6 @@
             const dumbbellLeft = document.getElementById('dumbbellLeft');
             const dumbbellRight = document.getElementById('dumbbellRight');
 
-            // Set speed for legs workout elements (squats)
-            const barbellLegs = document.getElementById('barbellLegs');
-            const headLegs = document.getElementById('headLegs');
-            const eyesLegs = document.getElementById('eyesLegs');
-            const bodyTopFaceLegs = document.getElementById('bodyTopFaceLegs');
-            const upperArmLeftLegs = document.getElementById('upperArmLeftLegs');
-            const upperArmRightLegs = document.getElementById('upperArmRightLegs');
-            const lowerArmLeftLegs = document.getElementById('lowerArmLeftLegs');
-            const lowerArmRightLegs = document.getElementById('lowerArmRightLegs');
-            const upperLegLeftLegs = document.getElementById('upperLegLeftLegs');
-            const upperLegRightLegs = document.getElementById('upperLegRightLegs');
-            const lowerLegLeftLegs = document.getElementById('lowerLegLeftLegs');
-            const lowerLegRightLegs = document.getElementById('lowerLegRightLegs');
-            const legsLegsCrotch = document.getElementById('legsLegsCrotch');
 
             let duration;
             if (intensity === 'LOW') {
@@ -577,20 +624,6 @@
             if (dumbbellLeft) dumbbellLeft.style.animationDuration = duration;
             if (dumbbellRight) dumbbellRight.style.animationDuration = duration;
 
-            // Apply to legs workout elements if they exist
-            if (barbellLegs) barbellLegs.style.animationDuration = duration;
-            if (headLegs) headLegs.style.animationDuration = duration;
-            if (eyesLegs) eyesLegs.style.animationDuration = duration;
-            if (bodyTopFaceLegs) bodyTopFaceLegs.style.animationDuration = duration;
-            if (upperArmLeftLegs) upperArmLeftLegs.style.animationDuration = duration;
-            if (upperArmRightLegs) upperArmRightLegs.style.animationDuration = duration;
-            if (lowerArmLeftLegs) lowerArmLeftLegs.style.animationDuration = duration;
-            if (lowerArmRightLegs) lowerArmRightLegs.style.animationDuration = duration;
-            if (upperLegLeftLegs) upperLegLeftLegs.style.animationDuration = duration;
-            if (upperLegRightLegs) upperLegRightLegs.style.animationDuration = duration;
-            if (lowerLegLeftLegs) lowerLegLeftLegs.style.animationDuration = duration;
-            if (lowerLegRightLegs) lowerLegRightLegs.style.animationDuration = duration;
-            if (legsLegsCrotch) legsLegsCrotch.style.animationDuration = duration;
         }
 
         function randomBlink() {
@@ -647,7 +680,7 @@
         }
 
         function triggerChestWorkout() {
-            const endButton = document.getElementById('endWorkoutButton');
+            const endButton = document.getElementById('endExerciseButton');
 
             setTimeout(() => {
                 if (endButton) endButton.classList.add('visible');
@@ -670,7 +703,7 @@
         }
 
         function triggerArmsWorkout() {
-            const endButton = document.getElementById('endWorkoutButton');
+            const endButton = document.getElementById('endExerciseButton');
             
             setTimeout(() => {
                 if (endButton) endButton.classList.add('visible');
@@ -694,7 +727,7 @@
         }
 
         function triggerBackWorkout() {
-            const endButton = document.getElementById('endWorkoutButton');
+            const endButton = document.getElementById('endExerciseButton');
             
             setTimeout(() => {
                 if (endButton) endButton.classList.add('visible');
@@ -717,26 +750,12 @@
         }
 
         function triggerLegsWorkout() {
-            const endButton = document.getElementById('endWorkoutButton');
+            const endButton = document.getElementById('endExerciseButton');
+            const legsGifContainer = document.getElementById('legsGifContainer');
             
             setTimeout(() => {
                 if (endButton) endButton.classList.add('visible');
-
-                // Show all legs workout elements if they exist
-                const elements = [
-                    'headLegs', 'eyesLegs', 'eyeLeftLegs', 'eyeRightLegs',
-                    'bodyTopFaceLegs', 
-                    'upperArmLeftLegs', 'upperArmRightLegs', 
-                    'lowerArmLeftLegs', 'lowerArmRightLegs', 
-                    'legsLegs', 'upperLegLeftLegs', 'lowerLegLeftLegs', 
-                    'upperLegRightLegs', 'lowerLegRightLegs', 'legsLegsCrotch',
-                    'barbellLegs', 'barbellBarLegs', 'barbellWeightLeftLegs', 'barbellWeightRightLegs'
-                ];
-                
-                elements.forEach(id => {
-                    const element = document.getElementById(id);
-                    if (element) element.classList.add('visible');
-                });
+                if (legsGifContainer) legsGifContainer.classList.add('visible');
             }, 1700);
         }
 
