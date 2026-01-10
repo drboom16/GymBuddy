@@ -27,11 +27,12 @@
 }
 
 :root {
-    /* Color Palette - Green Primary (Earthy Green) */
-    --primary-green: #4ade80;
-    --primary-green-light: #86efac;
-    --primary-green-dark: #22c55e;
-    --primary-green-muted: #6ee7b7;
+    /* Color Palette - Green Primary (Dull Dark Green) */
+    --primary-green: #15803d;
+    --primary-green-light: #22c55e;
+    --primary-green-dark: #166534;
+    --primary-green-darker: #14532d;
+    --primary-green-muted: #16a34a;
     --accent-purple: #9333ea;
     --accent-purple-light: #c084fc;
     --accent-orange: #f97316;
@@ -72,7 +73,11 @@
     --font-size-3xl: 30px;
     --font-size-4xl: 36px;
     
-    /* Shadows - Removed */
+    /* Shadows - Bold black backdrop */
+    --shadow-sm: 2px 2px 0 0 #000;
+    --shadow-md: 3px 3px 0 0 #000;
+    --shadow-lg: 4px 4px 0 0 #000;
+    --shadow-xl: 5px 5px 0 0 #000;
 }
 
 /* Base Styles */
@@ -168,11 +173,13 @@ body {
     cursor: pointer;
     white-space: nowrap;
     transition: all 0.2s;
+    box-shadow: var(--shadow-sm);
 }
 
 .tab-item.active {
-    background: var(--primary-green);
+    background: var(--primary-green-dark);
     color: var(--background-white);
+    box-shadow: var(--shadow-md);
 }
 
 .tab-item:hover:not(.active) {
@@ -187,10 +194,12 @@ body {
     padding: var(--spacing-lg);
     border: 2px solid #000;
     transition: all 0.2s;
+    box-shadow: var(--shadow-md);
 }
 
 .card:hover {
     transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
 }
 
 .card-large {
@@ -288,7 +297,7 @@ body {
 
 .section-link {
     font-size: var(--font-size-sm);
-    color: var(--primary-green);
+    color: var(--primary-green-dark);
     text-decoration: none;
     font-weight: 500;
     display: flex;
@@ -313,16 +322,24 @@ body {
     align-items: center;
     justify-content: center;
     gap: var(--spacing-sm);
+    box-shadow: var(--shadow-sm);
 }
 
 .btn-primary {
-    background: var(--primary-green);
+    background: var(--primary-green-darker) !important;
     color: var(--background-white);
 }
 
 .btn-primary:hover {
-    background: var(--primary-green-dark);
+    background: var(--primary-green-dark) !important;
     transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Ensure Create New Workout button uses dark green */
+.btn-primary.btn-full,
+#createWorkoutBtn.btn-primary {
+    background: var(--primary-green-darker) !important;
 }
 
 .btn-secondary {
@@ -353,6 +370,8 @@ body {
     display: flex;
     gap: var(--spacing-md);
     padding: 0 var(--spacing-lg);
+    padding-right: calc(var(--spacing-lg) + 5px);
+    padding-bottom: 5px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
@@ -404,6 +423,7 @@ body {
     font-weight: 600;
     text-transform: uppercase;
     border: 2px solid #000;
+    box-shadow: var(--shadow-sm);
 }
 
 .badge-green {
@@ -460,7 +480,7 @@ body {
 }
 
 .nav-item.active {
-    color: var(--primary-green);
+    color: #000;
 }
 
 .nav-item.active::before {
@@ -471,12 +491,12 @@ body {
     transform: translateX(-50%);
     width: 36px;
     height: 3px;
-    background: var(--primary-green);
+    background: #000;
     border-radius: 2px 2px 2px 2px;
 }
 
 .nav-item.active .nav-icon {
-    stroke: var(--primary-green);
+    stroke: #000;
 }
 
 .nav-icon {

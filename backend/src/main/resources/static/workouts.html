@@ -32,6 +32,11 @@
             margin-bottom: var(--spacing-xl);
             border: 2px solid #000;
             width: 100%;
+            box-shadow: 3px 3px 0 0 #000;
+        }
+
+        .workout-item.colored {
+            border-left: 6px solid;
         }
 
         .thinking-gif-container {
@@ -781,9 +786,25 @@
                     return;
                 }
                 
-                workoutList.innerHTML = workouts.map(workout => {
+                // Color palette for workout tabs
+                const workoutColors = [
+                    '#ffbe1e', // Yellow/Orange
+                    '#f48952', // Orange/Coral
+                    '#8991f3', // Purple/Blue
+                    '#8cea64', // Green
+                    '#ff6b9d', // Pink (complementary)
+                    '#4ecdc4', // Turquoise (complementary)
+                    '#ffa07a', // Light Salmon (complementary)
+                    '#ba68c8', // Purple (complementary)
+                    '#ffd93d', // Bright Yellow (complementary)
+                    '#6c5ce7'  // Indigo (complementary)
+                ];
+                
+                workoutList.innerHTML = workouts.map((workout, index) => {
                     const workoutName = workout.workoutName || 'Unnamed Workout';
                     const exercises = workout.exercises || [];
+                    const colorIndex = index % workoutColors.length;
+                    const workoutColor = workoutColors[colorIndex];
                     
                     const exercisesList = exercises.map(exercise => {
                         const exerciseName = exercise.name || 'Unknown Exercise';
@@ -807,7 +828,7 @@
                     }).join('');
                     
                     return `
-                        <div class="workout-item" data-workout-id="${workout.id}">
+                        <div class="workout-item colored" data-workout-id="${workout.id}" style="border-left-color: ${workoutColor};">
                             <div class="workout-header">
                                 <h2 class="workout-name">
                                     <i data-lucide="dumbbell" style="width: 20px; height: 20px; stroke: var(--text-primary);"></i>

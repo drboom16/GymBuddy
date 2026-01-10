@@ -29,7 +29,8 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            transition: transform 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 3px 3px 0 0 #000;
         }
 
         .workout-card-placeholder:hover {
@@ -189,7 +190,7 @@
         }
 
         .begin-workout-confirm-modal .btn-begin:hover {
-            background: linear-gradient(135deg, var(--primary-green-dark) 0%, #16a34a 100%);
+            background: linear-gradient(135deg, var(--primary-green-dark) 0%, #15803d 100%);
             transform: translateY(-2px);
             box-shadow: var(--shadow-md);
         }
@@ -216,7 +217,7 @@
             <div class="section-header" style="padding: 0; padding-right: var(--spacing-lg);">
                 <div class="section-title">My Workouts</div>
             </div>
-            <div class="scrollable-row" id="myWorkoutsContainer" style="padding-left: 0;">
+            <div class="scrollable-row" id="myWorkoutsContainer" style="padding-left: 0; padding-right: calc(var(--spacing-lg) + 5px); padding-bottom: 5px;">
                 <!-- Workouts will be loaded here -->
             </div>
             <div class="stretching-gif-container">
@@ -583,11 +584,27 @@
                     return;
                 }
                 
-                container.innerHTML = workouts.map(workout => {
+                // Color palette for workout cards
+                const workoutColors = [
+                    '#ffbe1e', // Yellow/Orange
+                    '#f48952', // Orange/Coral
+                    '#8991f3', // Purple/Blue
+                    '#8cea64', // Green
+                    '#ff6b9d', // Pink (complementary)
+                    '#4ecdc4', // Turquoise (complementary)
+                    '#ffa07a', // Light Salmon (complementary)
+                    '#ba68c8', // Purple (complementary)
+                    '#ffd93d', // Bright Yellow (complementary)
+                    '#6c5ce7'  // Indigo (complementary)
+                ];
+                
+                container.innerHTML = workouts.map((workout, index) => {
                     const workoutName = workout.workoutName || 'Unnamed Workout';
+                    const colorIndex = index % workoutColors.length;
+                    const workoutColor = workoutColors[colorIndex];
                     return `
                         <div class="scrollable-item" data-workout-id="${workout.id}" onclick="confirmBeginWorkout(${workout.id})">
-                            <div class="workout-card-placeholder">
+                            <div class="workout-card-placeholder" style="background: ${workoutColor};">
                                 <i data-lucide="dumbbell" style="width: 64px; height: 64px; stroke: var(--text-primary); margin-bottom: var(--spacing-md);"></i>
                                 <div style="font-weight: 600; color: var(--text-primary); font-size: var(--font-size-base);">${workoutName}</div>
                             </div>

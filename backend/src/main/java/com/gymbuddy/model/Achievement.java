@@ -27,6 +27,9 @@ public class Achievement {
     @Column
     private Integer duration; // Optional tag: duration in seconds
 
+    @Column(nullable = false)
+    private int coinReward = 0; // Coin reward for completing this achievement
+
 
     public Achievement() { // Default constructor (required by JPA)
 
@@ -37,9 +40,24 @@ public class Achievement {
         this.target = target;
     }
 
+    public Achievement(String achievementName, int target, int coinReward) {
+        this.achievementName = achievementName;
+        this.target = target;
+        this.coinReward = coinReward;
+    }
+
     public Achievement(String achievementName, int target, String exerciseType, String intensity, Integer duration) {
         this.achievementName = achievementName;
         this.target = target;
+        this.exerciseType = exerciseType;
+        this.intensity = intensity;
+        this.duration = duration;
+    }
+
+    public Achievement(String achievementName, int target, int coinReward, String exerciseType, String intensity, Integer duration) {
+        this.achievementName = achievementName;
+        this.target = target;
+        this.coinReward = coinReward;
         this.exerciseType = exerciseType;
         this.intensity = intensity;
         this.duration = duration;
@@ -91,5 +109,13 @@ public class Achievement {
 
     public void setDuration(Integer duration) {
         this.duration = duration;
+    }
+
+    public int getCoinReward() {
+        return coinReward;
+    }
+
+    public void setCoinReward(int coinReward) {
+        this.coinReward = coinReward;
     }
 }

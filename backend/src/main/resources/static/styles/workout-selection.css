@@ -50,6 +50,7 @@
     justify-content: space-between;
     width: 100%;
     min-height: 120px;
+    box-shadow: 3px 3px 0 0 #000;
 }
 
 .workout-arms {
@@ -70,7 +71,8 @@
 
 .workout-type-card:hover {
     transform: translateY(-4px);
-    border-color: #4ade80;
+    border-color: #15803d;
+    box-shadow: 4px 4px 0 0 #000;
 }
 
 .workout-type-card.selected {
@@ -229,12 +231,12 @@
 }
 
 .duration-option:hover {
-    border-color: #4ade80;
+    border-color: #15803d;
     background: #f0f0f0;
 }
 
 .duration-option.selected {
-    background: #4ade80;
+    background: #15803d;
     color: white;
     border-color: #000;
 }
@@ -267,14 +269,14 @@
 .intensity-medium:hover,
 .intensity-high:hover,
 .intensity-max:hover {
-    border-color: #4ade80;
+    border-color: #15803d;
 }
 
 .intensity-low.selected,
 .intensity-medium.selected,
 .intensity-high.selected,
 .intensity-max.selected {
-    background: #4ade80;
+    background: #15803d;
     color: white;
     border-color: #000;
 }
@@ -292,11 +294,11 @@
 }
 
 .intensity-max {
-    background: #4ade80;
+    background: #15803d;
 }
 
 .go-button {
-    background: #4ade80;
+    background: #15803d;
     color: white;
     border: 2px solid #000;
     padding: 18px 48px;
@@ -310,8 +312,8 @@
 }
 
 .go-button:hover {
-    background: #22c55e;
-    border-color: #22c55e;
+    background: #15803d;
+    border-color: #15803d;
     transform: translateY(-2px);
 }
 

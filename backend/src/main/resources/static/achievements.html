@@ -26,7 +26,13 @@
             flex-direction: column;
             gap: var(--spacing-sm);
             transition: transform 0.2s, box-shadow 0.2s;
-            border: 1px solid #e5e7eb;
+            border: 2px solid #000;
+            box-shadow: 3px 3px 0 0 #000;
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         .achievement-card.completed {
@@ -143,6 +149,31 @@
         .completion-badge svg {
             width: 16px;
             height: 16px;
+        }
+
+        .coin-reward {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            color: #f59e0b;
+            margin-top: var(--spacing-xs);
+        }
+
+        .coin-reward i,
+        .coin-reward svg {
+            width: 16px;
+            height: 16px;
+            stroke: #f59e0b;
+        }
+
+        .coin-reward .check-icon {
+            width: 18px;
+            height: 18px;
+            stroke: var(--primary-green-darker);
+            stroke-width: 3;
+            margin-left: var(--spacing-xs);
         }
 
         .loading {
@@ -287,6 +318,11 @@
                             </div>
                             <div class="progress-bar-container">
                                 <div class="progress-bar" style="width: ${progressPercentage}%"></div>
+                            </div>
+                            <div class="coin-reward">
+                                <i data-lucide="coins"></i>
+                                <span>${achievement.coinReward || 0}</span>
+                                ${isCompleted ? '<i data-lucide="check-circle" class="check-icon"></i>' : ''}
                             </div>
                             ${isCompleted ? `
                                 <div class="completion-badge">
