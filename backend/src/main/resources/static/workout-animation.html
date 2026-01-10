@@ -395,7 +395,6 @@
                 
                 const exerciseResponse = {
                     type: params.get("type"),
-                    intensity: params.get("intensity"),
                     duration: durationInSeconds,
                 };
 
@@ -498,7 +497,7 @@
             }
         }
 
-        async function startWorkoutAnimation(workoutType, intensity, duration) {
+        async function startWorkoutAnimation(workoutType, duration) {
             const workoutScreen = document.getElementById('workoutScreen');
             const whiteOverlay = document.getElementById('whiteOverlay');
             const goText = document.getElementById('goText');
@@ -508,7 +507,6 @@
             const normalizedWorkoutType = workoutType.toUpperCase();
 
             console.log(`WORKOUT_TYPE: ${normalizedWorkoutType}`);
-            console.log(`INTENSITY: ${intensity}`);
             console.log(`DURATION: ${duration}`);
     
             // Load the appropriate workout fragment
@@ -546,7 +544,7 @@
             }
 
             setTimeout(() => {
-                setSpeed(intensity);
+                setSpeed();
             }, 1000);
 
             setTimeout(randomBlink, 2000);
@@ -575,7 +573,7 @@
             }, 1700);
         } 
 
-        function setSpeed(intensity) {
+        function setSpeed() {
             // Set speed for chest workout elements (bench press)
             const barbell = document.getElementById('barbell');
             const barbellWeight = document.getElementById('barbellWeight');
@@ -593,19 +591,8 @@
             const dumbbellLeft = document.getElementById('dumbbellLeft');
             const dumbbellRight = document.getElementById('dumbbellRight');
 
-
-            let duration;
-            if (intensity === 'LOW') {
-                duration = '3.0s';
-            } else if (intensity === 'MEDIUM') {
-                duration = '2.0s';
-            } else if (intensity === 'HIGH') {
-                duration = '1.0s';
-            } else if (intensity === 'MAX') {
-                duration = '0.2s';
-            } else {
-                return;
-            }
+            // Use default medium speed (2.0s)
+            const duration = '2.0s';
 
             // Apply to chest workout elements if they exist
             if (barbell) barbell.style.animationDuration = duration;
@@ -764,17 +751,15 @@
             const params = new URLSearchParams(window.location.search);
 
             const workoutType = params.get('type');
-            const intensity = params.get('intensity');
             const duration = params.get('duration');
             
-            if (workoutType && intensity && duration) {
+            if (workoutType && duration) {
                 // Store workout data globally for saving later
                 window.workoutType = workoutType;
-                window.workoutIntensity = intensity;
                 window.workoutDuration = duration;
 
                 // Start workout animation immediately
-                startWorkoutAnimation(workoutType, intensity, duration);
+                startWorkoutAnimation(workoutType, duration);
             } else {
                 // If parameters are missing, redirect to train page
                 window.location = '/train';

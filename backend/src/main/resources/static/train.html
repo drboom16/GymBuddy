@@ -332,24 +332,6 @@
             </div>
             <div class="modal-content">
                 <div class="selection-group">
-                    <label class="selection-label">Intensity</label>
-                    <div class="intensity-bar">
-                        <div class="intensity-low" onclick="selectIntensity(this, 'low')">
-                            LOW
-                        </div>
-                        <div class="intensity-medium" onclick="selectIntensity(this, 'medium')">
-                            MEDIUM
-                        </div>
-                        <div class="intensity-high" onclick="selectIntensity(this, 'high')">
-                            HIGH
-                        </div>
-                        <div class="intensity-max" onclick="selectIntensity(this, 'max')">
-                            MAX
-                        </div>
-                    </div>
-                </div>
-
-                <div class="selection-group">
                     <label class="selection-label">Duration</label>
                     <div class="duration-bar">
                         <div class="duration-option" onclick="selectDuration(this, '30s')">
@@ -462,9 +444,6 @@
             document.getElementById('intensityDurationModal').classList.remove('active');
             
             // Reset selections
-            document.querySelectorAll('.intensity-low, .intensity-medium, .intensity-high, .intensity-max').forEach(el => {
-                el.classList.remove('selected');
-            });
             document.querySelectorAll('.duration-option').forEach(el => {
                 el.classList.remove('selected');
             });
@@ -504,13 +483,6 @@
             this.value = this.value.replace(/[^0-9]/g, '');
         });
 
-        function selectIntensity(element, value) {
-            document.querySelectorAll('.intensity-low, .intensity-medium, .intensity-high, .intensity-max').forEach(el => {
-                el.classList.remove('selected');
-            });
-            element.classList.add('selected');
-        }
-
         function selectDuration(element, value) {
             document.querySelectorAll('.duration-option').forEach(el => {
                 el.classList.remove('selected');
@@ -519,24 +491,17 @@
         }
 
         function startWorkout() {
-            const selectedIntensity = document.querySelector('.intensity-low.selected, .intensity-medium.selected, .intensity-high.selected, .intensity-max.selected');
             const selectedDuration = document.querySelector('.duration-option.selected');
-
-            if (!selectedIntensity) {
-                alert('Please select an intensity!');
-                return;
-            }
 
             if (!selectedDuration) {
                 alert('Please select a duration!');
                 return;
             }
 
-            const intensityValue = selectedIntensity.textContent.trim();
             const durationValue = selectedDuration.textContent.trim();
 
             // Navigate to workout animation page with URL parameters
-            window.location.href = `/workout-animation?type=${encodeURIComponent(selectedWorkoutType)}&intensity=${encodeURIComponent(intensityValue)}&duration=${encodeURIComponent(durationValue)}`;
+            window.location.href = `/workout-animation?type=${encodeURIComponent(selectedWorkoutType)}&duration=${encodeURIComponent(durationValue)}`;
         }
 
         function setActiveNavItem() {

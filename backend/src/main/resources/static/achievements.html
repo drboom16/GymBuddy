@@ -376,9 +376,6 @@
                 if (achievement.exerciseType) {
                     tags.push(`<span class="achievement-tag">${achievement.exerciseType}</span>`);
                 }
-                if (achievement.intensity) {
-                    tags.push(`<span class="achievement-tag">${achievement.intensity}</span>`);
-                }
                 if (achievement.duration) {
                     const minutes = Math.floor(achievement.duration / 60);
                     const seconds = achievement.duration % 60;

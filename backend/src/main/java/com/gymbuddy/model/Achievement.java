@@ -22,9 +22,6 @@ public class Achievement {
     private String exerciseType; // Optional tag: exercise type (e.g., "arms", "chest", "legs")
 
     @Column
-    private String intensity; // Optional tag: intensity (e.g., "low", "medium", "high", "max")
-
-    @Column
     private Integer duration; // Optional tag: duration in seconds
 
     @Column(nullable = false)
@@ -49,20 +46,18 @@ public class Achievement {
         this.coinReward = coinReward;
     }
 
-    public Achievement(String achievementName, int target, String exerciseType, String intensity, Integer duration) {
+    public Achievement(String achievementName, int target, String exerciseType, Integer duration) {
         this.achievementName = achievementName;
         this.target = target;
         this.exerciseType = exerciseType;
-        this.intensity = intensity;
         this.duration = duration;
     }
 
-    public Achievement(String achievementName, int target, int coinReward, String exerciseType, String intensity, Integer duration) {
+    public Achievement(String achievementName, int target, int coinReward, String exerciseType, Integer duration) {
         this.achievementName = achievementName;
         this.target = target;
         this.coinReward = coinReward;
         this.exerciseType = exerciseType;
-        this.intensity = intensity;
         this.duration = duration;
         this.isDaily = false;
     }
@@ -104,14 +99,6 @@ public class Achievement {
 
     public void setExerciseType(String exerciseType) {
         this.exerciseType = exerciseType;
-    }
-
-    public String getIntensity() {
-        return intensity;
-    }
-
-    public void setIntensity(String intensity) {
-        this.intensity = intensity;
     }
 
     public Integer getDuration() {

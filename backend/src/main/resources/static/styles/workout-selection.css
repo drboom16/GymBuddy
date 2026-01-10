@@ -241,61 +241,6 @@
     border-color: #000;
 }
 
-.intensity-bar {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 8px;
-    height: 40px;
-}
-
-.intensity-low,
-.intensity-medium,
-.intensity-high,
-.intensity-max {
-    border: 2px solid #000;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 600;
-    color: #333;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-transform: uppercase;
-}
-
-.intensity-low:hover,
-.intensity-medium:hover,
-.intensity-high:hover,
-.intensity-max:hover {
-    border-color: #15803d;
-}
-
-.intensity-low.selected,
-.intensity-medium.selected,
-.intensity-high.selected,
-.intensity-max.selected {
-    background: #15803d;
-    color: white;
-    border-color: #000;
-}
-
-.intensity-low {
-    background: #d1fae5;
-}
-
-.intensity-medium {
-    background: #a7f3d0;
-}
-
-.intensity-high {
-    background: #6ee7b7;
-}
-
-.intensity-max {
-    background: #15803d;
-}
 
 .go-button {
     background: #15803d;
