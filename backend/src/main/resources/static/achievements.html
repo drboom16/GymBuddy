@@ -15,7 +15,7 @@
             display: flex;
             flex-direction: column;
             gap: var(--spacing-md);
-            padding-bottom: var(--spacing-xl);
+            padding-bottom: var(--spacing-sm);
         }
 
         .achievement-card {
@@ -196,6 +196,54 @@
             stroke: var(--text-secondary);
             opacity: 0.5;
         }
+
+        .daily-reset-timer {
+            text-align: center;
+            font-size: var(--font-size-xs);
+            color: #9ca3af;
+            opacity: 0.5;
+            padding: var(--spacing-sm) var(--spacing-lg);
+            margin: 0;
+        }
+
+        .achievement-tabs {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-lg);
+            padding: 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .achievement-tab {
+            flex: 1;
+            padding: var(--spacing-md);
+            background: white;
+            border: 2px solid #000;
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+        }
+
+        .achievement-tab:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .achievement-tab.active {
+            background: var(--primary-green-darker);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .achievement-tab.active:hover {
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -205,9 +253,14 @@
     <h1 class="page-title-large">Achievements</h1>
 
     <div class="content-container">
+        <div class="achievement-tabs">
+            <button class="achievement-tab active" id="dailyTab" onclick="switchTab('daily')">Daily</button>
+            <button class="achievement-tab" id="lifetimeTab" onclick="switchTab('lifetime')">Lifetime</button>
+        </div>
         <div id="achievementsList" class="achievements-container">
             <div class="loading">Loading achievements...</div>
         </div>
+        <div class="daily-reset-timer" id="dailyResetTimer" style="display: none;">Daily achievements reset in <span id="resetTime">calculating...</span></div>
     </div>
 
     <div class="bottom-nav">
@@ -260,83 +313,127 @@
         // Set active nav-item on page load
         setActiveNavItem();
 
-        // Fetch and render achievements
-        async function loadAchievements() {
+        let allAchievements = [];
+        let currentTab = 'daily';
+
+        // Switch between daily and lifetime tabs
+        function switchTab(tab) {
+            currentTab = tab;
+            const dailyTab = document.getElementById('dailyTab');
+            const lifetimeTab = document.getElementById('lifetimeTab');
+            const resetTimer = document.getElementById('dailyResetTimer');
+            
+            if (tab === 'daily') {
+                dailyTab.classList.add('active');
+                lifetimeTab.classList.remove('active');
+                if (resetTimer) resetTimer.style.display = 'block';
+            } else {
+                lifetimeTab.classList.add('active');
+                dailyTab.classList.remove('active');
+                if (resetTimer) resetTimer.style.display = 'none';
+            }
+            
+            renderAchievements();
+        }
+
+        // Render achievements based on current tab
+        function renderAchievements() {
             const achievementsList = document.getElementById('achievementsList');
             
+            if (allAchievements.length === 0) {
+                achievementsList.innerHTML = `
+                    <div class="empty-state">
+                        <i data-lucide="medal"></i>
+                        <p>No achievements yet. Start working out to unlock achievements!</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+            
+            // Filter achievements by current tab
+            const filteredAchievements = allAchievements.filter(achievement => {
+                return currentTab === 'daily' ? achievement.daily : !achievement.daily;
+            });
+            
+            if (filteredAchievements.length === 0) {
+                achievementsList.innerHTML = `
+                    <div class="empty-state">
+                        <i data-lucide="medal"></i>
+                        <p>No ${currentTab} achievements available.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+            
+            achievementsList.innerHTML = filteredAchievements.map(achievement => {
+                const isCompleted = achievement.current >= achievement.target;
+                const progressPercentage = Math.min((achievement.current / achievement.target) * 100, 100);
+                
+                // Build tags string
+                const tags = [];
+                if (achievement.exerciseType) {
+                    tags.push(`<span class="achievement-tag">${achievement.exerciseType}</span>`);
+                }
+                if (achievement.intensity) {
+                    tags.push(`<span class="achievement-tag">${achievement.intensity}</span>`);
+                }
+                if (achievement.duration) {
+                    const minutes = Math.floor(achievement.duration / 60);
+                    const seconds = achievement.duration % 60;
+                    const durationStr = minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
+                    tags.push(`<span class="achievement-tag">${durationStr}</span>`);
+                }
+                
+                return `
+                    <div class="achievement-card ${isCompleted ? 'completed' : ''}">
+                        <div class="achievement-header">
+                            <div class="achievement-icon">
+                                <i data-lucide="${isCompleted ? 'award' : 'target'}"></i>
+                            </div>
+                            <div class="achievement-info">
+                                <h3 class="achievement-name">${achievement.achievementName}</h3>
+                                <div class="achievement-progress">
+                                    ${achievement.current} / ${achievement.target}
+                                </div>
+                                ${tags.length > 0 ? `<div class="achievement-tags">${tags.join('')}</div>` : ''}
+                            </div>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: ${progressPercentage}%"></div>
+                        </div>
+                        <div class="coin-reward">
+                            <i data-lucide="coins"></i>
+                            <span>${achievement.coinReward || 0}</span>
+                            ${isCompleted ? '<i data-lucide="check-circle" class="check-icon"></i>' : ''}
+                        </div>
+                        ${isCompleted ? `
+                            <div class="completion-badge">
+                                <i data-lucide="check-circle"></i>
+                                <span>Completed!</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+            
+            lucide.createIcons();
+        }
+
+        // Fetch and render achievements
+        async function loadAchievements() {
             try {
                 const response = await fetch('/api/achievements');
                 if (!response.ok) {
                     throw new Error('Failed to load achievements');
                 }
                 
-                const achievements = await response.json();
-                
-                if (achievements.length === 0) {
-                    achievementsList.innerHTML = `
-                        <div class="empty-state">
-                            <i data-lucide="medal"></i>
-                            <p>No achievements yet. Start working out to unlock achievements!</p>
-                        </div>
-                    `;
-                    lucide.createIcons();
-                    return;
-                }
-                
-                achievementsList.innerHTML = achievements.map(achievement => {
-                    const isCompleted = achievement.current >= achievement.target;
-                    const progressPercentage = Math.min((achievement.current / achievement.target) * 100, 100);
-                    
-                    // Build tags string
-                    const tags = [];
-                    if (achievement.exerciseType) {
-                        tags.push(`<span class="achievement-tag">${achievement.exerciseType}</span>`);
-                    }
-                    if (achievement.intensity) {
-                        tags.push(`<span class="achievement-tag">${achievement.intensity}</span>`);
-                    }
-                    if (achievement.duration) {
-                        const minutes = Math.floor(achievement.duration / 60);
-                        const seconds = achievement.duration % 60;
-                        const durationStr = minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
-                        tags.push(`<span class="achievement-tag">${durationStr}</span>`);
-                    }
-                    
-                    return `
-                        <div class="achievement-card ${isCompleted ? 'completed' : ''}">
-                            <div class="achievement-header">
-                                <div class="achievement-icon">
-                                    <i data-lucide="${isCompleted ? 'award' : 'target'}"></i>
-                                </div>
-                                <div class="achievement-info">
-                                    <h3 class="achievement-name">${achievement.achievementName}</h3>
-                                    <div class="achievement-progress">
-                                        ${achievement.current} / ${achievement.target}
-                                    </div>
-                                    ${tags.length > 0 ? `<div class="achievement-tags">${tags.join('')}</div>` : ''}
-                                </div>
-                            </div>
-                            <div class="progress-bar-container">
-                                <div class="progress-bar" style="width: ${progressPercentage}%"></div>
-                            </div>
-                            <div class="coin-reward">
-                                <i data-lucide="coins"></i>
-                                <span>${achievement.coinReward || 0}</span>
-                                ${isCompleted ? '<i data-lucide="check-circle" class="check-icon"></i>' : ''}
-                            </div>
-                            ${isCompleted ? `
-                                <div class="completion-badge">
-                                    <i data-lucide="check-circle"></i>
-                                    <span>Completed!</span>
-                                </div>
-                            ` : ''}
-                        </div>
-                    `;
-                }).join('');
-                
-                lucide.createIcons();
+                allAchievements = await response.json();
+                renderAchievements();
             } catch (error) {
                 console.error('Error loading achievements:', error);
+                const achievementsList = document.getElementById('achievementsList');
                 achievementsList.innerHTML = `
                     <div class="empty-state">
                         <i data-lucide="alert-circle"></i>
@@ -347,8 +444,45 @@
             }
         }
 
+        // Calculate and display time until daily reset (midnight)
+        function updateResetTimer() {
+            const now = new Date();
+            const tomorrow = new Date(now);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            tomorrow.setHours(0, 0, 0, 0);
+            
+            const timeUntilReset = tomorrow - now;
+            const hours = Math.floor(timeUntilReset / (1000 * 60 * 60));
+            const minutes = Math.floor((timeUntilReset % (1000 * 60 * 60)) / (1000 * 60));
+            
+            let timeString = '';
+            if (hours > 0) {
+                timeString = `${hours} hour${hours !== 1 ? 's' : ''} ${minutes} minute${minutes !== 1 ? 's' : ''}`;
+            } else {
+                timeString = `${minutes} minute${minutes !== 1 ? 's' : ''}`;
+            }
+            
+            const resetTimeElement = document.getElementById('resetTime');
+            if (resetTimeElement) {
+                resetTimeElement.textContent = timeString;
+            }
+        }
+
+        // Update timer every minute
+        function startResetTimer() {
+            updateResetTimer();
+            setInterval(updateResetTimer, 60000); // Update every minute
+        }
+
         // Load achievements on page load
         loadAchievements();
+        startResetTimer();
+        
+        // Show timer if daily tab is active
+        if (currentTab === 'daily') {
+            const resetTimer = document.getElementById('dailyResetTimer');
+            if (resetTimer) resetTimer.style.display = 'block';
+        }
     </script>
 </body>
 </html>

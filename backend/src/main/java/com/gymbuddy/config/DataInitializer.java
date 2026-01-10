@@ -50,23 +50,32 @@ public class DataInitializer implements CommandLineRunner {
         List<Achievement> existingAchievements = achievementRepository.findAll();
         
         if (existingAchievements.isEmpty()) {
-            // Create default achievements with coin rewards
-            List<Achievement> achievements = new ArrayList<>();
+            // Create daily achievements (3 same ones that can be completed in one workout session)
+            List<Achievement> dailyAchievements = new ArrayList<>();
+            dailyAchievements.add(new Achievement("Complete 1 Workout", 1, 15, true));
+            dailyAchievements.add(new Achievement("Complete 5 Sets", 5, 10, true));
+            dailyAchievements.add(new Achievement("Workout for 2 Minutes", 120, 20, true)); // 120 seconds = 2 minutes
             
-            achievements.add(new Achievement("First Workout", 1, 10));
-            achievements.add(new Achievement("5 Workouts Complete", 5, 25));
-            achievements.add(new Achievement("10 Workouts Complete", 10, 50));
-            achievements.add(new Achievement("25 Workouts Complete", 25, 100));
-            achievements.add(new Achievement("50 Workouts Complete", 50, 200));
-            achievements.add(new Achievement("100 Workouts Complete", 100, 500));
-            achievements.add(new Achievement("First Set Complete", 1, 5));
-            achievements.add(new Achievement("10 Sets Complete", 10, 30));
-            achievements.add(new Achievement("50 Sets Complete", 50, 150));
-            achievements.add(new Achievement("100 Sets Complete", 100, 300));
-            achievements.add(new Achievement("Week Warrior", 7, 75));
-            achievements.add(new Achievement("Monthly Champion", 30, 250));
+            // Create lifetime achievements with coin rewards
+            List<Achievement> lifetimeAchievements = new ArrayList<>();
+            lifetimeAchievements.add(new Achievement("First Workout", 1, 10, false));
+            lifetimeAchievements.add(new Achievement("5 Workouts Complete", 5, 25, false));
+            lifetimeAchievements.add(new Achievement("10 Workouts Complete", 10, 50, false));
+            lifetimeAchievements.add(new Achievement("25 Workouts Complete", 25, 100, false));
+            lifetimeAchievements.add(new Achievement("50 Workouts Complete", 50, 200, false));
+            lifetimeAchievements.add(new Achievement("100 Workouts Complete", 100, 500, false));
+            lifetimeAchievements.add(new Achievement("First Set Complete", 1, 5, false));
+            lifetimeAchievements.add(new Achievement("10 Sets Complete", 10, 30, false));
+            lifetimeAchievements.add(new Achievement("50 Sets Complete", 50, 150, false));
+            lifetimeAchievements.add(new Achievement("100 Sets Complete", 100, 300, false));
+            lifetimeAchievements.add(new Achievement("Week Warrior", 7, 75, false));
+            lifetimeAchievements.add(new Achievement("Monthly Champion", 30, 250, false));
             
-            achievementRepository.saveAll(achievements);
+            // Save all achievements
+            List<Achievement> allAchievements = new ArrayList<>();
+            allAchievements.addAll(dailyAchievements);
+            allAchievements.addAll(lifetimeAchievements);
+            achievementRepository.saveAll(allAchievements);
         }
 
         // Check if gymbuddies already exist
@@ -76,12 +85,12 @@ public class DataInitializer implements CommandLineRunner {
             // Create default gymbuddies
             List<GymBuddy> gymBuddies = new ArrayList<>();
             
-            gymBuddies.add(new GymBuddy("Rookie", 0, "/public/gymbuddy-rookie.png"));
-            gymBuddies.add(new GymBuddy("Warrior", 100, "/public/gymbuddy-warrior.png"));
-            gymBuddies.add(new GymBuddy("Champion", 250, "/public/gymbuddy-champion.png"));
-            gymBuddies.add(new GymBuddy("Elite", 500, "/public/gymbuddy-elite.png"));
-            gymBuddies.add(new GymBuddy("Legend", 1000, "/public/gymbuddy-legend.png"));
-            gymBuddies.add(new GymBuddy("Mythic", 2500, "/public/gymbuddy-mythic.png"));
+            gymBuddies.add(new GymBuddy("EarthBuddy", 0, "/public/gymbuddy-rookie.png", false));
+            gymBuddies.add(new GymBuddy("MysticalBuddy", 100, "/public/gymbuddy-warrior.png", false));
+            gymBuddies.add(new GymBuddy("LegendaryBuddy", 0, "/public/gymbuddy-champion.png", true));
+            gymBuddies.add(new GymBuddy("DarkBuddy", 500, "/public/gymbuddy-elite.png", false));
+            gymBuddies.add(new GymBuddy("AncientBuddy", 1000, "/public/gymbuddy-legend.png", false));
+            gymBuddies.add(new GymBuddy("PinkBuddy", 2500, "/public/gymbuddy-mythic.png", false));
             
             gymBuddyRepository.saveAll(gymBuddies);
         }

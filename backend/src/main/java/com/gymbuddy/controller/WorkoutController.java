@@ -1,5 +1,6 @@
 package com.gymbuddy.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import java.util.*;
 @RequestMapping("/api/workouts")
 public class WorkoutController {
     
+    @Autowired
     private final WorkoutService workoutService;
 
     public WorkoutController(WorkoutService workoutService) {

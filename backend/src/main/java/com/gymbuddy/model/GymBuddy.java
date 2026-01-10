@@ -18,6 +18,9 @@ public class GymBuddy {
     @Column(nullable = false)
     private String imagePath;
 
+    @Column(nullable = false)
+    private boolean requiresAllAchievements = false; // Whether this gymbuddy requires all achievements to be completed
+
     // Default constructor (required by JPA)
     public GymBuddy() {
     }
@@ -26,6 +29,13 @@ public class GymBuddy {
         this.name = name;
         this.coinCost = coinCost;
         this.imagePath = imagePath;
+    }
+
+    public GymBuddy(String name, int coinCost, String imagePath, boolean requiresAllAchievements) {
+        this.name = name;
+        this.coinCost = coinCost;
+        this.imagePath = imagePath;
+        this.requiresAllAchievements = requiresAllAchievements;
     }
 
     // Getters and Setters
@@ -59,5 +69,13 @@ public class GymBuddy {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public boolean isRequiresAllAchievements() {
+        return requiresAllAchievements;
+    }
+
+    public void setRequiresAllAchievements(boolean requiresAllAchievements) {
+        this.requiresAllAchievements = requiresAllAchievements;
     }
 }
