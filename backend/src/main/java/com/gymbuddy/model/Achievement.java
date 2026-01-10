@@ -30,6 +30,9 @@ public class Achievement {
     @Column(nullable = false)
     private int coinReward = 0; // Coin reward for completing this achievement
 
+    @Column(nullable = false)
+    private boolean isDaily = false; // Whether this is a daily achievement (true) or lifetime achievement (false)
+
 
     public Achievement() { // Default constructor (required by JPA)
 
@@ -61,6 +64,14 @@ public class Achievement {
         this.exerciseType = exerciseType;
         this.intensity = intensity;
         this.duration = duration;
+        this.isDaily = false;
+    }
+
+    public Achievement(String achievementName, int target, int coinReward, boolean isDaily) {
+        this.achievementName = achievementName;
+        this.target = target;
+        this.coinReward = coinReward;
+        this.isDaily = isDaily;
     }
 
     public void incrementCurrent() {
@@ -117,5 +128,13 @@ public class Achievement {
 
     public void setCoinReward(int coinReward) {
         this.coinReward = coinReward;
+    }
+
+    public boolean isDaily() {
+        return isDaily;
+    }
+
+    public void setDaily(boolean daily) {
+        isDaily = daily;
     }
 }

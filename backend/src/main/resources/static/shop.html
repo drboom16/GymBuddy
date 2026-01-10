@@ -57,11 +57,42 @@
             transition: transform 0.2s, box-shadow 0.2s;
             border: 2px solid #000;
             box-shadow: var(--shadow-sm);
+            position: relative;
         }
 
         .gymbuddy-card:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow-md);
+        }
+
+        .gymbuddy-card.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            position: relative;
+        }
+
+        .gymbuddy-card.locked:hover {
+            transform: none;
+        }
+
+        .locked-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        .locked-icon {
+            width: 32px;
+            height: 32px;
+            stroke: var(--text-primary);
         }
 
         .gymbuddy-info {
@@ -135,6 +166,23 @@
         .coin-button:active {
             transform: translateY(0);
             box-shadow: var(--shadow-sm);
+        }
+
+        .coin-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .coin-button:disabled:hover {
+            transform: none;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .coin-button i[data-lucide="check"] {
+            width: 28px;
+            height: 28px;
+            stroke: var(--primary-green-darker);
+            stroke-width: 3;
         }
 
         .coin-button i,
@@ -274,18 +322,30 @@
                 }
                 
                 gymbuddiesList.innerHTML = gymbuddies.map(gymbuddy => {
+                    const isAvailable = gymbuddy.isAvailable !== false;
+                    const isLocked = !isAvailable;
+                    const isFree = gymbuddy.coinCost === 0;
+                    
                     return `
-                        <div class="gymbuddy-card">
+                        <div class="gymbuddy-card ${isLocked ? 'locked' : ''}">
+                            ${isLocked ? '<div class="locked-overlay"><i data-lucide="lock" class="locked-icon"></i></div>' : ''}
                             <div class="gymbuddy-info">
                                 <img src="${gymbuddy.imagePath}" alt="${gymbuddy.name}" class="gymbuddy-image">
                                 <div class="gymbuddy-details">
                                     <h3 class="gymbuddy-name">${gymbuddy.name}</h3>
+                                    ${isLocked ? '<p style="font-size: var(--font-size-xs); color: var(--text-secondary); margin-top: var(--spacing-xs);">Complete all achievements to unlock</p>' : ''}
                                 </div>
                             </div>
-                            <button class="coin-button" onclick="purchaseGymBuddy(${gymbuddy.id}, ${gymbuddy.coinCost})" title="Purchase for ${gymbuddy.coinCost} coins">
-                                <i data-lucide="coins"></i>
-                                <span class="coin-amount">${gymbuddy.coinCost}</span>
-                            </button>
+                            ${isFree && isAvailable ? `
+                                <button class="coin-button" onclick="purchaseGymBuddy(${gymbuddy.id}, ${gymbuddy.coinCost})" title="Claim for free">
+                                    <i data-lucide="check"></i>
+                                </button>
+                            ` : !isFree ? `
+                                <button class="coin-button" ${isLocked ? 'disabled' : ''} onclick="${isLocked ? '' : `purchaseGymBuddy(${gymbuddy.id}, ${gymbuddy.coinCost})`}" title="${isLocked ? 'Complete all achievements to unlock' : `Purchase for ${gymbuddy.coinCost} coins`}" style="${isLocked ? 'opacity: 0.5; cursor: not-allowed;' : ''}">
+                                    <i data-lucide="coins"></i>
+                                    <span class="coin-amount">${gymbuddy.coinCost}</span>
+                                </button>
+                            ` : ''}
                         </div>
                     `;
                 }).join('');
