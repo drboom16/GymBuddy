@@ -1,11 +1,9 @@
 package com.gymbuddy.repository;
 
+import com.gymbuddy.model.GymBuddy;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.gymbuddy.model.Achievement;
-
 @Repository
-public interface AchievementRepository extends JpaRepository<Achievement, Long> {
-
+public interface GymBuddyRepository extends JpaRepository<GymBuddy, Long> {
 }

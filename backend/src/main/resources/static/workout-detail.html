@@ -79,6 +79,7 @@
             border-radius: var(--radius-lg);
             padding: var(--spacing-md) var(--spacing-lg);
             margin-bottom: var(--spacing-md);
+            box-shadow: 3px 3px 0 0 #000;
         }
 
         .exercise-header {
@@ -171,6 +172,7 @@
             border: 2px solid #000;
             border-radius: var(--radius-md);
             font-size: var(--font-size-base);
+            box-shadow: 2px 2px 0 0 #000;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
@@ -183,7 +185,7 @@
         }
 
         .set-button.complete {
-            background: #22c55e;
+            background: #15803d;
             color: white;
             opacity: 0.6;
             cursor: not-allowed;
@@ -281,6 +283,7 @@
             max-width: 400px;
             width: 85%;
             border: 2px solid #000;
+            box-shadow: 5px 5px 0 0 #000;
         }
 
         .set-config-modal .modal-title {
@@ -326,19 +329,19 @@
         }
 
         .intensity-low {
-            background: linear-gradient(135deg, #86efac 0%, #4ade80 100%);
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
         }
 
         .intensity-medium {
-            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            background: linear-gradient(135deg, #15803d 0%, #166534 100%);
         }
 
         .intensity-high {
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            background: linear-gradient(135deg, #166534 0%, #14532d 100%);
         }
 
         .intensity-max {
-            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            background: linear-gradient(135deg, #14532d 0%, #134e4a 100%);
         }
 
         .intensity-low.selected,
@@ -433,6 +436,7 @@
             width: 85%;
             border: 2px solid #000;
             text-align: center;
+            box-shadow: 5px 5px 0 0 #000;
         }
 
         .completion-modal .modal-title {
@@ -515,7 +519,8 @@
             width: 90%;
             border: 3px solid #000;
             transform: scale(0.95);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+            box-shadow: 5px 5px 0 0 #000;
         }
 
         .leave-workout-modal.active .modal {
@@ -622,7 +627,8 @@
             width: 90%;
             border: 3px solid #000;
             transform: scale(0.95);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+            box-shadow: 5px 5px 0 0 #000;
         }
 
         .end-workout-confirm-modal.active .modal {

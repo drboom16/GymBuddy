@@ -11,17 +11,185 @@
             background: var(--background-cream);
         }
 
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-2xl) var(--spacing-lg) var(--spacing-md) var(--spacing-lg);
+            padding-top: calc(var(--spacing-2xl) + env(safe-area-inset-top, 0px) + 45px);
+        }
+
+        .coin-display {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            background: white;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius-md);
+            border: 2px solid #000;
+            box-shadow: var(--shadow-sm);
+            font-weight: 600;
+            font-size: var(--font-size-base);
+        }
+
+        .coin-display i,
+        .coin-display svg {
+            width: 20px;
+            height: 20px;
+            stroke: #f59e0b;
+        }
+
+        .gymbuddies-container {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+            padding-bottom: var(--spacing-xl);
+        }
+
+        .gymbuddy-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--spacing-md);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 2px solid #000;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .gymbuddy-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .gymbuddy-info {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            flex: 1;
+        }
+
+        .gymbuddy-image {
+            width: 100px;
+            height: 140px;
+            border-radius: var(--radius-md);
+            object-fit: contain;
+            flex-shrink: 0;
+            border: 2px solid #000;
+            background: var(--background-cream);
+        }
+
+        .gymbuddy-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+
+        .gymbuddy-name {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .gymbuddy-price {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .gymbuddy-price i,
+        .gymbuddy-price svg {
+            width: 20px;
+            height: 20px;
+            stroke: #f59e0b;
+        }
+
+        .coin-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .coin-button:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .coin-button:active {
+            transform: translateY(0);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .coin-button i,
+        .coin-button svg {
+            width: 32px;
+            height: 32px;
+            stroke: #f59e0b;
+            fill: #fef3c7;
+        }
+
+        .coin-amount {
+            position: absolute;
+            font-size: var(--font-size-base);
+            font-weight: 700;
+            color: var(--text-primary);
+            z-index: 1;
+        }
+
+        .loading {
+            text-align: center;
+            padding: var(--spacing-2xl);
+            color: var(--text-secondary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-2xl);
+            color: var(--text-secondary);
+        }
+
+        .empty-state i,
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: var(--spacing-md);
+            stroke: var(--text-secondary);
+            opacity: 0.5;
+        }
     </style>
 </head>
 <body>
     <!-- iPhone Dynamic Island -->
     <div class="dynamic-island"></div>
 
-    <h1 class="page-title-large">Shop</h1>
+    <div class="header-container">
+        <h1 class="page-title-large" style="padding: 0; margin: 0;">Shop</h1>
+        <div class="coin-display" id="userCoins">
+            <i data-lucide="coins"></i>
+            <span id="coinAmount">0</span>
+        </div>
+    </div>
 
     <div class="content-container">
-        <div class="card card-large">
-            <p style="color: var(--text-secondary);">Browse and purchase items here.</p>
+        <div id="gymbuddiesList" class="gymbuddies-container">
+            <div class="loading">Loading gymbuddies...</div>
         </div>
     </div>
 
@@ -74,6 +242,75 @@
 
         // Set active nav-item on page load
         setActiveNavItem();
+
+        // Load user coins (placeholder - replace with actual API call)
+        function loadUserCoins() {
+            // TODO: Replace with actual API call to get user coins
+            const coins = localStorage.getItem('userCoins') || '0';
+            document.getElementById('coinAmount').textContent = coins;
+        }
+
+        // Fetch and render gymbuddies
+        async function loadGymBuddies() {
+            const gymbuddiesList = document.getElementById('gymbuddiesList');
+            
+            try {
+                const response = await fetch('/api/gymbuddies');
+                if (!response.ok) {
+                    throw new Error('Failed to load gymbuddies');
+                }
+                
+                const gymbuddies = await response.json();
+                
+                if (gymbuddies.length === 0) {
+                    gymbuddiesList.innerHTML = `
+                        <div class="empty-state">
+                            <i data-lucide="users"></i>
+                            <p>No gymbuddies available yet.</p>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                    return;
+                }
+                
+                gymbuddiesList.innerHTML = gymbuddies.map(gymbuddy => {
+                    return `
+                        <div class="gymbuddy-card">
+                            <div class="gymbuddy-info">
+                                <img src="${gymbuddy.imagePath}" alt="${gymbuddy.name}" class="gymbuddy-image">
+                                <div class="gymbuddy-details">
+                                    <h3 class="gymbuddy-name">${gymbuddy.name}</h3>
+                                </div>
+                            </div>
+                            <button class="coin-button" onclick="purchaseGymBuddy(${gymbuddy.id}, ${gymbuddy.coinCost})" title="Purchase for ${gymbuddy.coinCost} coins">
+                                <i data-lucide="coins"></i>
+                                <span class="coin-amount">${gymbuddy.coinCost}</span>
+                            </button>
+                        </div>
+                    `;
+                }).join('');
+                
+                lucide.createIcons();
+            } catch (error) {
+                console.error('Error loading gymbuddies:', error);
+                gymbuddiesList.innerHTML = `
+                    <div class="empty-state">
+                        <i data-lucide="alert-circle"></i>
+                        <p>Failed to load gymbuddies. Please try again later.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+            }
+        }
+
+        function purchaseGymBuddy(id, coinCost) {
+            // TODO: Implement purchase logic
+            alert(`Purchase ${id} for ${coinCost} coins? (Purchase functionality coming soon!)`);
+        }
+
+        // Load gymbuddies and user coins on page load
+        loadGymBuddies();
+        loadUserCoins();
     </script>
 </body>
 </html>
