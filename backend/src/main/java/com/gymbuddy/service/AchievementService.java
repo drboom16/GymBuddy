@@ -19,8 +19,8 @@ public class AchievementService {
         this.achievementRepository = achievementRepository;
     }
 
-    public ExerciseResponse createExerciseResponse(String type, String intensity, int duration) {
-        ExerciseResponse exerciseResponse = new ExerciseResponse(type, intensity, duration);
+    public ExerciseResponse createExerciseResponse(String type, int duration) {
+        ExerciseResponse exerciseResponse = new ExerciseResponse(type, duration);
         exerciseResponses.add(exerciseResponse);
         return exerciseResponse;
     }
@@ -64,12 +64,6 @@ public class AchievementService {
         // Check exercise type tag
         if (achievement.getExerciseType() != null && 
             !achievement.getExerciseType().equalsIgnoreCase(response.getType())) {
-            return false;
-        }
-
-        // Check intensity tag
-        if (achievement.getIntensity() != null && 
-            !achievement.getIntensity().equalsIgnoreCase(response.getIntensity())) {
             return false;
         }
 

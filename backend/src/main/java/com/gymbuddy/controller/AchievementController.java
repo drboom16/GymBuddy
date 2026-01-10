@@ -57,7 +57,6 @@ public class AchievementController {
     public ResponseEntity<Map<String, Object>> createExerciseResponse(@RequestBody Map<String, Object> request) {
         try {
             String type = (String) request.get("type");
-            String intensity = (String) request.get("intensity");
             
             int duration;
             Object durationObj = request.get("duration");
@@ -70,7 +69,7 @@ public class AchievementController {
                 throw new IllegalArgumentException("Duration must be a number or numeric string");
             }
             
-            ExerciseResponse exerciseResponse = achievementService.createExerciseResponse(type, intensity, duration);
+            ExerciseResponse exerciseResponse = achievementService.createExerciseResponse(type, duration);
             Map<String, Object> response = new HashMap<>();
             response.put("exerciseResponse", exerciseResponse);
             return ResponseEntity.ok(response);

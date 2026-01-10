@@ -305,53 +305,6 @@
             display: block;
         }
 
-        .intensity-bar {
-            height: 40px;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
-            gap: var(--spacing-sm);
-        }
-
-        .intensity-low,
-        .intensity-medium,
-        .intensity-high,
-        .intensity-max {
-            transition: all 0.3s ease;
-            color: white;
-            font-weight: 600;
-            font-size: var(--font-size-sm);
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            border: 2px solid #000;
-        }
-
-        .intensity-low {
-            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
-        }
-
-        .intensity-medium {
-            background: linear-gradient(135deg, #15803d 0%, #166534 100%);
-        }
-
-        .intensity-high {
-            background: linear-gradient(135deg, #166534 0%, #14532d 100%);
-        }
-
-        .intensity-max {
-            background: linear-gradient(135deg, #14532d 0%, #134e4a 100%);
-        }
-
-        .intensity-low.selected,
-        .intensity-medium.selected,
-        .intensity-high.selected,
-        .intensity-max.selected {
-            border: 3px solid #000;
-            transform: scale(1.05);
-        }
-
         .duration-bar {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -771,16 +724,6 @@
             <h2 class="modal-title">Configure Set</h2>
             <div class="modal-content">
                 <div class="selection-group">
-                    <label class="selection-label">Intensity</label>
-                    <div class="intensity-bar">
-                        <div class="intensity-low" onclick="selectIntensity(this, 'low')">LOW</div>
-                        <div class="intensity-medium" onclick="selectIntensity(this, 'medium')">MEDIUM</div>
-                        <div class="intensity-high" onclick="selectIntensity(this, 'high')">HIGH</div>
-                        <div class="intensity-max" onclick="selectIntensity(this, 'max')">MAX</div>
-                    </div>
-                </div>
-
-                <div class="selection-group">
                     <label class="selection-label">Duration</label>
                     <div class="duration-bar">
                         <div class="duration-option" onclick="selectDuration(this, '30s')">30s</div>
@@ -849,7 +792,7 @@
         let workoutState = {}; // Track exercise and set states
         let timerInterval = null;
         let startTime = null;
-        let currentSetConfig = null; // {exerciseIndex, setIndex, intensity, duration, exerciseType}
+        let currentSetConfig = null; // {exerciseIndex, setIndex, duration, exerciseType}
         let workoutStarted = false; // Track if workout has begun
         
         // Load timer state from localStorage
@@ -1005,22 +948,12 @@
             };
             
             // Reset selections
-            document.querySelectorAll('.intensity-low, .intensity-medium, .intensity-high, .intensity-max').forEach(el => {
-                el.classList.remove('selected');
-            });
             document.querySelectorAll('.duration-option').forEach(el => {
                 el.classList.remove('selected');
             });
             
             document.getElementById('setConfigModal').classList.add('active');
             lucide.createIcons();
-        }
-
-        function selectIntensity(element, value) {
-            document.querySelectorAll('.intensity-low, .intensity-medium, .intensity-high, .intensity-max').forEach(el => {
-                el.classList.remove('selected');
-            });
-            element.classList.add('selected');
         }
 
         function selectDuration(element, value) {
@@ -1031,15 +964,13 @@
         }
 
         function startSetAnimation() {
-            const selectedIntensity = document.querySelector('.intensity-low.selected, .intensity-medium.selected, .intensity-high.selected, .intensity-max.selected');
             const selectedDuration = document.querySelector('.duration-option.selected');
             
-            if (!selectedIntensity || !selectedDuration) {
-                alert('Please select intensity and duration!');
+            if (!selectedDuration) {
+                alert('Please select a duration!');
                 return;
             }
             
-            const intensity = selectedIntensity.textContent.trim().toLowerCase();
             const duration = selectedDuration.textContent.trim();
             const exerciseType = currentSetConfig.exerciseType || 'chest';
             
@@ -1047,7 +978,7 @@
             document.getElementById('setConfigModal').classList.remove('active');
             
             // Navigate to workout animation
-            window.location.href = `/workout-animation?type=${encodeURIComponent(exerciseType)}&intensity=${encodeURIComponent(intensity)}&duration=${encodeURIComponent(duration)}&workoutId=${workoutId}&exerciseIndex=${currentSetConfig.exerciseIndex}&setIndex=${currentSetConfig.setIndex}`;
+            window.location.href = `/workout-animation?type=${encodeURIComponent(exerciseType)}&duration=${encodeURIComponent(duration)}&workoutId=${workoutId}&exerciseIndex=${currentSetConfig.exerciseIndex}&setIndex=${currentSetConfig.setIndex}`;
         }
 
         // Handle return from animation
