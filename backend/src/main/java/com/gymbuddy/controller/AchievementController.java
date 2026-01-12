@@ -40,8 +40,10 @@ public class AchievementController {
     @PutMapping("/update")
     public ResponseEntity<Map<String, Object>> updateAchievements() {
         try {
-            achievementService.updateAchievements();
-            return ResponseEntity.ok(null);
+            int newCoinTotal = achievementService.updateAchievements();
+            Map<String, Object> response = new HashMap<>();
+            response.put("coins", newCoinTotal);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, Object> error = new HashMap<>();
             error.put("error", "Achievements could not be updated: " + e.getMessage());

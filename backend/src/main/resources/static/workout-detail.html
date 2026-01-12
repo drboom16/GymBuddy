@@ -23,6 +23,7 @@
             border-radius: var(--radius-xl);
             padding: var(--spacing-sm) var(--spacing-lg);
             margin-bottom: var(--spacing-xl);
+            box-shadow: 3px 3px 0 0 #000;
         }
 
         .workout-header-top {
@@ -51,7 +52,7 @@
             justify-content: flex-start;
             gap: var(--spacing-lg);
             color: var(--text-secondary);
-            font-size: var(--font-size-xs);
+            font-size: var(--font-size-base);
             margin-top: var(--spacing-sm);
             margin-bottom: var(--spacing-xs);
         }
@@ -62,12 +63,6 @@
             gap: var(--spacing-xs);
         }
 
-        .workout-header-actions {
-            display: flex;
-            justify-content: center;
-            margin-top: var(--spacing-xs);
-            margin-bottom: var(--spacing-xl);
-        }
 
         .exercises-section {
             margin-bottom: var(--spacing-xl);
@@ -96,6 +91,12 @@
             align-items: center;
             gap: var(--spacing-md);
             flex: 1;
+        }
+
+        .exercise-header-right {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
         }
 
         .exercise-name {
@@ -133,6 +134,7 @@
 
         .exercise-type-badge {
             padding: 4px 10px;
+            margin-right: var(--spacing-sm);
             border-radius: var(--radius-sm);
             font-size: var(--font-size-xs);
             font-weight: 700;
@@ -172,7 +174,6 @@
             border: 2px solid #000;
             border-radius: var(--radius-md);
             font-size: var(--font-size-base);
-            box-shadow: 2px 2px 0 0 #000;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
@@ -187,7 +188,6 @@
         .set-button.complete {
             background: #15803d;
             color: white;
-            opacity: 0.6;
             cursor: not-allowed;
         }
 
@@ -199,25 +199,34 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 48px;
-            height: 48px;
-            background: transparent;
-            border: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: #f87171;
+            border: 2px solid #000;
             border-radius: var(--radius-md);
             cursor: pointer;
             transition: all 0.2s;
             text-decoration: none;
-            color: var(--text-primary);
+            color: white;
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            box-shadow: 3px 3px 0 0 #000;
         }
 
         .back-button:hover {
-            opacity: 0.7;
-            transform: translateX(-2px);
+            background: #ef4444;
+            transform: translateY(-2px);
+            box-shadow: 4px 4px 0 0 #000;
+        }
+
+        .back-button:active {
+            transform: translateY(0);
+            box-shadow: 3px 3px 0 0 #000;
         }
 
         .page-header {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: var(--spacing-md);
             padding: var(--spacing-2xl) var(--spacing-lg) var(--spacing-md) var(--spacing-lg);
             padding-top: calc(var(--spacing-2xl) + env(safe-area-inset-top, 0px) + 45px);
@@ -231,27 +240,6 @@
             line-height: 1.2;
         }
 
-        .end-workout-btn {
-            background: #f87171;
-            color: white;
-            border: 2px solid #000;
-            border-radius: var(--radius-md);
-            padding: var(--spacing-xs) var(--spacing-lg);
-            font-size: var(--font-size-sm);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--spacing-xs);
-            width: 100%;
-        }
-
-        .end-workout-btn:hover {
-            background: #ef4444;
-            transform: translateY(-2px);
-        }
 
         /* Set Configuration Modal */
         .set-config-modal {
@@ -283,7 +271,6 @@
             max-width: 400px;
             width: 85%;
             border: 2px solid #000;
-            box-shadow: 5px 5px 0 0 #000;
         }
 
         .set-config-modal .modal-title {
@@ -358,71 +345,6 @@
             transform: none;
         }
 
-        /* Completion Modal */
-        .completion-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 400;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        .completion-modal.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .completion-modal .modal {
-            background: var(--background-white);
-            border-radius: var(--radius-xl);
-            padding: var(--spacing-xl);
-            max-width: 400px;
-            width: 85%;
-            border: 2px solid #000;
-            text-align: center;
-            box-shadow: 5px 5px 0 0 #000;
-        }
-
-        .completion-modal .modal-title {
-            font-size: var(--font-size-2xl);
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: var(--spacing-md);
-        }
-
-        .completion-modal .modal-message {
-            font-size: var(--font-size-base);
-            color: var(--text-secondary);
-            margin-bottom: var(--spacing-xl);
-        }
-
-        .completion-modal .btn-go-back {
-            width: 100%;
-            background: var(--primary-green);
-            color: white;
-            border: 2px solid #000;
-            padding: var(--spacing-md);
-            font-size: var(--font-size-base);
-            font-weight: 600;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .completion-modal .btn-go-back:hover {
-            background: var(--primary-green-dark);
-            transform: translateY(-2px);
-        }
-
         .loading-state,
         .error-state {
             text-align: center;
@@ -439,114 +361,6 @@
 
         .error-state {
             color: #dc2626;
-        }
-
-        /* Leave Workout Warning Modal */
-        .leave-workout-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 500;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s ease;
-        }
-
-        .leave-workout-modal.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .leave-workout-modal .modal {
-            background: var(--background-white);
-            border-radius: var(--radius-2xl);
-            padding: var(--spacing-2xl);
-            max-width: 420px;
-            width: 90%;
-            border: 3px solid #000;
-            transform: scale(0.95);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
-            box-shadow: 5px 5px 0 0 #000;
-        }
-
-        .leave-workout-modal.active .modal {
-            transform: scale(1);
-        }
-
-        .leave-workout-modal .modal-icon {
-            display: flex;
-            justify-content: center;
-            margin-bottom: var(--spacing-lg);
-        }
-
-        .leave-workout-modal .modal-icon i {
-            width: 64px;
-            height: 64px;
-            color: #dc2626;
-        }
-
-        .leave-workout-modal .modal-title {
-            font-size: var(--font-size-2xl);
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: var(--spacing-md);
-            text-align: center;
-        }
-
-        .leave-workout-modal .modal-message {
-            font-size: var(--font-size-base);
-            color: var(--text-secondary);
-            margin-bottom: var(--spacing-2xl);
-            line-height: 1.6;
-            text-align: center;
-        }
-
-        .leave-workout-modal .modal-actions {
-            display: flex;
-            gap: var(--spacing-md);
-        }
-
-        .leave-workout-modal .btn-stay {
-            flex: 1;
-            padding: var(--spacing-md) var(--spacing-lg);
-            background: var(--background-white);
-            color: var(--text-primary);
-            border: 2px solid #000;
-            border-radius: var(--radius-lg);
-            font-size: var(--font-size-base);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .leave-workout-modal .btn-stay:hover {
-            background: var(--neutral-gray-light);
-            transform: translateY(-1px);
-        }
-
-        .leave-workout-modal .btn-leave {
-            flex: 1;
-            padding: var(--spacing-md) var(--spacing-lg);
-            background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
-            color: white;
-            border: 2px solid #000;
-            border-radius: var(--radius-lg);
-            font-size: var(--font-size-base);
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .leave-workout-modal .btn-leave:hover {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            transform: translateY(-2px);
         }
 
         /* End Workout Confirmation Modal */
@@ -580,8 +394,7 @@
             width: 90%;
             border: 3px solid #000;
             transform: scale(0.95);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
-            box-shadow: 5px 5px 0 0 #000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .end-workout-confirm-modal.active .modal {
@@ -663,10 +476,8 @@
     <div class="dynamic-island"></div>
 
     <div class="page-header">
-        <a href="/train" class="back-button">
-            <i data-lucide="arrow-left"></i>
-        </a>
         <h1 class="page-title">Workout</h1>
+        <button class="back-button" id="exitWorkoutBtn">Leave</button>
     </div>
 
     <div class="content-container">
@@ -698,14 +509,6 @@
                 </div>
             </div>
             
-            <!-- End Workout Button -->
-            <div class="workout-header-actions">
-                <button class="end-workout-btn" id="endWorkoutBtn">
-                    <i data-lucide="x" style="width: 18px; height: 18px;"></i>
-                    End Workout
-                </button>
-            </div>
-
             <!-- Exercises Section -->
             <div class="exercises-section">
                 <div class="section-header" style="padding: 0;">
@@ -734,32 +537,6 @@
                 </div>
 
                 <button class="go-button" id="goButton" onclick="startSetAnimation()">GO!</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Completion Modal -->
-    <div class="completion-modal" id="completionModal">
-        <div class="modal">
-            <h2 class="modal-title">Set Complete!</h2>
-            <div class="modal-message">Great work! Ready for the next set?</div>
-            <button class="btn-go-back" onclick="closeCompletionModal()">Go Back</button>
-        </div>
-    </div>
-
-    <!-- Leave Workout Warning Modal -->
-    <div class="leave-workout-modal" id="leaveWorkoutModal">
-        <div class="modal">
-            <div class="modal-icon">
-                <i data-lucide="alert-triangle"></i>
-            </div>
-            <h2 class="modal-title">Leave Workout?</h2>
-            <div class="modal-message">
-                Your workout progress will not be saved. Are you sure you want to leave?
-            </div>
-            <div class="modal-actions">
-                <button class="btn-stay" onclick="closeLeaveWorkoutModal()">Stay</button>
-                <button class="btn-leave" onclick="confirmLeaveWorkout()">Leave</button>
             </div>
         </div>
     </div>
@@ -801,6 +578,47 @@
         if (savedStartTime) {
             startTime = parseInt(savedStartTime);
         }
+        
+        // Load workout state from localStorage
+        const WORKOUT_STATE_KEY = `workout_state_${workoutId}`;
+        function loadWorkoutState() {
+            const savedState = localStorage.getItem(WORKOUT_STATE_KEY);
+            if (savedState) {
+                try {
+                    const parsed = JSON.parse(savedState);
+                    // Replace workoutState with saved state, but convert string keys to numbers
+                    workoutState = {};
+                    Object.keys(parsed).forEach(key => {
+                        const numKey = parseInt(key);
+                        if (!isNaN(numKey)) {
+                            workoutState[numKey] = parsed[key];
+                            // Also convert set indices to numbers
+                            if (workoutState[numKey].sets) {
+                                const sets = {};
+                                Object.keys(workoutState[numKey].sets).forEach(setKey => {
+                                    const numSetKey = parseInt(setKey);
+                                    if (!isNaN(numSetKey)) {
+                                        sets[numSetKey] = workoutState[numKey].sets[setKey];
+                                    }
+                                });
+                                workoutState[numKey].sets = sets;
+                            }
+                        }
+                    });
+                } catch (e) {
+                    console.error('Error loading workout state:', e);
+                    workoutState = {};
+                }
+            }
+        }
+        
+        function saveWorkoutState() {
+            try {
+                localStorage.setItem(WORKOUT_STATE_KEY, JSON.stringify(workoutState));
+            } catch (e) {
+                console.error('Error saving workout state:', e);
+            }
+        }
 
         // Load workout data
         async function loadWorkout() {
@@ -818,13 +636,14 @@
                 workoutData = await response.json();
                 loadingState.style.display = 'none';
                 workoutContent.style.display = 'block';
+                
+                // Load persisted workout state before rendering
+                loadWorkoutState();
+                
                 renderWorkout(workoutData);
                 startTimer(); // Start timer but don't mark workout as started yet
                 // Update timer display immediately
                 updateTimer();
-                
-                // Process any pending set complete after workout is loaded
-                await processPendingSetComplete();
                 
             } catch (error) {
                 console.error('Error loading workout:', error);
@@ -842,8 +661,10 @@
             
             // Initialize workout state - use sets from workout data, no configuration
             workout.exercises.forEach((exercise, exIndex) => {
+                const noSets = exercise.noSets || 1;
+                
+                // Initialize or update exercise state
                 if (!workoutState[exIndex]) {
-                    const noSets = exercise.noSets || 1;
                     workoutState[exIndex] = {
                         noSets: noSets,
                         sets: {}
@@ -852,8 +673,24 @@
                     for (let i = 0; i < noSets; i++) {
                         workoutState[exIndex].sets[i] = false; // false = incomplete
                     }
+                } else {
+                    // Preserve existing completion state, but ensure structure matches
+                    if (!workoutState[exIndex].sets) {
+                        workoutState[exIndex].sets = {};
+                    }
+                    // Ensure all sets are accounted for (in case exercise was modified)
+                    for (let i = 0; i < noSets; i++) {
+                        // Only initialize if not already set (preserve true values)
+                        if (workoutState[exIndex].sets[i] === undefined) {
+                            workoutState[exIndex].sets[i] = false;
+                        }
+                    }
+                    workoutState[exIndex].noSets = noSets;
                 }
             });
+            
+            // Save state after initialization to ensure it's persisted
+            saveWorkoutState();
             
             // Render exercises
             const exercisesList = document.getElementById('exercisesList');
@@ -867,12 +704,14 @@
             } else {
                 exercisesList.innerHTML = workout.exercises.map((exercise, exIndex) => {
                     const typeClass = exercise.type ? `exercise-type-${exercise.type}` : '';
-                    const noSets = workoutState[exIndex].noSets;
-                    const sets = workoutState[exIndex].sets;
+                    const noSets = exercise.noSets || 1;
+                    const exerciseSets = exercise.sets || [];
                     
-                    // Generate sets buttons
+                    // Generate sets buttons - check completion from backend data
                     const setsButtons = Array.from({ length: noSets }, (_, setIndex) => {
-                        const isComplete = sets[setIndex] === true;
+                        // Check if set is completed - handle both 'completed' and 'isCompleted' property names
+                        const set = exerciseSets[setIndex];
+                        const isComplete = set && (set.completed === true || set.isCompleted === true);
                         return `
                             <button class="set-button ${isComplete ? 'complete' : 'incomplete'}" 
                                     onclick="openSetConfig(${exIndex}, ${setIndex}, '${exercise.type || ''}')"
@@ -887,13 +726,15 @@
                             <div class="exercise-header" onclick="toggleExerciseDropdown(${exIndex})">
                                 <div class="exercise-header-left">
                                     <div class="exercise-name">${exercise.name}</div>
+                                </div>
+                                <div class="exercise-header-right">
                                     ${exercise.type ? `
                                         <div class="exercise-type-badge ${typeClass}">
                                             ${exercise.type}
                                         </div>
                                     ` : ''}
+                                    <i data-lucide="chevron-down" class="exercise-dropdown-arrow" id="arrow-${exIndex}"></i>
                                 </div>
-                                <i data-lucide="chevron-down" class="exercise-dropdown-arrow" id="arrow-${exIndex}"></i>
                             </div>
                             <div class="exercise-content" id="content-${exIndex}">
                                 <div class="sets-container">
@@ -913,12 +754,11 @@
         function updateCompletedSetsCount(workout) {
             let completedCount = 0;
             
-            // Count completed sets from workoutState
-            Object.keys(workoutState).forEach(exIndex => {
-                const exerciseState = workoutState[exIndex];
-                if (exerciseState && exerciseState.sets) {
-                    Object.keys(exerciseState.sets).forEach(setIndex => {
-                        if (exerciseState.sets[setIndex] === true) {
+            // Count completed sets from backend data
+            workout.exercises.forEach((exercise) => {
+                if (exercise.sets) {
+                    exercise.sets.forEach(set => {
+                        if (set && (set.completed === true || set.isCompleted === true)) {
                             completedCount++;
                         }
                     });
@@ -928,8 +768,8 @@
             // Update display
             const completedSetsElement = document.getElementById('completedSetsCount');
 
-            const totalSets = workout.exercises.reduce((total, exercise, exIndex) => {
-                return total + (workoutState[exIndex]?.noSets || exercise.noSets || 1);
+            const totalSets = workout.exercises.reduce((total, exercise) => {
+                return total + (exercise.noSets || 1);
             }, 0);
 
             if (completedSetsElement) {
@@ -981,65 +821,7 @@
             window.location.href = `/workout-animation?type=${encodeURIComponent(exerciseType)}&duration=${encodeURIComponent(duration)}&workoutId=${workoutId}&exerciseIndex=${currentSetConfig.exerciseIndex}&setIndex=${currentSetConfig.setIndex}`;
         }
 
-        // Handle return from animation
-        let pendingSetComplete = null;
-        
-        window.addEventListener('load', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('setComplete') === 'true') {
-                const exIndex = parseInt(urlParams.get('exerciseIndex'));
-                const setIndex = parseInt(urlParams.get('setIndex'));
-                
-                if (!isNaN(exIndex) && !isNaN(setIndex)) {
-                    // Store for processing after workout loads
-                    pendingSetComplete = { exIndex, setIndex };
-                    
-                    // Clean URL immediately
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                }
-            }
-        });
-        
-        // Process pending set complete after workout loads
-        async function processPendingSetComplete() {
-            if (pendingSetComplete && workoutData && workoutState[pendingSetComplete.exIndex]) {
-                const { exIndex, setIndex } = pendingSetComplete;
-                
-                // Mark workout as started if not already
-                if (!workoutStarted) {
-                    workoutStarted = true;
-                }
-                
-                // Ensure workoutState is initialized for this exercise
-                if (!workoutState[exIndex]) {
-                    const exercise = workoutData.exercises[exIndex];
-                    const noSets = exercise.noSets || 1;
-                    workoutState[exIndex] = {
-                        noSets: noSets,
-                        sets: {}
-                    };
-                    for (let i = 0; i < noSets; i++) {
-                        workoutState[exIndex].sets[i] = false;
-                    }
-                }
-                
-                // Mark set as complete
-                if (workoutState[exIndex].sets) {
-                    workoutState[exIndex].sets[setIndex] = true;
-                    renderWorkout(workoutData);
-                    updateCompletedSetsCount(workoutData);
-                    
-                    // Show completion modal
-                    document.getElementById('completionModal').classList.add('active');
-                }
-                
-                pendingSetComplete = null;
-            }
-        }
-
-        function closeCompletionModal() {
-            document.getElementById('completionModal').classList.remove('active');
-        }
+        // Set completion is now handled in workout-animation.html via backend API
 
         function startTimer() {
             // Always check localStorage first to ensure we have the latest saved time
@@ -1114,19 +896,67 @@
                 clearInterval(timerInterval);
                 timerInterval = null;
             }
-            // Clear timer from localStorage
+            // Clear timer and workout state from localStorage
             localStorage.removeItem(TIMER_STORAGE_KEY);
+            localStorage.removeItem(WORKOUT_STATE_KEY);
             startTime = null;
+            workoutState = {}; // Reset workout state
 
-            const response = await fetch('/api/achievements/update', {
-                method: 'PUT'
-            });
-
-            if (response.ok) {
-                window.location.href = '/train';
-            } else {
-                console.error("There was an error updating achievements");
+            // Check if at least one exercise is fully completed (all sets within that exercise must be completed)
+            let hasCompletedExercise = false;
+            if (workoutData && workoutData.exercises) {
+                for (const exercise of workoutData.exercises) {
+                    if (exercise.sets && exercise.sets.length > 0) {
+                        // An exercise is completed only if ALL of its sets are completed
+                        let isExerciseCompleted = true;
+                        for (const set of exercise.sets) {
+                            const isSetCompleted = set && (set.completed === true || set.isCompleted === true);
+                            if (!isSetCompleted) {
+                                isExerciseCompleted = false;
+                                break;
+                            }
+                        }
+                        if (isExerciseCompleted) {
+                            hasCompletedExercise = true;
+                            break; // Found one completed exercise, no need to check others
+                        }
+                    }
+                }
             }
+
+            // Only mark workout as completed and update achievements if at least one exercise is fully completed
+            if (hasCompletedExercise) {
+                // Mark workout as completed
+                try {
+                    await fetch(`/api/workouts/${workoutId}/complete`, {
+                        method: 'PUT'
+                    });
+                } catch (error) {
+                    console.error("Error marking workout as completed:", error);
+                }
+
+                // Update achievements
+                try {
+                    const response = await fetch('/api/achievements/update', {
+                        method: 'PUT'
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        // Update localStorage with new coin count
+                        if (data.coins !== undefined) {
+                            localStorage.setItem('userCoins', data.coins.toString());
+                        }
+                    } else {
+                        console.error("There was an error updating achievements");
+                    }
+                } catch (error) {
+                    console.error("Error updating achievements:", error);
+                }
+            }
+
+            // Redirect regardless of whether sets were completed
+            window.location.href = '/train';
         }
 
         // Close modals when clicking outside
@@ -1136,48 +966,9 @@
             }
         });
 
-        document.getElementById('completionModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeCompletionModal();
-            }
-        });
+        // Exit workout button (replaces back arrow)
+        document.getElementById('exitWorkoutBtn').addEventListener('click', showEndWorkoutModal);
 
-        // End workout button
-        document.getElementById('endWorkoutBtn').addEventListener('click', showEndWorkoutModal);
-
-        // Intercept back button click
-        document.querySelector('.back-button').addEventListener('click', function(e) {
-            e.preventDefault();
-            showLeaveWorkoutModal();
-        });
-
-        // Leave workout modal functions
-        function showLeaveWorkoutModal() {
-            document.getElementById('leaveWorkoutModal').classList.add('active');
-            lucide.createIcons();
-        }
-
-        function closeLeaveWorkoutModal() {
-            document.getElementById('leaveWorkoutModal').classList.remove('active');
-        }
-
-        function confirmLeaveWorkout() {
-            // Clear timer from localStorage
-            localStorage.removeItem(TIMER_STORAGE_KEY);
-            if (timerInterval) {
-                clearInterval(timerInterval);
-                timerInterval = null;
-            }
-            // Navigate back to train page
-            window.location.href = '/train';
-        }
-
-        // Close leave workout modal when clicking outside
-        document.getElementById('leaveWorkoutModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeLeaveWorkoutModal();
-            }
-        });
 
         // Close end workout modal when clicking outside
         document.getElementById('endWorkoutConfirmModal').addEventListener('click', function(e) {

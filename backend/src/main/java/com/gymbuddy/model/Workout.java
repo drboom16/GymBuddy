@@ -1,6 +1,7 @@
 package com.gymbuddy.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import com.gymbuddy.model.Exercises.*;
@@ -19,6 +20,12 @@ public class Workout {
     @CollectionTable(name = "workout_exercises", joinColumns = @JoinColumn(name = "workout_id"))
     private List<Exercise> exercises;
 
+    @Column
+    private LocalDateTime completedAt;
+
+    @Column
+    private String color; // Color hex code for the workout card
+
     // Default constructor (required by JPA)
     public Workout() {
         this.exercises = new ArrayList<>();
@@ -27,6 +34,12 @@ public class Workout {
     public Workout(String workoutName, List<Exercise> exercises) {
         this.workoutName = workoutName;
         this.exercises = new ArrayList<>(exercises);
+    }
+
+    public Workout(String workoutName, List<Exercise> exercises, String color) {
+        this.workoutName = workoutName;
+        this.exercises = new ArrayList<>(exercises);
+        this.color = color;
     }
     
     // Getters and Setters
@@ -52,5 +65,21 @@ public class Workout {
 
     public void setExercises(List<Exercise> exercises) {
         this.exercises = exercises;
+    }
+
+    public LocalDateTime getCompletedAt() {
+        return completedAt;
+    }
+
+    public void setCompletedAt(LocalDateTime completedAt) {
+        this.completedAt = completedAt;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }
