@@ -786,25 +786,11 @@
                     return;
                 }
                 
-                // Color palette for workout tabs
-                const workoutColors = [
-                    '#ffbe1e', // Yellow/Orange
-                    '#f48952', // Orange/Coral
-                    '#8991f3', // Purple/Blue
-                    '#8cea64', // Green
-                    '#ff6b9d', // Pink (complementary)
-                    '#4ecdc4', // Turquoise (complementary)
-                    '#ffa07a', // Light Salmon (complementary)
-                    '#ba68c8', // Purple (complementary)
-                    '#ffd93d', // Bright Yellow (complementary)
-                    '#6c5ce7'  // Indigo (complementary)
-                ];
-                
-                workoutList.innerHTML = workouts.map((workout, index) => {
+                workoutList.innerHTML = workouts.map((workout) => {
                     const workoutName = workout.workoutName || 'Unnamed Workout';
                     const exercises = workout.exercises || [];
-                    const colorIndex = index % workoutColors.length;
-                    const workoutColor = workoutColors[colorIndex];
+                    // Use the stored color from the workout, or fallback to a default
+                    const workoutColor = workout.color || '#f48952';
                     
                     const exercisesList = exercises.map(exercise => {
                         const exerciseName = exercise.name || 'Unknown Exercise';

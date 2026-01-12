@@ -18,8 +18,9 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
-            background: white;
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: var(--background-cream);
+            font-family: var(--font-family);
+            color: var(--text-primary);
         }
 
         .workout-screen {
@@ -28,7 +29,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: white;
+            background: var(--background-cream);
             z-index: 0;
             display: block;
             overflow: hidden;
@@ -49,7 +50,7 @@
             left: -150%;
             width: 300%;
             height: 300%;
-            background: white;
+            background: var(--background-cream);
             transform: rotate(-30deg) translate(-50%, -50%);
             transform-origin: top left;
             z-index: 2500;
@@ -61,14 +62,14 @@
         }
 
         .go-text {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-family: var(--font-family);
             position: fixed;
             top: 50%;
             left: 0;
             transform: translate(-100%, -50%);
             font-size: 120px;
             font-weight: 700;
-            color: #333;
+            color: var(--text-primary);
             z-index: 2600;
             opacity: 1;
             transition: transform 0.5s ease;
@@ -88,17 +89,18 @@
             position: fixed;
             top: 20px;
             left: 20px;
-            background: grey;
+            background: #f87171;
             color: white;
-            border: none;
-            padding: 24px 48px;
-            font-size: 24px;
+            border: 2px solid #000;
+            padding: var(--spacing-sm) var(--spacing-md);
+            font-size: var(--font-size-base);
             font-weight: 600;
-            border-radius: 12px;
+            border-radius: var(--radius-md);
             cursor: pointer;
             z-index: 3100;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-sm);
         }
 
         .end-workout-button.visible {
@@ -106,8 +108,14 @@
         }
 
         .end-workout-button:hover {
-            background: #a0a0a0;
+            background: #ef4444;
             transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .end-workout-button:active {
+            transform: translateY(0);
+            box-shadow: var(--shadow-sm);
         }
 
         .timer {
@@ -117,13 +125,12 @@
             transform: translateX(-50%);
             font-size: 120px;
             font-weight: 700;
-            color: #333;
+            color: var(--text-primary);
             z-index: 2800;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-family: var(--font-family);
             letter-spacing: -2px;
             opacity: 0;
             transition: opacity 0.3s ease;
-            /* Timer visible but countdown disabled for development */
         }
 
         .modal-overlay {
@@ -132,7 +139,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(4px);
             display: flex;
             align-items: center;
@@ -149,13 +156,14 @@
         }
 
         .modal {
-            background: white;
-            border-radius: 24px;
-            padding: 32px;
+            background: var(--background-white);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
             max-width: 500px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
+            border: 2px solid #000;
             transform: scale(0.9) translateY(20px);
             transition: transform 0.3s ease;
         }
@@ -173,34 +181,34 @@
         }
 
         .modal-title {
-            font-size: 28px;
+            font-size: var(--font-size-2xl);
             font-weight: 700;
-            color: #333;
+            color: var(--text-primary);
             margin: 0;
         }
 
         .modal-close {
             background: none;
             border: none;
-            font-size: 24px;
+            font-size: var(--font-size-xl);
             cursor: pointer;
-            color: #666;
+            color: var(--text-secondary);
             padding: 0;
             width: 32px;
             height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 8px;
+            border-radius: var(--radius-sm);
             transition: background 0.2s;
         }
 
         .modal-close:hover {
-            background: #f0f0f0;
+            background: var(--neutral-gray-light);
         }
 
         .modal-content {
-            color: #666;
+            color: var(--text-secondary);
             line-height: 1.6;
         }
 
@@ -210,56 +218,61 @@
 
         .workout-complete-modal .modal {
             text-align: center;
-            padding: 32px;
+            padding: var(--spacing-xl);
             max-width: 500px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
+            border: 2px solid #000;
         }
 
         .workout-complete-modal .modal-header {
             border-bottom: none;
-            margin-bottom: 24px;
+            margin-bottom: var(--spacing-lg);
             padding-bottom: 0;
         }
 
         .workout-complete-modal .modal-title {
-            font-size: 42px;
+            font-size: var(--font-size-3xl);
             font-weight: 700;
-            color: #333;
+            color: var(--text-primary);
             letter-spacing: -1px;
-            margin-bottom: 16px;
+            margin-bottom: var(--spacing-md);
         }
 
         .workout-complete-message {
-            font-size: 20px;
+            font-size: var(--font-size-lg);
             font-weight: 500;
-            color: #666;
-            margin: 0 0 40px 0;
+            color: var(--text-secondary);
+            margin: 0 0 var(--spacing-xl) 0;
             line-height: 1.5;
         }
 
         .modal-button {
-            background: black;
+            background: var(--primary-green-darker);
             color: white;
-            border: 2px solid black;
-            padding: 18px 48px;
-            font-size: 20px;
+            border: 2px solid #000;
+            padding: var(--spacing-md) var(--spacing-xl);
+            font-size: var(--font-size-base);
             font-weight: 600;
-            border-radius: 16px;
+            border-radius: var(--radius-lg);
             cursor: pointer;
             margin-top: 0;
-            transition: transform 0.2s;
+            transition: all 0.2s;
             width: 100%;
             max-width: 300px;
+            box-shadow: var(--shadow-sm);
         }
 
         .modal-button:hover {
+            background: var(--primary-green-dark);
             transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         .modal-button:active {
             transform: translateY(0);
+            box-shadow: var(--shadow-sm);
         }
 
         /* Legs GIF Container */
@@ -316,25 +329,29 @@
                 <h2 class="modal-title">Are you sure you want to leave?</h2>
             </div>
             <div class="modal-content">
-                <button class="modal-button" onclick="endExercise()">
-                    Leave
-                </button>
-                <button class="modal-button" onclick="document.getElementById('exitExerciseModal').classList.remove('active')">
-                    Cancel
-                </button>
+                <div class="modal-actions">
+                    <button class="modal-button secondary" onclick="document.getElementById('exitExerciseModal').classList.remove('active')">
+                        Cancel
+                    </button>
+                    <button class="modal-button danger" onclick="endExercise()">
+                        Leave
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Workout Complete Modal -->
+    <!-- Set Complete Modal -->
     <div class="modal-overlay workout-complete-modal" id="workoutCompleteModal">
         <div class="modal">
             <div class="modal-header">
-                <h2 class="modal-title">Workout Complete!</h2>
+                <h2 class="modal-title">Set Complete!</h2>
             </div>
             <div class="modal-content">
-                <div class="workout-complete-message" id="workoutCompleteMessage"></div>
-                <button class="modal-button" onclick="returnToHome()">Return to Home</button>
+                <div class="workout-complete-message">Great work! Ready for the next set?</div>
+                <div class="modal-actions" style="justify-content: center;">
+                    <button class="modal-button" onclick="returnToHome()" style="max-width: 200px;">Go Back</button>
+                </div>
             </div>
         </div>
     </div>
@@ -377,10 +394,6 @@
             }
 
             const modal = document.getElementById('workoutCompleteModal');
-            const messageElement = document.getElementById('workoutCompleteMessage');
-            const randomMessage = getRandomMotivationalMessage();
-            
-            messageElement.textContent = randomMessage;
             modal.classList.add('active');
             
             // Save workout to backend
@@ -417,19 +430,35 @@
             }
         }
 
-        function returnToHome() {
-            // Check if we came from a workout detail page
+        async function returnToHome() {
             const params = new URLSearchParams(window.location.search);
             const workoutId = params.get('workoutId');
-            const exerciseIndex = params.get('exerciseIndex');
-            const setIndex = params.get('setIndex');
-            
-            if (workoutId && exerciseIndex !== null && setIndex !== null) {
-                // Return to workout detail page with completion flag
-                window.location.href = `/train/${workoutId}?setComplete=true&exerciseIndex=${exerciseIndex}&setIndex=${setIndex}`;
+            const exerciseIndex = parseInt(params.get('exerciseIndex'));
+            const setIndex = parseInt(params.get('setIndex'));
+
+            // Mark set as complete on backend
+            if (workoutId && !isNaN(exerciseIndex) && !isNaN(setIndex)) {
+                try {
+                    const response = await fetch(`/api/workouts/${workoutId}/exercises/${exerciseIndex}/sets/${setIndex}/complete`, {
+                        method: 'PATCH'
+                    });
+                    
+                    if (response.ok) {
+                        console.log('Set marked as complete on backend');
+                    } else {
+                        console.error('Failed to mark set as complete:', response.statusText);
+                    }
+                } catch (error) {
+                    console.error('Error marking set as complete:', error);
+                }
+            }
+
+            // Return to the workout detail page
+            if (workoutId) {
+                window.location.href = `/train/${workoutId}`;
             } else {
                 // Default behavior: return to home
-                window.location = '/home';
+                window.location.href = '/home';
             }
         }
 

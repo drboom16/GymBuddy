@@ -332,7 +332,59 @@
             box-shadow: var(--shadow-sm);
         }
 
+        .completed-workouts-section {
+            padding: 0 var(--spacing-lg) var(--spacing-lg) var(--spacing-lg);
+        }
 
+        .completed-workouts-heading {
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .completed-workout-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-md) var(--spacing-lg);
+            margin-bottom: var(--spacing-sm);
+            border-radius: var(--radius-lg);
+            border: 2px solid #000;
+            box-shadow: var(--shadow-sm);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .completed-workout-name {
+            font-size: var(--font-size-base);
+            flex: 1;
+        }
+
+        .completed-workout-date {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            margin-left: var(--spacing-md);
+        }
+
+        .home-gif-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-2xl) var(--spacing-lg);
+            margin-top: auto;
+        }
+
+        .home-gif {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .content-container {
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 200px);
+        }
 
     </style>
 </head>
@@ -346,9 +398,19 @@
         <a href="/" class="leave-button">Leave</a>
     </div>
 
+    <!-- Completed Workouts Section -->
+    <div class="completed-workouts-section" id="completedWorkoutsSection" style="display: none;">
+        <h2 class="completed-workouts-heading">Recent Workouts</h2>
+        <div id="completedWorkoutsList">
+            <!-- Completed workouts will be loaded here -->
+        </div>
+    </div>
+
     <!-- Content Container -->
     <div class="content-container">
-        <!-- Home page content can be added here in the future -->
+        <div class="home-gif-container">
+            <img src="/public/home-1.gif" alt="Home animation" class="home-gif">
+        </div>
     </div>
 
     <div class="bottom-nav">
@@ -401,6 +463,61 @@
 
         // Set active nav-item on page load
         setActiveNavItem();
+
+        // Load and display completed workouts
+        async function loadCompletedWorkouts() {
+            try {
+                const response = await fetch('/api/workouts/completed/recent');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch completed workouts');
+                }
+                
+                const workouts = await response.json();
+                const container = document.getElementById('completedWorkoutsList');
+                const section = document.getElementById('completedWorkoutsSection');
+                
+                if (!workouts || workouts.length === 0) {
+                    container.innerHTML = '';
+                    section.style.display = 'none';
+                    return;
+                }
+
+                // Show the section if there are workouts
+                section.style.display = 'block';
+
+                container.innerHTML = workouts.map((workout) => {
+                    const workoutName = workout.workoutName || 'Unnamed Workout';
+                    // Use the stored color from the workout, or fallback to a default
+                    const workoutColor = workout.color || '#f48952';
+                    
+                    // Format date as "Wed 14" (day name and day of month)
+                    let dateText = '';
+                    if (workout.completedAt) {
+                        const completedDate = new Date(workout.completedAt);
+                        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                        const dayName = days[completedDate.getDay()];
+                        const dayOfMonth = completedDate.getDate();
+                        dateText = `${dayName} ${dayOfMonth}`;
+                    }
+                    
+                    return `
+                        <div class="completed-workout-item" style="background: ${workoutColor};">
+                            <span class="completed-workout-name">${workoutName}</span>
+                            <span class="completed-workout-date">${dateText}</span>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading completed workouts:', error);
+                const section = document.getElementById('completedWorkoutsSection');
+                const container = document.getElementById('completedWorkoutsList');
+                container.innerHTML = '';
+                section.style.display = 'none';
+            }
+        }
+
+        // Load completed workouts on page load
+        loadCompletedWorkouts();
     </script>
 </body>
 </html>

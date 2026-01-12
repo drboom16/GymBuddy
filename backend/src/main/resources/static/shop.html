@@ -291,11 +291,19 @@
         // Set active nav-item on page load
         setActiveNavItem();
 
-        // Load user coins (placeholder - replace with actual API call)
-        function loadUserCoins() {
-            // TODO: Replace with actual API call to get user coins
-            const coins = localStorage.getItem('userCoins') || '0';
-            document.getElementById('coinAmount').textContent = coins;
+        // Load user coins from API
+        async function loadUserCoins() {
+            try {
+                const response = await fetch('/api/user/coins');
+                if (!response.ok) {
+                    throw new Error('Failed to load user coins');
+                }
+                const data = await response.json();
+                document.getElementById('coinAmount').textContent = data.coins || 0;
+            } catch (error) {
+                console.error('Error loading user coins:', error);
+                document.getElementById('coinAmount').textContent = '0';
+            }
         }
 
         // Fetch and render gymbuddies
@@ -321,7 +329,14 @@
                     return;
                 }
                 
-                gymbuddiesList.innerHTML = gymbuddies.map(gymbuddy => {
+                // Sort gymbuddies: put LegendaryBuddy at the bottom
+                const sortedGymbuddies = [...gymbuddies].sort((a, b) => {
+                    if (a.name === 'LegendaryBuddy') return 1;
+                    if (b.name === 'LegendaryBuddy') return -1;
+                    return 0;
+                });
+                
+                gymbuddiesList.innerHTML = sortedGymbuddies.map(gymbuddy => {
                     const isAvailable = gymbuddy.isAvailable !== false;
                     const isLocked = !isAvailable;
                     const isFree = gymbuddy.coinCost === 0;

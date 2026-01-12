@@ -14,9 +14,11 @@ public class AchievementService {
     private List<ExerciseResponse> exerciseResponses = new ArrayList<>();
 
     private final AchievementRepository achievementRepository;
+    private final UserService userService;
 
-    public AchievementService(AchievementRepository achievementRepository) {
+    public AchievementService(AchievementRepository achievementRepository, UserService userService) {
         this.achievementRepository = achievementRepository;
+        this.userService = userService;
     }
 
     public ExerciseResponse createExerciseResponse(String type, int duration) {
@@ -25,13 +27,14 @@ public class AchievementService {
         return exerciseResponse;
     }
 
-    public void updateAchievements() {
+    public int updateAchievements() {
         if (exerciseResponses.isEmpty()) {
-            return;
+            return userService.getCoins();
         }
 
         List<Achievement> allAchievements = achievementRepository.findAll();
         Set<Achievement> achievementsToUpdate = new HashSet<>();
+        int totalCoinsAwarded = 0;
 
         for (ExerciseResponse response : exerciseResponses) {
             for (Achievement achievement : allAchievements) {
@@ -39,10 +42,21 @@ public class AchievementService {
                 if (achievement.getCurrent() < achievement.getTarget() && 
                     matchesAllTags(achievement, response)) {
                     
+                    boolean wasNotCompleted = achievement.getCurrent() < achievement.getTarget();
                     achievement.incrementCurrent();
                     achievementsToUpdate.add(achievement);
+                    
+                    // Award coins if achievement was just completed (reached target)
+                    if (wasNotCompleted && achievement.getCurrent() >= achievement.getTarget()) {
+                        totalCoinsAwarded += achievement.getCoinReward();
+                    }
                 }
             }
+        }
+
+        // Award coins to user
+        if (totalCoinsAwarded > 0) {
+            userService.addCoins(totalCoinsAwarded);
         }
 
         // Batch save all updated achievements
@@ -52,6 +66,9 @@ public class AchievementService {
 
         // Clear processed responses
         exerciseResponses.clear();
+        
+        // Return updated coin total
+        return userService.getCoins();
     }
 
     /**

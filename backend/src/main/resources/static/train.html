@@ -549,24 +549,10 @@
                     return;
                 }
                 
-                // Color palette for workout cards
-                const workoutColors = [
-                    '#ffbe1e', // Yellow/Orange
-                    '#f48952', // Orange/Coral
-                    '#8991f3', // Purple/Blue
-                    '#8cea64', // Green
-                    '#ff6b9d', // Pink (complementary)
-                    '#4ecdc4', // Turquoise (complementary)
-                    '#ffa07a', // Light Salmon (complementary)
-                    '#ba68c8', // Purple (complementary)
-                    '#ffd93d', // Bright Yellow (complementary)
-                    '#6c5ce7'  // Indigo (complementary)
-                ];
-                
-                container.innerHTML = workouts.map((workout, index) => {
+                container.innerHTML = workouts.map((workout) => {
                     const workoutName = workout.workoutName || 'Unnamed Workout';
-                    const colorIndex = index % workoutColors.length;
-                    const workoutColor = workoutColors[colorIndex];
+                    // Use the stored color from the workout, or fallback to a default
+                    const workoutColor = workout.color || '#f48952';
                     return `
                         <div class="scrollable-item" data-workout-id="${workout.id}" onclick="confirmBeginWorkout(${workout.id})">
                             <div class="workout-card-placeholder" style="background: ${workoutColor};">

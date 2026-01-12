@@ -25,14 +25,8 @@
             display: flex;
             flex-direction: column;
             gap: var(--spacing-sm);
-            transition: transform 0.2s, box-shadow 0.2s;
             border: 2px solid #000;
             box-shadow: 3px 3px 0 0 #000;
-        }
-
-        .achievement-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
         }
 
         .achievement-card.completed {
@@ -135,20 +129,11 @@
             background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
         }
 
-        .completion-badge {
+        .coin-reward-row {
             display: flex;
             align-items: center;
-            gap: var(--spacing-xs);
-            font-size: var(--font-size-sm);
-            font-weight: 600;
-            color: #f59e0b;
+            justify-content: space-between;
             margin-top: var(--spacing-xs);
-        }
-
-        .completion-badge i,
-        .completion-badge svg {
-            width: 16px;
-            height: 16px;
         }
 
         .coin-reward {
@@ -158,7 +143,6 @@
             font-size: var(--font-size-sm);
             font-weight: 600;
             color: #f59e0b;
-            margin-top: var(--spacing-xs);
         }
 
         .coin-reward i,
@@ -168,12 +152,19 @@
             stroke: #f59e0b;
         }
 
-        .coin-reward .check-icon {
-            width: 18px;
-            height: 18px;
-            stroke: var(--primary-green-darker);
-            stroke-width: 3;
-            margin-left: var(--spacing-xs);
+        .completion-badge {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            color: #f59e0b;
+        }
+
+        .completion-badge i,
+        .completion-badge svg {
+            width: 16px;
+            height: 16px;
         }
 
         .loading {
@@ -371,11 +362,8 @@
                 const isCompleted = achievement.current >= achievement.target;
                 const progressPercentage = Math.min((achievement.current / achievement.target) * 100, 100);
                 
-                // Build tags string
+                // Build tags string (only duration, not exerciseType since it's already in the name)
                 const tags = [];
-                if (achievement.exerciseType) {
-                    tags.push(`<span class="achievement-tag">${achievement.exerciseType}</span>`);
-                }
                 if (achievement.duration) {
                     const minutes = Math.floor(achievement.duration / 60);
                     const seconds = achievement.duration % 60;
@@ -400,17 +388,17 @@
                         <div class="progress-bar-container">
                             <div class="progress-bar" style="width: ${progressPercentage}%"></div>
                         </div>
-                        <div class="coin-reward">
-                            <i data-lucide="coins"></i>
-                            <span>${achievement.coinReward || 0}</span>
-                            ${isCompleted ? '<i data-lucide="check-circle" class="check-icon"></i>' : ''}
-                        </div>
-                        ${isCompleted ? `
-                            <div class="completion-badge">
-                                <i data-lucide="check-circle"></i>
-                                <span>Completed!</span>
+                        <div class="coin-reward-row">
+                            <div class="coin-reward">
+                                <i data-lucide="coins"></i>
+                                <span>${achievement.coinReward || 0}</span>
                             </div>
-                        ` : ''}
+                            ${isCompleted ? `
+                                <div class="completion-badge">
+                                    <i data-lucide="check-circle"></i>
+                                </div>
+                            ` : ''}
+                        </div>
                     </div>
                 `;
             }).join('');
