@@ -54,8 +54,8 @@
         }
 
         .workout-header {
-            margin-bottom: var(--spacing-md);
-            padding-bottom: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
+            padding-bottom: var(--spacing-xs);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -118,7 +118,7 @@
         }
 
         .exercise-item {
-            padding: var(--spacing-md) var(--spacing-lg);
+            padding: var(--spacing-sm) var(--spacing-md);
             background: var(--background-white);
             border: 2px solid #000;
             border-radius: var(--radius-md);
@@ -146,6 +146,8 @@
             overflow-wrap: break-word;
             flex: 1;
             min-width: 0;
+            color: var(--text-primary);
+            display: inline-block;
         }
 
         .exercise-sets {
@@ -165,25 +167,30 @@
             border: 2px solid #000;
             white-space: nowrap;
             flex-shrink: 0;
+            width: 60px;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .exercise-type-chest {
-            background: #8991fe;
+            background: #ffd93d;
             color: #000;
         }
 
         .exercise-type-back {
-            background: #f48952;
+            background: #6c5ce7;
             color: #000;
         }
 
         .exercise-type-arms {
-            background: #ffbe1e;
+            background: #ffa07a;
             color: #000;
         }
 
         .exercise-type-legs {
-            background: #8cea64;
+            background: #ba68c8;
             color: #000;
         }
 
@@ -364,6 +371,18 @@
             margin: 0;
         }
 
+        .edit-workout-modal .modal-message {
+            position: absolute;
+            top: calc(var(--spacing-lg) + 24px + var(--spacing-md) + var(--spacing-xs));
+            left: var(--spacing-lg);
+            right: var(--spacing-lg);
+            color: #dc2626;
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            text-align: center;
+            pointer-events: none;
+        }
+
         .edit-workout-modal .modal-close {
             background: none;
             border: none;
@@ -501,6 +520,24 @@
             flex: 1;
             height: 40px;
             box-sizing: border-box;
+            background: var(--primary-green) !important;
+            color: white !important;
+            border: 2px solid #000 !important;
+            border-radius: var(--radius-md) !important;
+            box-shadow: none !important;
+            font-weight: 700 !important;
+            transition: none !important;
+            transform: none !important;
+        }
+
+        .edit-workout-modal .add-exercise-btn:hover {
+            background: var(--primary-green) !important;
+            transform: none !important;
+        }
+
+        .edit-workout-modal .add-exercise-btn:active {
+            background: var(--primary-green) !important;
+            transform: none !important;
         }
 
         .edit-workout-modal .exercises-list {
@@ -540,16 +577,16 @@
             background: var(--background-white);
             border: 2px solid #000;
             border-radius: var(--radius-md);
-            transition: transform 0.2s;
-        }
-
-        .edit-workout-modal .exercise-item:hover {
-            transform: translateX(4px);
+            margin: 0;
+            box-sizing: border-box;
+            box-shadow: none;
+            transition: none;
         }
 
         .edit-workout-modal .exercise-item-content {
             display: flex;
             align-items: center;
+            gap: var(--spacing-sm);
             flex: 1;
         }
 
@@ -557,6 +594,8 @@
             font-size: var(--font-size-base);
             font-weight: 500;
             color: var(--text-primary);
+            min-width: 0;
+            flex: 1;
         }
 
         .edit-workout-modal .exercise-delete-btn {
@@ -603,9 +642,30 @@
             align-items: center;
             justify-content: center;
             gap: var(--spacing-sm);
-            padding: var(--spacing-md);
+            padding: var(--spacing-md) var(--spacing-lg);
             flex-shrink: 0;
+            background: var(--primary-green) !important;
+            color: white !important;
+            border: 2px solid #000 !important;
+            border-radius: var(--radius-md) !important;
+            box-shadow: none !important;
+            font-weight: 700 !important;
+            font-size: var(--font-size-base) !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
         }
+
+        .edit-workout-modal .save-workout-btn:hover {
+            background: var(--primary-green) !important;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md) !important;
+        }
+
+        .edit-workout-modal .save-workout-btn:active {
+            transform: translateY(0);
+            box-shadow: none !important;
+        }
+
     </style>
 </head>
 <body>
@@ -629,6 +689,7 @@
                     <i data-lucide="x"></i>
                 </button>
             </div>
+            <div class="modal-message" id="editWorkoutModalMessage" style="display: none;"></div>
             <div class="modal-content">
                 <!-- Workout Name Input -->
                 <div class="form-group">
@@ -661,7 +722,7 @@
                                 id="editNoSets"
                                 class="form-input exercise-sets-input"
                                 placeholder="Sets"
-                                value="0"
+                                value="1"
                                 autocomplete="off"
                                 inputmode="numeric"
                                 pattern="[0-9]*"
@@ -895,7 +956,7 @@
                 const workout = workouts.find(w => w.id === workoutId);
 
                 if (!workout) {
-                    alert('Workout not found');
+                    showModalMessage('editWorkoutModal', 'Workout not found');
                     return;
                 }
 
@@ -922,19 +983,35 @@
                 document.getElementById('editWorkoutName').focus();
             } catch (error) {
                 console.error('Error loading workout for edit:', error);
-                alert('Failed to load workout');
+                showModalMessage('editWorkoutModal', 'Failed to load workout');
+            }
+        }
+
+        function showModalMessage(modalId, message) {
+            const messageEl = document.getElementById(modalId + 'Message');
+            if (messageEl) {
+                messageEl.textContent = message;
+                messageEl.style.display = 'block';
+                setTimeout(() => {
+                    messageEl.style.display = 'none';
+                }, 3000);
             }
         }
 
         function closeEditWorkoutModal() {
             document.getElementById('editWorkoutModal').classList.remove('active');
+            // Hide message when closing
+            const messageEl = document.getElementById('editWorkoutModalMessage');
+            if (messageEl) {
+                messageEl.style.display = 'none';
+            }
             editWorkoutId = null;
             editExercises = [];
             
             // Clear inputs
             document.getElementById('editWorkoutName').value = '';
             document.getElementById('editExerciseName').value = '';
-            document.getElementById('editNoSets').value = '0';
+            document.getElementById('editNoSets').value = '1';
             document.getElementById('editExerciseType').value = 'chest';
         }
 
@@ -947,13 +1024,13 @@
             const setsValue = setsInput.value.trim();
 
             if (exerciseName === '') {
-                alert('Please enter an exercise name');
+                showModalMessage('editWorkoutModal', 'Please enter an exercise name');
                 return;
             }
 
             const sets = setsValue === '' ? 0 : parseInt(setsValue, 10);
-            if (isNaN(sets) || sets < 0) {
-                alert('Please enter a valid number of sets');
+            if (isNaN(sets) || sets < 1) {
+                showModalMessage('editWorkoutModal', 'Please enter a valid number of sets (at least 1)');
                 return;
             }
 
@@ -968,7 +1045,7 @@
 
             // Clear inputs
             exerciseNameInput.value = '';
-            setsInput.value = '0';
+            setsInput.value = '1';
             typeSelect.value = 'chest';
 
             // Re-render exercises
@@ -998,8 +1075,8 @@
                     <div class="exercise-item">
                         <div class="exercise-item-content">
                             <span class="exercise-name">${exercise.name}</span>
-                            <span style="margin-left: var(--spacing-sm); color: var(--text-secondary); font-size: var(--font-size-sm);">${setsText}</span>
-                            ${exercise.type ? `<span class="exercise-type-badge exercise-type-${exercise.type}" style="margin-left: var(--spacing-sm);">${exercise.type}</span>` : ''}
+                            <span style="color: var(--text-secondary); font-size: var(--font-size-sm);">${setsText}</span>
+                            ${exercise.type ? `<span class="exercise-type-badge exercise-type-${exercise.type}">${exercise.type}</span>` : ''}
                         </div>
                         <button class="exercise-delete-btn" onclick="removeEditExercise(${index})">
                             <i data-lucide="x"></i>
@@ -1018,7 +1095,7 @@
             const workoutName = capitalizeFirstWord(workoutNameInput.value.trim());
             
             if (workoutName === '') {
-                alert('Please enter a workout name');
+                showModalMessage('editWorkoutModal', 'Please enter a workout name');
                 return;
             }
 
@@ -1039,11 +1116,11 @@
                     loadWorkouts(); // Reload the list
                 } else {
                     const error = await response.json();
-                    alert('Failed to update workout: ' + (error.error || 'Unknown error'));
+                    showModalMessage('editWorkoutModal', 'Failed to update workout: ' + (error.error || 'Unknown error'));
                 }
             } catch (error) {
                 console.error('Error updating workout:', error);
-                alert('Error updating workout');
+                showModalMessage('editWorkoutModal', 'Error updating workout');
             }
         }
 

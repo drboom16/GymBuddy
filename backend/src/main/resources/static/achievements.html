@@ -34,6 +34,27 @@
             border: 2px solid #f59e0b;
         }
 
+        /* Exercise type color for target icon */
+        .achievement-card.exercise-type-arms .achievement-icon i,
+        .achievement-card.exercise-type-arms .achievement-icon svg {
+            stroke: #ffa07a !important;
+        }
+
+        .achievement-card.exercise-type-legs .achievement-icon i,
+        .achievement-card.exercise-type-legs .achievement-icon svg {
+            stroke: #ba68c8 !important;
+        }
+
+        .achievement-card.exercise-type-chest .achievement-icon i,
+        .achievement-card.exercise-type-chest .achievement-icon svg {
+            stroke: #ffd93d !important;
+        }
+
+        .achievement-card.exercise-type-back .achievement-icon i,
+        .achievement-card.exercise-type-back .achievement-icon svg {
+            stroke: #6c5ce7 !important;
+        }
+
         .achievement-header {
             display: flex;
             align-items: center;
@@ -371,8 +392,11 @@
                     tags.push(`<span class="achievement-tag">${durationStr}</span>`);
                 }
                 
+                // Add exercise type class for color tinge
+                const exerciseTypeClass = achievement.exerciseType ? `exercise-type-${achievement.exerciseType.toLowerCase()}` : '';
+                
                 return `
-                    <div class="achievement-card ${isCompleted ? 'completed' : ''}">
+                    <div class="achievement-card ${isCompleted ? 'completed' : ''} ${exerciseTypeClass}">
                         <div class="achievement-header">
                             <div class="achievement-icon">
                                 <i data-lucide="${isCompleted ? 'award' : 'target'}"></i>

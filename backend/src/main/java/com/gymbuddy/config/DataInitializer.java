@@ -55,26 +55,29 @@ public class DataInitializer implements CommandLineRunner {
         
         if (existingAchievements.isEmpty()) {
             // Create daily achievements (3 same ones that can be completed in one workout session)
+            // Total daily rewards: 45 coins per day. Over ~112 days, this provides 5000+ coins for Second Slot
             List<Achievement> dailyAchievements = new ArrayList<>();
             dailyAchievements.add(new Achievement("Complete 1 Workout", 1, 15, true));
             dailyAchievements.add(new Achievement("Complete 5 Sets", 5, 10, true));
             dailyAchievements.add(new Achievement("Workout for 2 Minutes", 120, 20, true)); // 120 seconds = 2 minutes
             
             // Create lifetime achievements with coin rewards
-            // Total rewards: 10,500 coins (sufficient for all purchasable gymbuddies: 600+3000+2400+2800+1200 = 10,000)
+            // Total rewards: 15,500+ coins (sufficient for all purchasable gymbuddies: 600+3000+2400+2800+1200+5000 = 15,000)
             List<Achievement> lifetimeAchievements = new ArrayList<>();
             lifetimeAchievements.add(new Achievement("First Workout", 1, 100, false));
             lifetimeAchievements.add(new Achievement("5 Workouts Complete", 5, 300, false));
             lifetimeAchievements.add(new Achievement("10 Workouts Complete", 10, 500, false));
             lifetimeAchievements.add(new Achievement("25 Workouts Complete", 25, 1000, false));
             lifetimeAchievements.add(new Achievement("50 Workouts Complete", 50, 2000, false));
-            lifetimeAchievements.add(new Achievement("100 Workouts Complete", 100, 3000, false));
+            lifetimeAchievements.add(new Achievement("100 Workouts Complete", 100, 3500, false));
             lifetimeAchievements.add(new Achievement("First Set Complete", 1, 50, false));
             lifetimeAchievements.add(new Achievement("10 Sets Complete", 10, 200, false));
             lifetimeAchievements.add(new Achievement("50 Sets Complete", 50, 800, false));
             lifetimeAchievements.add(new Achievement("100 Sets Complete", 100, 1500, false));
             lifetimeAchievements.add(new Achievement("Week Warrior", 7, 500, false));
             lifetimeAchievements.add(new Achievement("Monthly Champion", 30, 1000, false));
+            lifetimeAchievements.add(new Achievement("200 Workouts Complete", 200, 2000, false));
+            lifetimeAchievements.add(new Achievement("500 Sets Complete", 500, 1500, false));
             
             // Body part specific achievements (arms, chest, legs, back)
             // Arms achievements
@@ -125,6 +128,7 @@ public class DataInitializer implements CommandLineRunner {
             gymBuddies.add(new GymBuddy("DarkBuddy", 2400, "/public/gymbuddy-elite.png", false));
             gymBuddies.add(new GymBuddy("AncientBuddy", 2800, "/public/gymbuddy-legend.png", false));
             gymBuddies.add(new GymBuddy("PinkBuddy", 1200, "/public/gymbuddy-mythic.png", false));
+            gymBuddies.add(new GymBuddy("Second Slot", 5000, "/public/second-slot.png", false, false));
             
             gymBuddyRepository.saveAll(gymBuddies);
         }

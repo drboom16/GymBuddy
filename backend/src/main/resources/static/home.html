@@ -18,7 +18,7 @@
         }
 
         .workout-card {
-            background: linear-gradient(135deg, var(--primary-green-light) 0%, var(--primary-green) 100%);
+            background: var(--primary-green);
             border-radius: var(--radius-2xl);
             padding: var(--spacing-xl);
             color: var(--background-white);
@@ -261,7 +261,7 @@
         }
 
         .go-button:hover {
-            background: var(--primary-green-dark);
+            background: var(--primary-green);
             transform: translateY(-2px);
         }
 
@@ -368,11 +368,15 @@
         }
 
         .home-gif-container {
+            position: fixed;
+            bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+            left: 0;
+            right: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-2xl) var(--spacing-lg);
-            margin-top: auto;
+            padding: var(--spacing-lg);
+            z-index: 1;
         }
 
         .home-gif {
@@ -381,9 +385,7 @@
         }
 
         .content-container {
-            display: flex;
-            flex-direction: column;
-            min-height: calc(100vh - 200px);
+            padding-bottom: 200px;
         }
 
     </style>

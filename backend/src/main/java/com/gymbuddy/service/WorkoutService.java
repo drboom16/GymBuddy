@@ -32,17 +32,34 @@ public class WorkoutService {
     };
 
     public Workout createWorkout(String name, List<Exercise> exercises) {
-        // Get all existing workouts to determine the next color index
+        // Get all existing workouts (excluding the default "Arms" workout)
         List<Workout> allWorkouts = workoutRepository.findAllByOrderByIdAsc();
-        
-        // Count workouts that are not the default "Arms" workout
-        long nonArmsWorkoutCount = allWorkouts.stream()
+        List<Workout> nonArmsWorkouts = allWorkouts.stream()
             .filter(w -> !"Arms".equals(w.getWorkoutName()))
-            .count();
+            .toList();
         
-        // Assign color cycling through available colors (excluding the first color reserved for Arms)
-        int colorIndex = (int) (nonArmsWorkoutCount % WORKOUT_COLORS.length);
-        String assignedColor = WORKOUT_COLORS[colorIndex];
+        // Collect all currently used colors
+        Set<String> usedColors = new HashSet<>();
+        for (Workout workout : nonArmsWorkouts) {
+            if (workout.getColor() != null) {
+                usedColors.add(workout.getColor());
+            }
+        }
+        
+        // Find the first unused color from the array
+        String assignedColor = null;
+        for (String color : WORKOUT_COLORS) {
+            if (!usedColors.contains(color)) {
+                assignedColor = color;
+                break;
+            }
+        }
+        
+        // If all colors are used, cycle back to the first color
+        if (assignedColor == null) {
+            int colorIndex = (int) (nonArmsWorkouts.size() % WORKOUT_COLORS.length);
+            assignedColor = WORKOUT_COLORS[colorIndex];
+        }
         
         Workout workout = new Workout(name, exercises, assignedColor);
         return workoutRepository.save(workout);
@@ -132,6 +149,26 @@ public class WorkoutService {
         exercise.markSetComplete(setIndex);
         
         // Save workout - cascade will save the exercise and its sets
+        return workoutRepository.save(workout);
+    }
+
+    /**
+     * Reset all set completions for a workout
+     */
+    public Workout resetWorkoutSets(Long workoutId) {
+        Workout workout = workoutRepository.findById(workoutId)
+            .orElseThrow(() -> new RuntimeException("Workout not found"));
+        
+        // Reset all set completions for all exercises by setting sets to all false
+        for (Exercise exercise : workout.getExercises()) {
+            int noSets = exercise.getNoSets();
+            List<com.gymbuddy.model.ExerciseSet> sets = new ArrayList<>();
+            for (int i = 0; i < noSets; i++) {
+                sets.add(new com.gymbuddy.model.ExerciseSet(false));
+            }
+            exercise.setSets(sets);
+        }
+        
         return workoutRepository.save(workout);
     }
 }

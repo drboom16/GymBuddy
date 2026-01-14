@@ -16,6 +16,8 @@
 
         body {
             background: var(--background-cream);
+            overflow: hidden;
+            height: 100vh;
         }
 
         .workout-card-placeholder {
@@ -68,22 +70,22 @@
         }
 
         .exercise-type-select option[value="chest"] {
-            background: #8991fe;
+            background: #ffd93d;
             color: #000;
         }
 
         .exercise-type-select option[value="back"] {
-            background: #f48952;
+            background: #6c5ce7;
             color: #000;
         }
 
         .exercise-type-select option[value="arms"] {
-            background: #ffbe1e;
+            background: #ffa07a;
             color: #000;
         }
 
         .exercise-type-select option[value="legs"] {
-            background: #8cea64;
+            background: #ba68c8;
             color: #000;
         }
 
@@ -113,7 +115,7 @@
         .begin-workout-confirm-modal .modal {
             background: var(--background-white);
             border-radius: var(--radius-2xl);
-            padding: var(--spacing-2xl);
+            padding: var(--spacing-xl);
             max-width: 420px;
             width: 90%;
             border: 3px solid #000;
@@ -123,18 +125,6 @@
 
         .begin-workout-confirm-modal.active .modal {
             transform: scale(1);
-        }
-
-        .begin-workout-confirm-modal .modal-icon {
-            display: flex;
-            justify-content: center;
-            margin-bottom: var(--spacing-lg);
-        }
-
-        .begin-workout-confirm-modal .modal-icon i {
-            width: 64px;
-            height: 64px;
-            color: var(--primary-green);
         }
 
         .begin-workout-confirm-modal .modal-title {
@@ -148,7 +138,7 @@
         .begin-workout-confirm-modal .modal-message {
             font-size: var(--font-size-base);
             color: var(--text-secondary);
-            margin-bottom: var(--spacing-2xl);
+            margin-bottom: var(--spacing-lg);
             line-height: 1.6;
             text-align: center;
         }
@@ -164,7 +154,7 @@
             background: var(--background-white);
             color: var(--text-primary);
             border: 2px solid #000;
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-md);
             font-size: var(--font-size-base);
             font-weight: 600;
             cursor: pointer;
@@ -179,10 +169,10 @@
         .begin-workout-confirm-modal .btn-begin {
             flex: 1;
             padding: var(--spacing-md) var(--spacing-lg);
-            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
+            background: var(--primary-green);
             color: white;
             border: 2px solid #000;
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-md);
             font-size: var(--font-size-base);
             font-weight: 700;
             cursor: pointer;
@@ -190,9 +180,14 @@
         }
 
         .begin-workout-confirm-modal .btn-begin:hover {
-            background: linear-gradient(135deg, var(--primary-green-dark) 0%, #15803d 100%);
+            background: var(--primary-green);
             transform: translateY(-2px);
             box-shadow: var(--shadow-md);
+        }
+
+        .content-container {
+            overflow-y: hidden;
+            max-height: calc(100vh - 200px);
         }
 
     </style>
@@ -254,6 +249,7 @@
                     <i data-lucide="x"></i>
                 </button>
             </div>
+            <div class="modal-message" id="createWorkoutModalMessage" style="display: none;"></div>
             <div class="modal-content">
                 <!-- Workout Name Input -->
                 <div class="form-group">
@@ -281,16 +277,16 @@
                             maxlength="40"
                         >
                         <div class="exercise-options-row">
-                        <input
-                            type="text"
-                            id="noSets"
-                            class="form-input exercise-sets-input"
-                            placeholder="Sets"
-                            value="0"
-                            autocomplete="off"
-                            inputmode="numeric"
-                            pattern="[0-9]*"
-                        >
+                            <input
+                                type="text"
+                                id="noSets"
+                                class="form-input exercise-sets-input"
+                                placeholder="Sets"
+                                value="1"
+                                autocomplete="off"
+                                inputmode="numeric"
+                                pattern="[0-9]*"
+                            >
                             <select id="exerciseType" class="form-input exercise-type-select">
                                 <option value="chest">Chest</option>
                                 <option value="back">Back</option>
@@ -360,9 +356,6 @@
     <!-- Begin Workout Confirmation Modal -->
     <div class="begin-workout-confirm-modal" id="beginWorkoutConfirmationModal">
         <div class="modal">
-            <div class="modal-icon">
-                <i data-lucide="play-circle"></i>
-            </div>
             <h2 class="modal-title">Begin Workout?</h2>
             <div class="modal-message" id="beginWorkoutConfirmationMessage">
                 Ready to start your workout? The timer will begin once you start your first set.
@@ -389,6 +382,11 @@
 
         function closeCreateWorkoutModal() {
             document.getElementById('createWorkoutModal').classList.remove('active');
+            // Hide message when closing
+            const messageEl = document.getElementById('createWorkoutModalMessage');
+            if (messageEl) {
+                messageEl.style.display = 'none';
+            }
             // Reset form when closing
             document.getElementById('workoutName').value = '';
             document.getElementById('exerciseName').value = '';
@@ -581,6 +579,17 @@
             return trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase();
         }
 
+        function showModalMessage(modalId, message) {
+            const messageEl = document.getElementById(modalId + 'Message');
+            if (messageEl) {
+                messageEl.textContent = message;
+                messageEl.style.display = 'block';
+                setTimeout(() => {
+                    messageEl.style.display = 'none';
+                }, 3000);
+            }
+        }
+
         function addExercise() {
             const exerciseNameInput = document.getElementById("exerciseName");
             const noSetsInput = document.getElementById("noSets");
@@ -591,17 +600,17 @@
             const exerciseType = exerciseTypeSelect.value;
 
             if (name === '') {
-                alert('Please enter an exercise name');
+                showModalMessage('createWorkoutModal', 'Please enter an exercise name');
                 exerciseNameInput.focus();
                 return;
             }
 
-            // Parse sets as integer (default to 0 if empty or invalid)
+            // Parse sets as integer (must be at least 1)
             // Only allow numeric input
             const numericValue = setsValue.replace(/[^0-9]/g, '');
             const sets = numericValue === '' ? 0 : parseInt(numericValue, 10);
-            if (isNaN(sets) || sets < 0) {
-                alert('Please enter a valid number of sets (0 or greater)');
+            if (isNaN(sets) || sets < 1) {
+                showModalMessage('createWorkoutModal', 'Please enter a valid number of sets (at least 1)');
                 noSetsInput.focus();
                 return;
             }
@@ -614,7 +623,7 @@
 
             // Reset inputs
             exerciseNameInput.value = '';
-            noSetsInput.value = '0';
+            noSetsInput.value = '1';
             exerciseTypeSelect.value = 'chest'; // Reset to default
 
             // Focus back on exercise name input for quick adding
@@ -627,26 +636,19 @@
             const workoutExercises = document.getElementById('workoutExercises');
             
             if (exercises.length === 0) {
-                workoutExercises.innerHTML = '<div class="empty-state">No exercises added yet. Add your first exercise above!</div>';
+                workoutExercises.innerHTML = '<div class="empty-state">No exercises added yet</div>';
+                lucide.createIcons();
                 return;
             }
 
             workoutExercises.innerHTML = exercises.map((exercise, index) => {
-                const typeColors = {
-                    'chest': '#8991fe',
-                    'back': '#f48952',
-                    'arms': '#ffbe1e',
-                    'legs': '#8cea64'
-                };
-                const typeColor = typeColors[exercise.type] || '#000';
                 const setsText = exercise.noSets === 1 ? `${exercise.noSets} set` : `${exercise.noSets} sets`;
-                
                 return `
                     <div class="exercise-item">
                         <div class="exercise-item-content">
                             <span class="exercise-name">${exercise.name}</span>
-                            <span style="color: var(--text-secondary); margin-left: var(--spacing-sm);">(${setsText})</span>
-                            ${exercise.type ? `<span style="background: ${typeColor}; color: #000; padding: 2px 8px; border-radius: 4px; font-size: var(--font-size-sm); font-weight: 600; margin-left: var(--spacing-sm); text-transform: capitalize;">${exercise.type}</span>` : ''}
+                            <span style="color: var(--text-secondary); font-size: var(--font-size-sm);">${setsText}</span>
+                            ${exercise.type ? `<span class="exercise-type-badge exercise-type-${exercise.type}">${exercise.type}</span>` : ''}
                         </div>
                         <button class="exercise-delete-btn" onclick="removeExercise(${index})">
                             <i data-lucide="x"></i>
@@ -654,8 +656,7 @@
                     </div>
                 `;
             }).join('');
-            
-            // Reinitialize icons after rendering
+
             lucide.createIcons();
         }
 
@@ -671,12 +672,12 @@
             const workoutName = capitalizeFirstWord(workoutNameInput.value.trim());
             
             if (!workoutName) {
-                alert('Please enter a workout name');
+                showModalMessage('createWorkoutModal', 'Please enter a workout name');
                 return;
             }
             
             if (exercises.length === 0) {
-                alert('Please add at least one exercise');
+                showModalMessage('createWorkoutModal', 'Please add at least one exercise');
                 return;
             }
 

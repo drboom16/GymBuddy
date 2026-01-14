@@ -38,4 +38,15 @@ public class GymBuddyService {
             .filter(achievement -> !achievement.isDaily())
             .allMatch(achievement -> achievement.getCurrent() >= achievement.getTarget());
     }
+
+    public boolean areAllDailyAchievementsComplete() {
+        List<Achievement> allAchievements = achievementRepository.findAll();
+        if (allAchievements.isEmpty()) {
+            return false;
+        }
+        // Only check daily achievements (isDaily = true)
+        return allAchievements.stream()
+            .filter(Achievement::isDaily)
+            .allMatch(achievement -> achievement.getCurrent() >= achievement.getTarget());
+    }
 }
