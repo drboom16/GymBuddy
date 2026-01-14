@@ -24,6 +24,7 @@ public class GymBuddyController {
     public ResponseEntity<List<Map<String, Object>>> getAllGymBuddies() {
         List<GymBuddy> gymBuddies = gymBuddyService.getAllGymBuddies();
         boolean allAchievementsComplete = gymBuddyService.areAllAchievementsComplete();
+        boolean allDailyAchievementsComplete = gymBuddyService.areAllDailyAchievementsComplete();
         
         List<Map<String, Object>> gymBuddiesWithAvailability = gymBuddies.stream()
             .map(gymBuddy -> {
@@ -33,8 +34,11 @@ public class GymBuddyController {
                 gymBuddyMap.put("coinCost", gymBuddy.getCoinCost());
                 gymBuddyMap.put("imagePath", gymBuddy.getImagePath());
                 gymBuddyMap.put("requiresAllAchievements", gymBuddy.isRequiresAllAchievements());
-                // Only available if it doesn't require achievements, or if all achievements are complete
-                gymBuddyMap.put("isAvailable", !gymBuddy.isRequiresAllAchievements() || allAchievementsComplete);
+                gymBuddyMap.put("requiresAllDailyAchievements", gymBuddy.isRequiresAllDailyAchievements());
+                // Only available if it doesn't require achievements, or if the required achievements are complete
+                boolean isAvailable = (!gymBuddy.isRequiresAllAchievements() || allAchievementsComplete) &&
+                                      (!gymBuddy.isRequiresAllDailyAchievements() || allDailyAchievementsComplete);
+                gymBuddyMap.put("isAvailable", isAvailable);
                 return gymBuddyMap;
             })
             .collect(Collectors.toList());

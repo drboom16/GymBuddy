@@ -103,6 +103,10 @@
             font-weight: 600;
             font-size: var(--font-size-base);
             color: var(--text-primary);
+            min-width: 0;
+            flex: 1;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .exercise-dropdown-arrow {
@@ -143,22 +147,22 @@
         }
 
         .exercise-type-chest {
-            background: #8991fe;
+            background: #ffd93d;
             color: #000;
         }
 
         .exercise-type-back {
-            background: #f48952;
+            background: #6c5ce7;
             color: #000;
         }
 
         .exercise-type-arms {
-            background: #ffbe1e;
+            background: #ffa07a;
             color: #000;
         }
 
         .exercise-type-legs {
-            background: #8cea64;
+            background: #ba68c8;
             color: #000;
         }
 
@@ -199,21 +203,28 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: var(--spacing-sm) var(--spacing-md);
-            background: #f87171;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            background: var(--background-white);
             border: 2px solid #000;
             border-radius: var(--radius-md);
             cursor: pointer;
             transition: all 0.2s;
             text-decoration: none;
-            color: white;
-            font-size: var(--font-size-base);
-            font-weight: 600;
             box-shadow: 3px 3px 0 0 #000;
         }
 
+        .back-button i,
+        .back-button svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--text-primary);
+            stroke-width: 2.5;
+        }
+
         .back-button:hover {
-            background: #ef4444;
+            background: var(--neutral-gray-light);
             transform: translateY(-2px);
             box-shadow: 4px 4px 0 0 #000;
         }
@@ -221,6 +232,28 @@
         .back-button:active {
             transform: translateY(0);
             box-shadow: 3px 3px 0 0 #000;
+        }
+
+        /* Finish Workout Button (replaces exit button when all sets complete) */
+        .back-button.finish-workout {
+            background: var(--primary-green);
+            width: auto;
+            padding: var(--spacing-sm) var(--spacing-md);
+            gap: var(--spacing-xs);
+        }
+
+        .back-button.finish-workout:hover {
+            background: var(--primary-green-darker);
+        }
+
+        .back-button.finish-workout i, .back-button.finish-workout svg {
+            stroke: white;
+        }
+
+        .back-button.finish-workout span {
+            color: white;
+            font-weight: 700;
+            font-size: var(--font-size-sm);
         }
 
         .page-header {
@@ -271,17 +304,30 @@
             max-width: 400px;
             width: 85%;
             border: 2px solid #000;
+            position: relative;
         }
 
         .set-config-modal .modal-title {
             font-size: var(--font-size-xl);
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
         }
 
-        .selection-group {
-            margin-bottom: var(--spacing-xl);
+        .set-config-modal .modal-message {
+            color: #dc2626;
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: var(--spacing-md);
+            min-height: 24px;
+            height: 24px;
+            line-height: 24px;
+            visibility: hidden;
+        }
+
+        .set-config-modal .modal-message:not(:empty) {
+            visibility: visible;
         }
 
         .selection-label {
@@ -297,15 +343,16 @@
             grid-template-columns: 1fr 1fr 1fr 1fr;
             gap: var(--spacing-sm);
             height: 40px;
+            margin-bottom: var(--spacing-md);
         }
 
         .duration-option {
-            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            background: var(--background-cream);
             transition: all 0.3s ease;
-            color: #333;
+            color: var(--text-primary);
             font-weight: 600;
             font-size: var(--font-size-sm);
-            border-radius: var(--radius-md);
+            border-radius: var(--radius-sm);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -328,15 +375,14 @@
             padding: var(--spacing-lg);
             font-size: var(--font-size-lg);
             font-weight: 700;
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-md);
             cursor: pointer;
-            margin-top: var(--spacing-lg);
+            margin-top: var(--spacing-md);
             transition: all 0.2s;
         }
 
         .go-button:hover {
-            background: var(--primary-green-dark);
-            transform: translateY(-2px);
+            background: var(--primary-green);
         }
 
         .go-button:disabled {
@@ -370,15 +416,15 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 500;
+            z-index: 300;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s ease;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
 
         .end-workout-confirm-modal.active {
@@ -388,45 +434,25 @@
 
         .end-workout-confirm-modal .modal {
             background: var(--background-white);
-            border-radius: var(--radius-2xl);
-            padding: var(--spacing-2xl);
-            max-width: 420px;
-            width: 90%;
-            border: 3px solid #000;
-            transform: scale(0.95);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .end-workout-confirm-modal.active .modal {
-            transform: scale(1);
-        }
-
-        .end-workout-confirm-modal .modal-icon {
-            display: flex;
-            justify-content: center;
-            margin-bottom: var(--spacing-lg);
-        }
-
-        .end-workout-confirm-modal .modal-icon i {
-            width: 64px;
-            height: 64px;
-            color: #f87171;
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            max-width: 400px;
+            width: 85%;
+            border: 2px solid #000;
         }
 
         .end-workout-confirm-modal .modal-title {
-            font-size: var(--font-size-2xl);
+            font-size: var(--font-size-xl);
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: var(--spacing-md);
-            text-align: center;
+            margin-bottom: var(--spacing-lg);
         }
 
         .end-workout-confirm-modal .modal-message {
             font-size: var(--font-size-base);
             color: var(--text-secondary);
-            margin-bottom: var(--spacing-2xl);
-            line-height: 1.6;
-            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            line-height: 1.5;
         }
 
         .end-workout-confirm-modal .modal-actions {
@@ -436,38 +462,30 @@
 
         .end-workout-confirm-modal .btn-cancel {
             flex: 1;
-            padding: var(--spacing-md) var(--spacing-lg);
+            padding: var(--spacing-md);
             background: var(--background-white);
             color: var(--text-primary);
             border: 2px solid #000;
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-md);
             font-size: var(--font-size-base);
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .end-workout-confirm-modal .btn-cancel:hover {
-            background: var(--neutral-gray-light);
-            transform: translateY(-1px);
         }
 
         .end-workout-confirm-modal .btn-confirm {
             flex: 1;
-            padding: var(--spacing-md) var(--spacing-lg);
-            background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+            padding: var(--spacing-md);
+            background: #dc2626;
             color: white;
             border: 2px solid #000;
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-md);
             font-size: var(--font-size-base);
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
         }
 
         .end-workout-confirm-modal .btn-confirm:hover {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            transform: translateY(-2px);
+            background: #b91c1c;
         }
     </style>
 </head>
@@ -477,7 +495,9 @@
 
     <div class="page-header">
         <h1 class="page-title">Workout</h1>
-        <button class="back-button" id="exitWorkoutBtn">Leave</button>
+        <button class="back-button" id="exitWorkoutBtn">
+            <i data-lucide="x"></i>
+        </button>
     </div>
 
     <div class="content-container">
@@ -518,22 +538,19 @@
                     <!-- Exercises will be loaded here -->
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Set Configuration Modal -->
+            
+            <!-- Exercises Section -->
     <div class="set-config-modal" id="setConfigModal">
         <div class="modal">
-            <h2 class="modal-title">Configure Set</h2>
+            <h2 class="modal-title">Choose Set Duration</h2>
             <div class="modal-content">
-                <div class="selection-group">
-                    <label class="selection-label">Duration</label>
-                    <div class="duration-bar">
-                        <div class="duration-option" onclick="selectDuration(this, '30s')">30s</div>
-                        <div class="duration-option" onclick="selectDuration(this, '1m')">1m</div>
-                        <div class="duration-option" onclick="selectDuration(this, '2m')">2m</div>
-                        <div class="duration-option" onclick="selectDuration(this, '3m')">3m</div>
-                    </div>
+                <div class="modal-message" id="setConfigModalMessage"></div>
+
+                <div class="duration-bar">
+                    <div class="duration-option" onclick="selectDuration(this, '30s')">30s</div>
+                    <div class="duration-option" onclick="selectDuration(this, '1m')">1m</div>
+                    <div class="duration-option" onclick="selectDuration(this, '2m')">2m</div>
+                    <div class="duration-option" onclick="selectDuration(this, '3m')">3m</div>
                 </div>
 
                 <button class="go-button" id="goButton" onclick="startSetAnimation()">GO!</button>
@@ -544,9 +561,6 @@
     <!-- End Workout Confirmation Modal -->
     <div class="end-workout-confirm-modal" id="endWorkoutConfirmModal">
         <div class="modal">
-            <div class="modal-icon">
-                <i data-lucide="power"></i>
-            </div>
             <h2 class="modal-title">End Workout?</h2>
             <div class="modal-message">
                 Are you sure you want to end this workout?
@@ -644,6 +658,11 @@
                 startTimer(); // Start timer but don't mark workout as started yet
                 // Update timer display immediately
                 updateTimer();
+                
+                // Check if all sets are complete after loading
+                if (workoutData) {
+                    checkAllSetsComplete(workoutData);
+                }
                 
             } catch (error) {
                 console.error('Error loading workout:', error);
@@ -775,6 +794,54 @@
             if (completedSetsElement) {
                 completedSetsElement.textContent = `${completedCount}/${totalSets} sets completed`;
             }
+            
+            // Check if all sets are completed and show/hide finish button
+            checkAllSetsComplete(workout);
+        }
+
+        function checkAllSetsComplete(workout) {
+            if (!workout || !workout.exercises || workout.exercises.length === 0) {
+                return false;
+            }
+            
+            // Check if all exercises have all their sets completed
+            let allComplete = true;
+            for (const exercise of workout.exercises) {
+                if (!exercise.sets || exercise.sets.length === 0) {
+                    allComplete = false;
+                    break;
+                }
+                
+                // Check if all sets in this exercise are completed
+                for (const set of exercise.sets) {
+                    if (!set || (set.completed !== true && set.isCompleted !== true)) {
+                        allComplete = false;
+                        break;
+                    }
+                }
+                
+                if (!allComplete) {
+                    break;
+                }
+            }
+            
+            // Transform exit button into finish workout button
+            const exitBtn = document.getElementById('exitWorkoutBtn');
+            if (exitBtn) {
+                if (allComplete) {
+                    // Change to finish workout button
+                    exitBtn.classList.add('finish-workout');
+                    exitBtn.innerHTML = '<i data-lucide="check-circle"></i><span>Finish Workout</span>';
+                    lucide.createIcons();
+                } else {
+                    // Change back to exit button
+                    exitBtn.classList.remove('finish-workout');
+                    exitBtn.innerHTML = '<i data-lucide="x"></i>';
+                    lucide.createIcons();
+                }
+            }
+            
+            return allComplete;
         }
 
         function openSetConfig(exIndex, setIndex, exerciseType) {
@@ -803,11 +870,23 @@
             element.classList.add('selected');
         }
 
+        function showModalMessage(modalId, message) {
+            const messageEl = document.getElementById(modalId + 'Message');
+            if (messageEl) {
+                messageEl.textContent = message;
+                messageEl.style.visibility = 'visible';
+                setTimeout(() => {
+                    messageEl.style.visibility = 'hidden';
+                    messageEl.textContent = '';
+                }, 3000);
+            }
+        }
+
         function startSetAnimation() {
             const selectedDuration = document.querySelector('.duration-option.selected');
             
             if (!selectedDuration) {
-                alert('Please select a duration!');
+                showModalMessage('setConfigModal', 'Please select a duration!');
                 return;
             }
             
@@ -883,6 +962,15 @@
         }
 
         function showEndWorkoutModal() {
+            // Check if all sets are complete - if so, finish workout directly without modal
+            const exitBtn = document.getElementById('exitWorkoutBtn');
+            if (exitBtn && exitBtn.classList.contains('finish-workout')) {
+                // All sets are complete, finish workout directly
+                confirmEndWorkout();
+                return;
+            }
+            
+            // Otherwise, show the confirmation modal
             document.getElementById('endWorkoutConfirmModal').classList.add('active');
             lucide.createIcons();
         }
@@ -892,15 +980,29 @@
         }
 
         async function confirmEndWorkout() {
+            // Stop timer
             if (timerInterval) {
                 clearInterval(timerInterval);
                 timerInterval = null;
             }
+            
+            // Reset backend database - clear all set completions
+            try {
+                await fetch(`/api/workouts/${workoutId}/reset`, {
+                    method: 'DELETE'
+                });
+            } catch (error) {
+                console.error("Error resetting workout sets:", error);
+            }
+            
             // Clear timer and workout state from localStorage
             localStorage.removeItem(TIMER_STORAGE_KEY);
             localStorage.removeItem(WORKOUT_STATE_KEY);
+            
+            // Reset state variables
             startTime = null;
-            workoutState = {}; // Reset workout state
+            workoutState = {};
+            workoutStarted = false;
 
             // Check if at least one exercise is fully completed (all sets within that exercise must be completed)
             let hasCompletedExercise = false;
@@ -966,7 +1068,7 @@
             }
         });
 
-        // Exit workout button (replaces back arrow)
+        // Exit workout button (replaces back arrow, becomes finish button when all sets complete)
         document.getElementById('exitWorkoutBtn').addEventListener('click', showEndWorkoutModal);
 
 
@@ -979,6 +1081,29 @@
 
         // Initialize
         loadWorkout();
+
+        // Check for workout completion when page becomes visible (user returns from workout-animation)
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden && workoutData) {
+                // Reload workout data to check for completed sets
+                loadWorkout();
+            }
+        });
+
+        // Also check periodically in case user completes sets in another tab/window
+        setInterval(function() {
+            if (!document.hidden && workoutData) {
+                fetch(`/api/workouts/${workoutId}`)
+                    .then(response => response.json())
+                    .then(workout => {
+                        workoutData = workout;
+                        updateCompletedSetsCount(workout);
+                    })
+                    .catch(error => {
+                        console.error('Error checking workout completion:', error);
+                    });
+            }
+        }, 2000); // Check every 2 seconds
 
         // Add spin animation for loader
         const style = document.createElement('style');

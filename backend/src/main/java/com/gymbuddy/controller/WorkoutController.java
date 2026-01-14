@@ -50,7 +50,7 @@ public class WorkoutController {
                         ? ((Number) exerciseData.get("noSets")).intValue() 
                         : 0;
                     String type = (String) exerciseData.get("type");
-                    exercises.add(workoutService.createExercise(workoutName, noSets, type));
+                    exercises.add(workoutService.createExercise(name, noSets, type));
                 }
             }
             
@@ -122,7 +122,7 @@ public class WorkoutController {
                         ? ((Number) exerciseData.get("noSets")).intValue() 
                         : 0;
                     String type = (String) exerciseData.get("type");
-                    exercises.add(workoutService.createExercise(workoutName, noSets, type));
+                    exercises.add(workoutService.createExercise(name, noSets, type));
                 }
             }
             
@@ -217,6 +217,30 @@ public class WorkoutController {
         } catch (Exception e) {
             Map<String, Object> error = new HashMap<>();
             error.put("error", "Failed to mark set as completed: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
+    }
+
+    /**
+     * DELETE
+     * /api/workouts/{workoutId}/reset
+     * Reset all set completions for a workout
+     */
+    @DeleteMapping("/{workoutId}/reset")
+    public ResponseEntity<Map<String, Object>> resetWorkoutSets(@PathVariable Long workoutId) {
+        try {
+            Workout workout = workoutService.resetWorkoutSets(workoutId);
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Workout sets reset successfully");
+            response.put("workoutId", workout.getId());
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            Map<String, Object> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        } catch (Exception e) {
+            Map<String, Object> error = new HashMap<>();
+            error.put("error", "Failed to reset workout sets: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
     }

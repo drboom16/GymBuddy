@@ -27,12 +27,9 @@
 }
 
 :root {
-    /* Color Palette - Green Primary (Dull Dark Green) */
+    /* Color Palette - Green Primary */
     --primary-green: #15803d;
-    --primary-green-light: #22c55e;
-    --primary-green-dark: #166534;
-    --primary-green-darker: #14532d;
-    --primary-green-muted: #16a34a;
+    --primary-green-darker: #0f5d2e;
     --accent-purple: #9333ea;
     --accent-purple-light: #c084fc;
     --accent-orange: #f97316;
@@ -177,7 +174,7 @@ body {
 }
 
 .tab-item.active {
-    background: var(--primary-green-dark);
+    background: var(--primary-green);
     color: var(--background-white);
     box-shadow: var(--shadow-md);
 }
@@ -297,7 +294,7 @@ body {
 
 .section-link {
     font-size: var(--font-size-sm);
-    color: var(--primary-green-dark);
+    color: var(--primary-green);
     text-decoration: none;
     font-weight: 500;
     display: flex;
@@ -312,7 +309,7 @@ body {
 /* Button Components */
 .btn {
     padding: var(--spacing-md) var(--spacing-xl);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-xl);
     font-size: var(--font-size-base);
     font-weight: 600;
     border: 2px solid #000;
@@ -326,12 +323,12 @@ body {
 }
 
 .btn-primary {
-    background: var(--primary-green-darker) !important;
+    background: var(--primary-green) !important;
     color: var(--background-white);
 }
 
 .btn-primary:hover {
-    background: var(--primary-green-dark) !important;
+    background: var(--primary-green) !important;
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
 }
@@ -340,6 +337,7 @@ body {
 .btn-primary.btn-full,
 #createWorkoutBtn.btn-primary {
     background: var(--primary-green-darker) !important;
+    border-radius: var(--radius-md) !important;
 }
 
 .btn-secondary {
@@ -427,7 +425,7 @@ body {
 }
 
 .badge-green {
-    background: var(--primary-green-light);
+    background: var(--primary-green);
     color: #065f46;
 }
 

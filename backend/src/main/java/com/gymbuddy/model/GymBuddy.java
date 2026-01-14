@@ -19,7 +19,10 @@ public class GymBuddy {
     private String imagePath;
 
     @Column(nullable = false)
-    private boolean requiresAllAchievements = false; // Whether this gymbuddy requires all achievements to be completed
+    private boolean requiresAllAchievements = false; // Whether this gymbuddy requires all lifetime achievements to be completed
+
+    @Column(nullable = false)
+    private boolean requiresAllDailyAchievements = false; // Whether this gymbuddy requires all daily achievements to be completed
 
     // Default constructor (required by JPA)
     public GymBuddy() {
@@ -36,6 +39,14 @@ public class GymBuddy {
         this.coinCost = coinCost;
         this.imagePath = imagePath;
         this.requiresAllAchievements = requiresAllAchievements;
+    }
+
+    public GymBuddy(String name, int coinCost, String imagePath, boolean requiresAllAchievements, boolean requiresAllDailyAchievements) {
+        this.name = name;
+        this.coinCost = coinCost;
+        this.imagePath = imagePath;
+        this.requiresAllAchievements = requiresAllAchievements;
+        this.requiresAllDailyAchievements = requiresAllDailyAchievements;
     }
 
     // Getters and Setters
@@ -77,5 +88,13 @@ public class GymBuddy {
 
     public void setRequiresAllAchievements(boolean requiresAllAchievements) {
         this.requiresAllAchievements = requiresAllAchievements;
+    }
+
+    public boolean isRequiresAllDailyAchievements() {
+        return requiresAllDailyAchievements;
+    }
+
+    public void setRequiresAllDailyAchievements(boolean requiresAllDailyAchievements) {
+        this.requiresAllDailyAchievements = requiresAllDailyAchievements;
     }
 }
