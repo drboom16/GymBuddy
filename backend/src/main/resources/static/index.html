@@ -15,36 +15,54 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            min-height: 100vh;
+            height: 100vh;
+            max-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 10px;
+            padding: 20px 10px;
             overflow: hidden;
+            background: var(--background-cream);
+        }
+
+        .landing-gif {
+            width: 320px;
+            height: 320px;
+            object-fit: contain;
+            margin-bottom: 0;
+            border-radius: var(--radius-lg);
+            flex-shrink: 0;
         }
 
         .container {
             background: var(--background-cream);
             border-radius: 24px;
-            padding: 30px 30px 20px 30px;
+            padding: 24px;
             max-width: 500px;
             width: 100%;
             text-align: center;
+            flex-shrink: 0;
+            overflow: visible;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-md);
         }
 
         h1 {
-            font-size: 32px;
+            font-size: 40px;
             font-weight: 700;
             color: #333;
-            margin-bottom: 8px;
+            margin-top: 0;
+            margin-bottom: 0;
             letter-spacing: -1px;
         }
 
         .subtitle {
-            font-size: 14px;
+            font-size: 18px;
             color: #666;
-            margin-bottom: 20px;
+            margin-bottom: 0;
             line-height: 1.4;
         }
 
@@ -53,48 +71,64 @@
             margin-top: 0;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
+            width: 100%;
         }
 
         .feature {
             display: flex;
             align-items: center;
-            justify-content: flex-start;
-            gap: 12px;
-            padding: 12px;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px;
             background: white;
             border-radius: var(--radius-lg);
             border: 2px solid #000;
             box-shadow: 3px 3px 0 0 #000;
-            text-align: left;
+            text-align: center;
         }
 
         .feature-icon {
-            width: 20px;
-            height: 20px;
-            border-radius: 10px;
+            width: 24px;
+            height: 24px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 18px;
             flex-shrink: 0;
+            line-height: 1;
+            vertical-align: middle;
         }
 
         .feature-text {
-            font-size: 14px;
+            font-size: 16px;
             color: #333;
             font-weight: 500;
-            flex: 1;
+            flex: 0;
+            line-height: 1.5;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--primary-green-darker) !important;
+            border-radius: var(--radius-md) !important;
+            width: 100%;
+            margin-top: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <img src="/public/landingpage.gif" alt="GymBuddy Landing" class="landing-gif">
         <h1>Gym Buddy</h1>
         <p class="subtitle">Your friendly workout companion. Let's get moving together!</p>
 
-        <button class="btn btn-primary" onclick="window.location.href='/home'" style="width: 100%; max-width: 300px; padding: 12px 32px; font-size: 16px; margin-bottom: 16px;">
-            Start Workout
+        <button class="btn btn-primary" onclick="window.location.href='/home'" style="padding: 12px 28px; font-size: 16px;">
+            Get Started
         </button>
 
         <div class="features">
