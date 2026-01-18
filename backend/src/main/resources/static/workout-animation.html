@@ -2,10 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Workout - GymBuddy</title>
-    <link rel="stylesheet" href="styles/chest-animation.css">
-    <link rel="stylesheet" href="styles/arms-animation.css">
-    <link rel="stylesheet" href="styles/back-animation.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Arms animation CSS removed - using arms.gif instead -->
+    <!-- Chest animation CSS removed - using chest.gif instead -->
+    <!-- Back animation CSS removed - using back.gif instead -->
     <link rel="stylesheet" href="styles/design-system.css">
     <style>
         * {
@@ -35,32 +37,6 @@
             overflow: hidden;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        .white-overlay {
-            position: fixed;
-            top: -150%;
-            left: -150%;
-            width: 300%;
-            height: 300%;
-            background: var(--background-cream);
-            transform: rotate(-30deg) translate(-50%, -50%);
-            transform-origin: top left;
-            z-index: 2500;
-            transition: transform 0.8s ease-out;
-        }
-
-        .white-overlay.slide-in {
-            transform: rotate(-30deg) translate(0%, 0%);
-        }
-
         .go-text {
             font-family: var(--font-family);
             position: fixed;
@@ -85,54 +61,60 @@
             transition: transform 0.6s ease;
         }
 
-        .end-workout-button {
+        .back-button {
             position: fixed;
-            top: 20px;
+            top: 60px;
             left: 20px;
-            background: #f87171;
-            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            background: var(--background-white);
             border: 2px solid #000;
-            padding: var(--spacing-sm) var(--spacing-md);
-            font-size: var(--font-size-base);
-            font-weight: 600;
             border-radius: var(--radius-md);
             cursor: pointer;
             z-index: 3100;
-            opacity: 0;
-            transition: all 0.2s;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .end-workout-button.visible {
             opacity: 1;
+            transition: all 0.2s;
+            box-shadow: 3px 3px 0 0 #000;
         }
 
-        .end-workout-button:hover {
-            background: #ef4444;
+        .back-button i,
+        .back-button svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--text-primary);
+            stroke-width: 2.5;
+        }
+
+        .back-button:hover {
+            background: var(--neutral-gray-light);
             transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+            box-shadow: 4px 4px 0 0 #000;
         }
 
-        .end-workout-button:active {
+        .back-button:active {
             transform: translateY(0);
-            box-shadow: var(--shadow-sm);
+            box-shadow: 3px 3px 0 0 #000;
         }
 
         .timer {
             position: fixed;
-            top: 25vh;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 120px;
+            top: 60px;
+            right: 20px;
+            font-size: 32px;
             font-weight: 700;
             color: var(--text-primary);
             z-index: 2800;
             font-family: var(--font-family);
-            letter-spacing: -2px;
+            letter-spacing: -1px;
             opacity: 0;
             transition: opacity 0.3s ease;
         }
 
+        /* Exit Training Modal - matches end-workout-confirm-modal */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -144,7 +126,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 2000;
+            z-index: 300;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease;
@@ -155,61 +137,60 @@
             visibility: visible;
         }
 
-        .modal {
+        .modal-overlay .modal {
             background: var(--background-white);
             border-radius: var(--radius-xl);
             padding: var(--spacing-xl);
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
+            max-width: 400px;
+            width: 85%;
             border: 2px solid #000;
-            transform: scale(0.9) translateY(20px);
-            transition: transform 0.3s ease;
         }
 
-        .modal-overlay.active .modal {
-            transform: scale(1) translateY(0);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 32px;
-            padding-bottom: 16px;
-        }
-
-        .modal-title {
-            font-size: var(--font-size-2xl);
+        .modal-overlay .modal-title {
+            font-size: var(--font-size-xl);
             font-weight: 700;
             color: var(--text-primary);
-            margin: 0;
+            margin-bottom: var(--spacing-lg);
         }
 
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: var(--font-size-xl);
-            cursor: pointer;
+        .modal-overlay .modal-message {
+            font-size: var(--font-size-base);
             color: var(--text-secondary);
-            padding: 0;
-            width: 32px;
-            height: 32px;
+            margin-bottom: var(--spacing-xl);
+            line-height: 1.5;
+        }
+
+        .modal-overlay .modal-actions {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: var(--radius-sm);
-            transition: background 0.2s;
+            gap: var(--spacing-md);
         }
 
-        .modal-close:hover {
-            background: var(--neutral-gray-light);
+        .modal-overlay .btn-cancel {
+            flex: 1;
+            padding: var(--spacing-md);
+            background: var(--background-white);
+            color: var(--text-primary);
+            border: 2px solid #000;
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            cursor: pointer;
         }
 
-        .modal-content {
-            color: var(--text-secondary);
-            line-height: 1.6;
+        .modal-overlay .btn-confirm {
+            flex: 1;
+            padding: var(--spacing-md);
+            background: #dc2626;
+            color: white;
+            border: 2px solid #000;
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .modal-overlay .btn-confirm:hover {
+            background: #b91c1c;
         }
 
         .workout-complete-modal {
@@ -255,7 +236,7 @@
             padding: var(--spacing-md) var(--spacing-xl);
             font-size: var(--font-size-base);
             font-weight: 600;
-            border-radius: var(--radius-xl);
+            border-radius: var(--radius-sm);
             cursor: pointer;
             margin-top: 0;
             transition: all 0.2s;
@@ -279,7 +260,6 @@
             left: 50%;
             transform: translate(-50%, -50%);
             opacity: 0;
-            transition: opacity 0.3s ease;
             z-index: 1000;
             display: flex;
             align-items: center;
@@ -291,10 +271,75 @@
         }
 
         .legs-gif-container img {
-            max-width: 100%;
-            max-height: 80vh;
-            width: auto;
-            height: auto;
+            width: 120vw;
+            height: 120vh;
+            object-fit: contain;
+        }
+
+        .arms-gif-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .arms-gif-container.visible {
+            opacity: 1;
+        }
+
+        .arms-gif-container img {
+            width: 65vw;
+            height: 65vh;
+            object-fit: contain;
+        }
+
+        .chest-gif-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chest-gif-container.visible {
+            opacity: 1;
+        }
+
+        .chest-gif-container img {
+            width: 100vw;
+            height: 100vh;
+            object-fit: contain;
+        }
+
+        .back-gif-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-gif-container.visible {
+            opacity: 1;
+        }
+
+        .back-gif-container img {
+            width: 90vw;
+            height: 90vh;
+            object-fit: contain;
         }
 
     </style>
@@ -302,38 +347,44 @@
 <body>
     <!-- Workout Screen -->
     <div class="workout-screen" id="workoutScreen">
-        <div class="white-overlay" id="whiteOverlay"></div>
         <div class="go-text" id="goText">GO!</div>
         <div class="timer" id="timer">00:00</div>
-
-        <!-- Dynamic workout content container -->
-        <div id="workoutContentContainer"></div>
         
         <!-- Legs GIF Container -->
         <div class="legs-gif-container" id="legsGifContainer">
             <img src="/public/legs.gif" alt="Legs Workout Animation" id="legsGif">
         </div>
 
-        <div>
-            <button class="end-workout-button" id="endExerciseButton" onclick="leaveWorkoutPopUp(event)">End Workout</button>
+        <!-- Arms GIF Container -->
+        <div class="arms-gif-container" id="armsGifContainer">
+            <img src="/public/arms.gif" alt="Arms Workout Animation" id="armsGif">
         </div>
+
+        <!-- Chest GIF Container -->
+        <div class="chest-gif-container" id="chestGifContainer">
+            <img src="/public/chest.gif" alt="Chest Workout Animation" id="chestGif">
+        </div>
+
+        <!-- Back GIF Container -->
+        <div class="back-gif-container" id="backGifContainer">
+            <img src="/public/back.gif" alt="Back Workout Animation" id="backGif">
+        </div>
+
+        <button class="back-button" id="endExerciseButton" onclick="leaveWorkoutPopUp(event)">
+            <i data-lucide="x"></i>
+        </button>
     </div>
 
     <!-- Exit Training Modal -->
     <div class="modal-overlay" id="exitExerciseModal">
         <div class="modal">
-            <div class="modal-header">
-                <h2 class="modal-title">Are you sure you want to leave?</h2>
+            <h2 class="modal-title">End Exercise?</h2>
+            <div class="modal-message">
+                Are you sure you want to end this exercise?
             </div>
-            <div class="modal-content">
-                <div class="modal-actions">
-                    <button class="modal-button secondary" onclick="document.getElementById('exitExerciseModal').classList.remove('active')">
-                        Cancel
-                    </button>
-                    <button class="modal-button danger" onclick="endExercise()">
-                        Leave
-                    </button>
-                </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="document.getElementById('exitExerciseModal').classList.remove('active')">Cancel</button>
+                <button class="btn-confirm" onclick="endExercise()">End Exercise</button>
             </div>
         </div>
     </div>
@@ -504,28 +555,11 @@
         }
 
         async function loadWorkoutFragment(workoutType) {
-            const container = document.getElementById('workoutContentContainer');
-            const fragmentName = `${workoutType.toLowerCase()}-workout.html`;
-            
-            try {
-                const response = await fetch(`/workout-fragments/${fragmentName}`);
-                if (response.ok) {
-                    const html = await response.text();
-                    container.innerHTML = html;
-                    return true;
-                } else {
-                    console.error(`Failed to load workout fragment: ${fragmentName}`);
-                    return false;
-                }
-            } catch (error) {
-                console.error(`Error loading workout fragment: ${fragmentName}`, error);
-                return false;
-            }
+            // All workouts now use GIFs, no fragments needed
+            return true;
         }
 
         async function startWorkoutAnimation(workoutType, duration) {
-            const workoutScreen = document.getElementById('workoutScreen');
-            const whiteOverlay = document.getElementById('whiteOverlay');
             const goText = document.getElementById('goText');
             const timer = document.getElementById('timer');
 
@@ -535,48 +569,33 @@
             console.log(`WORKOUT_TYPE: ${normalizedWorkoutType}`);
             console.log(`DURATION: ${duration}`);
     
-            // Load the appropriate workout fragment
-            const loaded = await loadWorkoutFragment(workoutType);
-            if (!loaded) {
-                console.error('Failed to load workout fragment');
-                return;
-            }
-    
-            // Step 1: White overlay slides in from top left at 30 degrees
-            setTimeout(() => {
-                whiteOverlay.classList.add('slide-in');
-            }, 100);
-    
-            // Step 2: GO! text pops up
+            // Load the appropriate workout fragment (no-op now, all use GIFs)
+            await loadWorkoutFragment(workoutType);
+
+            // Step 1: GO! text pops up
             setTimeout(() => {
                 goText.classList.add('show');
-            }, 500);
+            }, 100);
     
-            // Step 3: GO! dashes out vertically
+            // Step 2: GO! dashes out
             setTimeout(() => {
                 goText.classList.remove('show');
                 goText.classList.add('exit');
-            }, 1300);
+            }, 900);
 
-            // Step 4: Show end workout button, character, bench, and start timer after GO! exits
-            if (normalizedWorkoutType === "ARMS") {
-                triggerArmsWorkout();
-            } else if (normalizedWorkoutType === "BACK") {
-                triggerBackWorkout();
-            } else if (normalizedWorkoutType === "CHEST") {
-                triggerChestWorkout();
-            } else if (normalizedWorkoutType === "LEGS") {
-                triggerLegsWorkout();
-            }
-
+            // Step 3: Show workout animation and controls after GO! exits (900ms + 600ms transition = 1500ms)
             setTimeout(() => {
-                setSpeed();
-            }, 1000);
+                if (normalizedWorkoutType === "ARMS") {
+                    triggerArmsWorkout();
+                } else if (normalizedWorkoutType === "BACK") {
+                    triggerBackWorkout();
+                } else if (normalizedWorkoutType === "CHEST") {
+                    triggerChestWorkout();
+                } else if (normalizedWorkoutType === "LEGS") {
+                    triggerLegsWorkout();
+                }
 
-            setTimeout(randomBlink, 2000);
-            setTimeout(randomEyesLookRight, 4000);
-            // Step 5: Start countdown timer after elements are visible
-            setTimeout(() => {
+                // Show and start countdown timer (only after GO! has fully exited)
                 let totalSeconds = parseDuration(duration);
                 timer.textContent = formatTime(totalSeconds);
                 timer.style.opacity = '1';
@@ -596,184 +615,54 @@
 
                 // Store interval ID globally so it can be cleared if workout is ended early
                 window.countdownInterval = countdownInterval;
-            }, 1700);
+            }, 1500);
         } 
-
-        function setSpeed() {
-            // Set speed for chest workout elements (bench press)
-            const barbell = document.getElementById('barbell');
-            const barbellWeight = document.getElementById('barbellWeight');
-            const upperArmLeft = document.getElementById('upperArmLeft');
-            const lowerArmLeft = document.getElementById('lowerArmLeft');
-            const upperArmRight = document.getElementById('upperArmRight');
-            const lowerArmRight = document.getElementById('lowerArmRight');
-
-            // Set speed for arms workout elements (bicep curls)
-            const barbellArms = document.getElementById('barbellArms');
-            const upperArmLeftArms = document.getElementById('upperArmLeftArms');
-            const lowerArmLeftArms = document.getElementById('lowerArmLeftArms');
-            const upperArmRightArms = document.getElementById('upperArmRightArms');
-            const lowerArmRightArms = document.getElementById('lowerArmRightArms');
-            const dumbbellLeft = document.getElementById('dumbbellLeft');
-            const dumbbellRight = document.getElementById('dumbbellRight');
-
-            // Use default medium speed (2.0s)
-            const duration = '2.0s';
-
-            // Apply to chest workout elements if they exist
-            if (barbell) barbell.style.animationDuration = duration;
-            if (barbellWeight) barbellWeight.style.animationDuration = duration;
-            if (upperArmLeft) upperArmLeft.style.animationDuration = duration;
-            if (lowerArmLeft) lowerArmLeft.style.animationDuration = duration;
-            if (upperArmRight) upperArmRight.style.animationDuration = duration;
-            if (lowerArmRight) lowerArmRight.style.animationDuration = duration;
-
-            // Apply to arms workout elements if they exist
-            if (barbellArms) barbellArms.style.animationDuration = duration;
-            if (upperArmLeftArms) upperArmLeftArms.style.animationDuration = duration;
-            if (lowerArmLeftArms) lowerArmLeftArms.style.animationDuration = duration;
-            if (upperArmRightArms) upperArmRightArms.style.animationDuration = duration;
-            if (lowerArmRightArms) lowerArmRightArms.style.animationDuration = duration;
-            if (dumbbellLeft) dumbbellLeft.style.animationDuration = duration;
-            if (dumbbellRight) dumbbellRight.style.animationDuration = duration;
-
-        }
-
-        function randomBlink() {
-            // Try chest workout eyes first
-            let eyeLeft = document.getElementById('eyeLeft');
-            let eyeRight = document.getElementById('eyeRight');
-            let eyeLeftArms = document.getElementById('eyeLeftArms');
-            let eyeRightArms = document.getElementById('eyeRightArms');
-            
-            // If not found, try arms workout eyes
-            if (!eyeLeft || !eyeRight) {
-                eyeLeft = eyeLeftArms;
-                eyeRight = eyeRightArms;
-            }
-
-            if (!eyeLeft || !eyeRight || !eyeLeftArms || !eyeRightArms) return;
-
-
-            eyeLeft.classList.add('blinking');
-            eyeRight.classList.add('blinking');
-            eyeLeftArms.classList.add('blinking');
-            eyeRightArms.classList.add('blinking');
-            setTimeout(() => {
-                eyeLeft.classList.remove('blinking');
-                eyeRight.classList.remove('blinking');
-                eyeLeftArms.classList.remove('blinking');
-                eyeRightArms.classList.remove('blinking');
-            }, 300);
-
-            const minDelay = 2000;
-            const maxDelay = 5000;
-            const randomDelay = Math.random() * (maxDelay - minDelay) + minDelay;
-            setTimeout(randomBlink, randomDelay);
-        }
-
-        function randomEyesLookRight() {
-            const eyeLeftArms = document.getElementById('eyeLeftArms');
-            const eyeRightArms = document.getElementById('eyeRightArms');
-
-            if (!eyeLeftArms || !eyeRightArms) return;
-                    
-            eyeLeftArms.classList.add('eyes-look-right');
-            eyeRightArms.classList.add('eyes-look-right');
-
-            setTimeout(() => {
-                eyeLeftArms.classList.remove('eyes-look-right');
-                eyeRightArms.classList.remove('eyes-look-right');
-            }, 300);
-
-            const minDelay = 4000;
-            const maxDelay = 12000;
-            const randomDelay = Math.random() * (maxDelay - minDelay) + minDelay;
-            setTimeout(randomEyesLookRight, randomDelay);
-        }
 
         function triggerChestWorkout() {
             const endButton = document.getElementById('endExerciseButton');
-
-            setTimeout(() => {
-                if (endButton) endButton.classList.add('visible');
-                
-                // Show all chest workout elements if they exist
-                const elements = [
-                    'benchTopFace', 'benchBottomEdge', 'benchLeftEdge', 'head',
-                    'bodyTopFace', 'bodyBelly', 'upperArms', 'upperArmLeft',
-                    'upperArmRight', 'lowerArms', 'lowerArmLeft', 'lowerArmRight',
-                    'legs', 'eyes', 'eyeLeft', 'eyeRight', 'rightWeight', 'leftWeight',
-                    'barbell', 'barbellWeight', 'benchFrontLeg', 'benchBackLeg',
-                    'benchFrontLegBase', 'benchBackLegBase'
-                ];
-                
-                elements.forEach(id => {
-                    const element = document.getElementById(id);
-                    if (element) element.classList.add('visible');
-                });
-            }, 1700);
+            const chestGifContainer = document.getElementById('chestGifContainer');
+            
+            if (endButton) {
+                lucide.createIcons();
+            }
+            if (chestGifContainer) chestGifContainer.classList.add('visible');
         }
 
         function triggerArmsWorkout() {
             const endButton = document.getElementById('endExerciseButton');
+            const armsGifContainer = document.getElementById('armsGifContainer');
             
-            setTimeout(() => {
-                if (endButton) endButton.classList.add('visible');
-
-                // Show all arms workout elements if they exist
-                const elements = [
-                    'headArms', 'eyesArms', 'eyeLeftArms', 'eyeRightArms',
-                    'bodyTopFaceArms', 'bodyBellyArms', 
-                    'upperArmsLeftArms', 'upperArmLeftArms', 
-                    'upperArmsRightArms', 'upperArmRightArms', 
-                    'lowerArmsLeftArms', 'lowerArmLeftArms',
-                    'lowerArmsRightArms', 'lowerArmRightArms', 
-                    'legsArms', 'legsArmsCrotch', 'barbellArms', 'barbellBar', 'barbellWeightLeft', 'barbellWeightRight'
-                ];
-                
-                elements.forEach(id => {
-                    const element = document.getElementById(id);
-                    if (element) element.classList.add('visible');
-                });
-            }, 1700);
+            if (endButton) {
+                lucide.createIcons();
+            }
+            if (armsGifContainer) armsGifContainer.classList.add('visible');
         }
 
         function triggerBackWorkout() {
             const endButton = document.getElementById('endExerciseButton');
+            const backGifContainer = document.getElementById('backGifContainer');
             
-            setTimeout(() => {
-                if (endButton) endButton.classList.add('visible');
-
-                // Show all back workout elements if they exist
-                const elements = [
-                    'headBack', 'eyesBack', 'eyeLeftBack', 'eyeRightBack',
-                    'bodyTopFaceBack', 
-                    'upperArmLeftBack', 'upperArmRightBack', 
-                    'lowerArmLeftBack', 'lowerArmRightBack', 
-                    'legsBack', 'legsBackCrotch',
-                    'pullupBarBack', 'pullupBarHorizontal', 'pullupBarSupportLeft', 'pullupBarSupportRight'
-                ];
-                
-                elements.forEach(id => {
-                    const element = document.getElementById(id);
-                    if (element) element.classList.add('visible');
-                });
-            }, 1700);
+            if (endButton) {
+                lucide.createIcons();
+            }
+            if (backGifContainer) backGifContainer.classList.add('visible');
         }
 
         function triggerLegsWorkout() {
             const endButton = document.getElementById('endExerciseButton');
             const legsGifContainer = document.getElementById('legsGifContainer');
             
-            setTimeout(() => {
-                if (endButton) endButton.classList.add('visible');
-                if (legsGifContainer) legsGifContainer.classList.add('visible');
-            }, 1700);
+            if (endButton) {
+                lucide.createIcons();
+            }
+            if (legsGifContainer) legsGifContainer.classList.add('visible');
         }
 
         // Read URL parameters and start workout animation
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize lucide icons
+            lucide.createIcons();
+            
             const params = new URLSearchParams(window.location.search);
 
             const workoutType = params.get('type');
