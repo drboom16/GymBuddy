@@ -210,26 +210,13 @@ body {
     border: 2px solid #000;
 }
 
-/* iPhone Dynamic Island */
-.dynamic-island {
-    position: fixed;
-    top: calc(env(safe-area-inset-top, 0px) + 8px);
-    left: 50%;
-    transform: translateX(-50%);
-    width: 126px;
-    height: 37px;
-    background: #000;
-    border-radius: 19px;
-    z-index: 1000;
-}
-
 /* Page Title */
 .page-title-large {
     font-size: var(--font-size-4xl);
     font-weight: 700;
     color: var(--text-primary);
     padding: var(--spacing-2xl) var(--spacing-lg) var(--spacing-md) var(--spacing-lg);
-    padding-top: calc(var(--spacing-2xl) + env(safe-area-inset-top, 0px) + 45px);
+    padding-top: calc(var(--spacing-2xl) + env(safe-area-inset-top, 0px));
     margin: 0;
     text-align: left;
     line-height: 1.2;
@@ -240,7 +227,7 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: var(--spacing-2xl) var(--spacing-lg) var(--spacing-md) var(--spacing-lg);
-    padding-top: calc(var(--spacing-2xl) + env(safe-area-inset-top, 0px) + 45px);
+    padding-top: calc(var(--spacing-2xl) + env(safe-area-inset-top, 0px));
 }
 
 .page-title-container .page-title-large {

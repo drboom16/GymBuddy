@@ -252,7 +252,7 @@
             justify-content: space-between;
             gap: var(--spacing-md);
             padding: var(--spacing-2xl) var(--spacing-lg) var(--spacing-md) var(--spacing-lg);
-            padding-top: calc(var(--spacing-2xl) + env(safe-area-inset-top, 0px) + 45px);
+            padding-top: calc(var(--spacing-2xl) + env(safe-area-inset-top, 0px));
         }
 
         .header-buttons {
@@ -511,9 +511,6 @@
     </style>
 </head>
 <body>
-    <!-- iPhone Dynamic Island -->
-    <div class="dynamic-island"></div>
-
     <div class="page-header">
         <h1 class="page-title">Workout</h1>
         <div class="header-buttons">

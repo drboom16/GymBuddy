@@ -16,7 +16,7 @@
             align-items: center;
             justify-content: space-between;
             padding: var(--spacing-2xl) var(--spacing-lg) var(--spacing-md) var(--spacing-lg);
-            padding-top: calc(var(--spacing-2xl) + env(safe-area-inset-top, 0px) + 45px);
+            padding-top: calc(var(--spacing-2xl) + env(safe-area-inset-top, 0px));
         }
 
         .coin-display {
@@ -347,9 +347,6 @@
     </style>
 </head>
 <body>
-    <!-- iPhone Dynamic Island -->
-    <div class="dynamic-island"></div>
-
     <div class="header-container">
         <h1 class="page-title-large" style="padding: 0; margin: 0;">Shop</h1>
         <div class="coin-display" id="userCoins">
