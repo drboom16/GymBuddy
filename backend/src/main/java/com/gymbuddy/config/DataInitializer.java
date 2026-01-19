@@ -142,7 +142,7 @@ public class DataInitializer implements CommandLineRunner {
         // Initialize default user if it doesn't exist
         List<User> allUsers = userRepository.findAll();
         if (allUsers.isEmpty()) {
-            User defaultUser = new User(0);
+            User defaultUser = new User(600);
             userRepository.save(defaultUser);
             
             // Give default user the white GymBuddy as active

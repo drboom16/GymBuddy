@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Workouts - GymBuddy</title>
     <link rel="stylesheet" href="styles/design-system.css">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="scripts/viewport.js"></script>
     <style>
         * {
             margin: 0;
@@ -342,6 +343,8 @@
             width: 90%;
             height: 65vh;
             max-height: 65vh;
+            height: calc(var(--app-height) * 0.65);
+            max-height: calc(var(--app-height) * 0.65);
             border: 2px solid #000;
             display: flex;
             flex-direction: column;
@@ -446,7 +449,7 @@
         .edit-workout-modal .form-input {
             width: 100%;
             padding: var(--spacing-sm) var(--spacing-md);
-            font-size: var(--font-size-sm);
+            font-size: var(--font-size-base);
             font-family: var(--font-family);
             border: 2px solid #000;
             border-radius: var(--radius-md);
@@ -474,7 +477,7 @@
         .edit-workout-modal .exercise-name-input {
             width: 100%;
             padding: var(--spacing-sm) var(--spacing-md);
-            font-size: var(--font-size-sm);
+            font-size: var(--font-size-base);
         }
 
         .edit-workout-modal .exercise-options-row {
@@ -490,7 +493,7 @@
             flex: 0 0 80px;
             min-width: 80px;
             padding: var(--spacing-sm) var(--spacing-md);
-            font-size: var(--font-size-sm);
+            font-size: var(--font-size-base);
             height: 40px;
             box-sizing: border-box;
         }
@@ -499,7 +502,7 @@
             flex: 0 0 100px;
             min-width: 100px;
             padding: var(--spacing-sm) 36px var(--spacing-sm) var(--spacing-md);
-            font-size: var(--font-size-sm);
+            font-size: var(--font-size-base);
             position: relative;
             z-index: 1;
             height: 40px;

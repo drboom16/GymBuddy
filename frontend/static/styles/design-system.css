@@ -50,6 +50,9 @@
     --spacing-lg: 24px;
     --spacing-xl: 32px;
     --spacing-2xl: 48px;
+
+    /* Viewport */
+    --app-height: 100vh;
     
     /* Border Radius */
     --radius-sm: 8px;

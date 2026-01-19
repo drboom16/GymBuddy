@@ -147,6 +147,7 @@
     max-width: 500px;
     width: 90%;
     max-height: 60vh;
+    max-height: calc(var(--app-height) * 0.6);
     overflow-y: auto;
     border: 2px solid #000;
     transform: scale(0.9) translateY(20px);
@@ -297,6 +298,8 @@
     width: 90%;
     height: 65vh;
     max-height: 65vh;
+    height: calc(var(--app-height) * 0.65);
+    max-height: calc(var(--app-height) * 0.65);
     display: flex;
     flex-direction: column;
     border: 2px solid #000;
@@ -402,7 +405,7 @@
 .create-workout-modal .form-input {
     width: 100%;
     padding: var(--spacing-sm) var(--spacing-md);
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-base);
     font-family: var(--font-family);
     border: 2px solid #000;
     border-radius: var(--radius-md);
@@ -430,7 +433,7 @@
 .create-workout-modal .exercise-name-input {
     width: 100%;
     padding: var(--spacing-sm) var(--spacing-md);
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-base);
 }
 
 .create-workout-modal .exercise-options-row {
@@ -446,7 +449,7 @@
     flex: 0 0 80px;
     min-width: 80px;
     padding: var(--spacing-sm) var(--spacing-md);
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-base);
     height: 40px;
     box-sizing: border-box;
 }
@@ -455,7 +458,7 @@
     flex: 0 0 100px;
     min-width: 100px;
     padding: var(--spacing-sm) 36px var(--spacing-sm) var(--spacing-md);
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-base);
     position: relative;
     z-index: 1;
     height: 40px;

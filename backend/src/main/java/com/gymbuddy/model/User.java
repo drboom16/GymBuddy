@@ -11,7 +11,7 @@ public class User {
     private Long id;
 
     @Column(nullable = false)
-    private int coins = 0;
+    private int coins = 600;
 
     // Default constructor (required by JPA)
     public User() {

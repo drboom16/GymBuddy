@@ -18,7 +18,7 @@ public class UserService {
     public User getOrCreateUser() {
         List<User> allUsers = userRepository.findAll();
         if (allUsers.isEmpty()) {
-            User newUser = new User(0);
+            User newUser = new User(600);
             return userRepository.save(newUser);
         } else {
             // Return the first user (assuming single user system)

@@ -91,6 +91,25 @@ This project is focused on mastering Spring Boot fundamentals, including:
 
 ## Documentation
 
+## Demo Videos
+
+<table>
+  <tr>
+    <td>
+      <video src="readme-videos/r1.mov?raw=1" controls muted playsinline></video>
+      <div>Fallback: <a href="readme-videos/r1.mov?raw=1">r1.mov</a></div>
+    </td>
+    <td>
+      <video src="readme-videos/r2.mov?raw=1" controls muted playsinline></video>
+      <div>Fallback: <a href="readme-videos/r2.mov?raw=1">r2.mov</a></div>
+    </td>
+    <td>
+      <video src="readme-videos/r3.mov?raw=1" controls muted playsinline></video>
+      <div>Fallback: <a href="readme-videos/r3.mov?raw=1">r3.mov</a></div>
+    </td>
+  </tr>
+</table>
+
 ## View in iPhone Mode
 
 ### Optionally: Xcode iOS Simulator (macOS only)
