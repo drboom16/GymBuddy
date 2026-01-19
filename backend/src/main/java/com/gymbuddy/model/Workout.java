@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import com.gymbuddy.model.Exercises.*;
-
 @Entity
 public class Workout {
 
@@ -18,7 +16,7 @@ public class Workout {
 
     @ElementCollection
     @CollectionTable(name = "workout_exercises", joinColumns = @JoinColumn(name = "workout_id"))
-    private List<Exercise> exercises;
+    private List<com.gymbuddy.model.Exercises.Exercise> exercises;
 
     @Column
     private LocalDateTime completedAt;
@@ -31,12 +29,12 @@ public class Workout {
         this.exercises = new ArrayList<>();
     }
 
-    public Workout(String workoutName, List<Exercise> exercises) {
+    public Workout(String workoutName, List<com.gymbuddy.model.Exercises.Exercise> exercises) {
         this.workoutName = workoutName;
         this.exercises = new ArrayList<>(exercises);
     }
 
-    public Workout(String workoutName, List<Exercise> exercises, String color) {
+    public Workout(String workoutName, List<com.gymbuddy.model.Exercises.Exercise> exercises, String color) {
         this.workoutName = workoutName;
         this.exercises = new ArrayList<>(exercises);
         this.color = color;
@@ -59,11 +57,11 @@ public class Workout {
         this.workoutName = workoutName;
     }
 
-    public List<Exercise> getExercises() {
+    public List<com.gymbuddy.model.Exercises.Exercise> getExercises() {
         return exercises;
     }
 
-    public void setExercises(List<Exercise> exercises) {
+    public void setExercises(List<com.gymbuddy.model.Exercises.Exercise> exercises) {
         this.exercises = exercises;
     }
 

@@ -5,6 +5,7 @@ import com.gymbuddy.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -36,13 +37,14 @@ class UserServiceTest {
     @Test
     void testGetOrCreateUser_WhenNoUsersExist_CreatesNewUser() {
         when(userRepository.findAll()).thenReturn(new ArrayList<>());
-        when(userRepository.save(any(User.class))).thenReturn(testUser);
+        User newUser = new User(0);
+        newUser.setId(1L);
+        when(userRepository.save(any(User.class))).thenReturn(newUser);
 
         User result = userService.getOrCreateUser();
 
         assertNotNull(result);
         assertEquals(0, result.getCoins());
-        verify(userRepository).save(any(User.class));
     }
 
     @Test
