@@ -322,15 +322,31 @@
             justify-content: center;
         }
 
-        .leave-button:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
 
-        .leave-button:active {
-            transform: translateY(0);
+        .collection-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            background: var(--background-white);
+            border: 2px solid #000;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
             box-shadow: var(--shadow-sm);
         }
+
+        .collection-button i,
+        .collection-button svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--text-primary);
+            stroke-width: 2.5;
+        }
+
 
         .completed-workouts-section {
             padding: 0 var(--spacing-lg) var(--spacing-lg) var(--spacing-lg);
@@ -397,7 +413,12 @@
     <!-- Page Title -->
     <div style="padding: var(--spacing-2xl) var(--spacing-lg) var(--spacing-md) var(--spacing-lg); padding-top: calc(var(--spacing-2xl) + env(safe-area-inset-top, 0px) + 45px); display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-md);">
         <h1 class="page-title-large" style="padding: 0; margin: 0;">Home</h1>
-        <a href="/" class="leave-button">Leave</a>
+        <div style="display: flex; align-items: center; gap: var(--spacing-sm);">
+            <a href="/collection" class="collection-button">
+                <i data-lucide="users"></i>
+            </a>
+            <a href="/" class="leave-button">Leave</a>
+        </div>
     </div>
 
     <!-- Completed Workouts Section -->
@@ -411,7 +432,7 @@
     <!-- Content Container -->
     <div class="content-container">
         <div class="home-gif-container">
-            <img src="/public/home-1.gif" alt="Home animation" class="home-gif">
+            <img src="/public/default-buddy/main-animation.gif" alt="Home animation" class="home-gif">
         </div>
     </div>
 
@@ -518,8 +539,47 @@
             }
         }
 
-        // Load completed workouts on page load
+        // Update gymbuddy animation based on active gymbuddy
+        async function updateGymBuddyAnimation() {
+            try {
+                const response = await fetch('/api/user/gymbuddies/active');
+                if (response.ok) {
+                    const activeGymBuddy = await response.json();
+                    const homeGif = document.querySelector('.home-gif');
+                    if (homeGif) {
+                        if (activeGymBuddy && activeGymBuddy.name === 'EarthBuddy') {
+                            homeGif.src = `/public/earth-buddy/main animation.gif?t=${Date.now()}`;
+                        } else {
+                            homeGif.src = `/public/default-buddy/main-animation.gif?t=${Date.now()}`;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading active gymbuddy:', error);
+            }
+        }
+
+        // Load completed workouts and update gymbuddy animation on page load
         loadCompletedWorkouts();
+        updateGymBuddyAnimation();
+
+        // Update animation when page becomes visible (user navigates back from collection)
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                updateGymBuddyAnimation();
+            }
+        });
+
+        // Also update when window gains focus (user switches back to tab/window)
+        window.addEventListener('focus', function() {
+            updateGymBuddyAnimation();
+        });
+
+        // Update when page is shown (handles all navigation including back/forward)
+        window.addEventListener('pageshow', function(event) {
+            // Always refresh animation when page is shown, whether from cache or not
+            updateGymBuddyAnimation();
+        });
     </script>
 </body>
 </html>

@@ -165,7 +165,7 @@ public class WorkoutService {
             List<com.gymbuddy.model.ExerciseSet> sets = new ArrayList<>();
             for (int i = 0; i < noSets; i++) {
                 sets.add(new com.gymbuddy.model.ExerciseSet(false));
-            }
+        }
             exercise.setSets(sets);
         }
         

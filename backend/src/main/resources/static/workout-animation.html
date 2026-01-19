@@ -61,10 +61,44 @@
             transition: transform 0.6s ease;
         }
 
-        .back-button {
+        .header-buttons {
             position: fixed;
             top: 60px;
             left: 20px;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            z-index: 3100;
+        }
+
+        .collection-button {
+            display: none; /* Hidden during workout - cannot change gymbuddy while exercising */
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            background: var(--background-white);
+            border: 2px solid #000;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            opacity: 1;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-sm);
+            text-decoration: none;
+        }
+
+        .collection-button i,
+        .collection-button svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--text-primary);
+            stroke-width: 2.5;
+        }
+
+
+        .back-button {
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -75,10 +109,9 @@
             border: 2px solid #000;
             border-radius: var(--radius-md);
             cursor: pointer;
-            z-index: 3100;
             opacity: 1;
             transition: all 0.2s;
-            box-shadow: 3px 3px 0 0 #000;
+            box-shadow: var(--shadow-sm);
         }
 
         .back-button i,
@@ -89,16 +122,6 @@
             stroke-width: 2.5;
         }
 
-        .back-button:hover {
-            background: var(--neutral-gray-light);
-            transform: translateY(-2px);
-            box-shadow: 4px 4px 0 0 #000;
-        }
-
-        .back-button:active {
-            transform: translateY(0);
-            box-shadow: 3px 3px 0 0 #000;
-        }
 
         .timer {
             position: fixed;
@@ -352,27 +375,32 @@
         
         <!-- Legs GIF Container -->
         <div class="legs-gif-container" id="legsGifContainer">
-            <img src="/public/legs.gif" alt="Legs Workout Animation" id="legsGif">
+            <img src="/public/default-buddy/legs.gif" alt="Legs Workout Animation" id="legsGif">
         </div>
 
         <!-- Arms GIF Container -->
         <div class="arms-gif-container" id="armsGifContainer">
-            <img src="/public/arms.gif" alt="Arms Workout Animation" id="armsGif">
+            <img src="/public/default-buddy/arms.gif" alt="Arms Workout Animation" id="armsGif">
         </div>
 
         <!-- Chest GIF Container -->
         <div class="chest-gif-container" id="chestGifContainer">
-            <img src="/public/chest.gif" alt="Chest Workout Animation" id="chestGif">
+            <img src="/public/default-buddy/chest.gif" alt="Chest Workout Animation" id="chestGif">
         </div>
 
         <!-- Back GIF Container -->
         <div class="back-gif-container" id="backGifContainer">
-            <img src="/public/back.gif" alt="Back Workout Animation" id="backGif">
+            <img src="/public/default-buddy/back.gif" alt="Back Workout Animation" id="backGif">
         </div>
 
-        <button class="back-button" id="endExerciseButton" onclick="leaveWorkoutPopUp(event)">
-            <i data-lucide="x"></i>
-        </button>
+        <div class="header-buttons">
+            <a href="/collection" class="collection-button">
+                <i data-lucide="users"></i>
+            </a>
+            <button class="back-button" id="endExerciseButton" onclick="leaveWorkoutPopUp(event)">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
     </div>
 
     <!-- Exit Training Modal -->
@@ -559,6 +587,51 @@
             return true;
         }
 
+        // Get active gymbuddy and update GIF paths
+        async function updateGymBuddyAnimations() {
+            try {
+                const response = await fetch('/api/user/gymbuddies/active');
+                if (response.ok) {
+                    const activeGymBuddy = await response.json();
+                    const legsGif = document.getElementById('legsGif');
+                    const armsGif = document.getElementById('armsGif');
+                    const chestGif = document.getElementById('chestGif');
+                    const backGif = document.getElementById('backGif');
+                    
+                    if (activeGymBuddy && activeGymBuddy.name === 'EarthBuddy') {
+                        if (legsGif) {
+                            legsGif.src = `/public/earth-buddy/legs.gif?t=${Date.now()}`;
+                        }
+                        if (armsGif) {
+                            armsGif.src = `/public/earth-buddy/arms.gif?t=${Date.now()}`;
+                        }
+                        if (chestGif) {
+                            chestGif.src = `/public/earth-buddy/chest.gif?t=${Date.now()}`;
+                        }
+                        if (backGif) {
+                            backGif.src = `/public/earth-buddy/back.gif?t=${Date.now()}`;
+                        }
+                    } else {
+                        // Use default animations
+                        if (legsGif) {
+                            legsGif.src = `/public/default-buddy/legs.gif?t=${Date.now()}`;
+                        }
+                        if (armsGif) {
+                            armsGif.src = `/public/default-buddy/arms.gif?t=${Date.now()}`;
+                        }
+                        if (chestGif) {
+                            chestGif.src = `/public/default-buddy/chest.gif?t=${Date.now()}`;
+                        }
+                        if (backGif) {
+                            backGif.src = `/public/default-buddy/back.gif?t=${Date.now()}`;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading active gymbuddy:', error);
+            }
+        }
+
         async function startWorkoutAnimation(workoutType, duration) {
             const goText = document.getElementById('goText');
             const timer = document.getElementById('timer');
@@ -659,9 +732,12 @@
         }
 
         // Read URL parameters and start workout animation
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             // Initialize lucide icons
             lucide.createIcons();
+            
+            // Update gymbuddy animations first, before starting workout
+            await updateGymBuddyAnimations();
             
             const params = new URLSearchParams(window.location.search);
 

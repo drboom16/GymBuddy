@@ -41,7 +41,7 @@ public class Workout {
         this.exercises = new ArrayList<>(exercises);
         this.color = color;
     }
-    
+
     // Getters and Setters
     public Long getId() {
         return id;

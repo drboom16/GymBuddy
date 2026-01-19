@@ -216,7 +216,7 @@
                 <!-- Workouts will be loaded here -->
             </div>
             <div class="stretching-gif-container">
-                <img src="/public/stretching.gif" alt="Stretching">
+                <img src="/public/default-buddy/stretching.gif" alt="Stretching">
             </div>
         </div>
 
@@ -277,16 +277,16 @@
                             maxlength="40"
                         >
                         <div class="exercise-options-row">
-                            <input
-                                type="text"
-                                id="noSets"
-                                class="form-input exercise-sets-input"
-                                placeholder="Sets"
+                        <input
+                            type="text"
+                            id="noSets"
+                            class="form-input exercise-sets-input"
+                            placeholder="Sets"
                                 value="1"
-                                autocomplete="off"
-                                inputmode="numeric"
-                                pattern="[0-9]*"
-                            >
+                            autocomplete="off"
+                            inputmode="numeric"
+                            pattern="[0-9]*"
+                        >
                             <select id="exerciseType" class="form-input exercise-type-select">
                                 <option value="chest">Chest</option>
                                 <option value="back">Back</option>
@@ -569,8 +569,29 @@
             }
         }
 
-        // Load workouts when page loads
+        // Update gymbuddy animation based on active gymbuddy
+        async function updateGymBuddyAnimation() {
+            try {
+                const response = await fetch('/api/user/gymbuddies/active');
+                if (response.ok) {
+                    const activeGymBuddy = await response.json();
+                    const stretchingGif = document.querySelector('.stretching-gif-container img');
+                    if (stretchingGif) {
+                        if (activeGymBuddy && activeGymBuddy.name === 'EarthBuddy') {
+                            stretchingGif.src = `/public/earth-buddy/stretching.gif?t=${Date.now()}`;
+                        } else {
+                            stretchingGif.src = `/public/default-buddy/stretching.gif?t=${Date.now()}`;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading active gymbuddy:', error);
+            }
+        }
+
+        // Load workouts and update gymbuddy animation when page loads
         loadMyWorkouts();
+        updateGymBuddyAnimation();
 
         function capitalizeFirstWord(text) {
             if (!text) return text;
@@ -656,7 +677,7 @@
                     </div>
                 `;
             }).join('');
-
+            
             lucide.createIcons();
         }
 

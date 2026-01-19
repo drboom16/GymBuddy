@@ -897,7 +897,7 @@
                     `;
                 }).join('') + `
                     <div class="thinking-gif-container">
-                        <img src="/public/thinking.gif" alt="Thinking">
+                        <img src="/public/default-buddy/thinking.gif" alt="Thinking">
                     </div>
                 `;
                 
@@ -1161,8 +1161,28 @@
             }
         });
 
-        // Load workouts when page loads
+        // Update gymbuddy animation based on active gymbuddy
+        async function updateGymBuddyAnimation() {
+            try {
+                const response = await fetch('/api/user/gymbuddies/active');
+                if (response.ok) {
+                    const activeGymBuddy = await response.json();
+                    const thinkingGif = document.querySelector('.thinking-gif-container img');
+                    if (thinkingGif) {
+                        if (activeGymBuddy && activeGymBuddy.name === 'EarthBuddy') {
+                            thinkingGif.src = `/public/earth-buddy/thinking.gif?t=${Date.now()}`;
+                        } else {
+                            thinkingGif.src = `/public/default-buddy/thinking.gif?t=${Date.now()}`;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading active gymbuddy:', error);
+            }
+        }
+
         loadWorkouts();
+        updateGymBuddyAnimation();
     </script>
 </body>
 </html>

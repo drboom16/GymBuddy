@@ -3,10 +3,12 @@ package com.gymbuddy.config;
 import com.gymbuddy.model.Achievement;
 import com.gymbuddy.model.GymBuddy;
 import com.gymbuddy.model.User;
+import com.gymbuddy.model.UserGymBuddy;
 import com.gymbuddy.model.Workout;
 import com.gymbuddy.model.Exercises.*;
 import com.gymbuddy.repository.AchievementRepository;
 import com.gymbuddy.repository.GymBuddyRepository;
+import com.gymbuddy.repository.UserGymBuddyRepository;
 import com.gymbuddy.repository.UserRepository;
 import com.gymbuddy.repository.WorkoutRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -22,12 +24,14 @@ public class DataInitializer implements CommandLineRunner {
     private final AchievementRepository achievementRepository;
     private final GymBuddyRepository gymBuddyRepository;
     private final UserRepository userRepository;
+    private final UserGymBuddyRepository userGymBuddyRepository;
 
-    public DataInitializer(WorkoutRepository workoutRepository, AchievementRepository achievementRepository, GymBuddyRepository gymBuddyRepository, UserRepository userRepository) {
+    public DataInitializer(WorkoutRepository workoutRepository, AchievementRepository achievementRepository, GymBuddyRepository gymBuddyRepository, UserRepository userRepository, UserGymBuddyRepository userGymBuddyRepository) {
         this.workoutRepository = workoutRepository;
         this.achievementRepository = achievementRepository;
         this.gymBuddyRepository = gymBuddyRepository;
         this.userRepository = userRepository;
+        this.userGymBuddyRepository = userGymBuddyRepository;
     }
 
     @Override
@@ -122,13 +126,15 @@ public class DataInitializer implements CommandLineRunner {
             // Create default gymbuddies
             List<GymBuddy> gymBuddies = new ArrayList<>();
             
-            gymBuddies.add(new GymBuddy("EarthBuddy", 600, "/public/gymbuddy-rookie.png", false));
-            gymBuddies.add(new GymBuddy("MysticalBuddy", 3000, "/public/gymbuddy-warrior.png", false));
-            gymBuddies.add(new GymBuddy("LegendaryBuddy", 0, "/public/gymbuddy-champion.png", true));
-            gymBuddies.add(new GymBuddy("DarkBuddy", 2400, "/public/gymbuddy-elite.png", false));
-            gymBuddies.add(new GymBuddy("AncientBuddy", 2800, "/public/gymbuddy-legend.png", false));
-            gymBuddies.add(new GymBuddy("PinkBuddy", 1200, "/public/gymbuddy-mythic.png", false));
-            gymBuddies.add(new GymBuddy("Second Slot", 5000, "/public/second-slot.png", false, false));
+            // Default white GymBuddy (free, always available)
+            gymBuddies.add(new GymBuddy("GymBuddy", 0, "/public/shop/gymbuddy.png", false));
+            gymBuddies.add(new GymBuddy("EarthBuddy", 600, "/public/shop/gymbuddy-rookie.png", false));
+            gymBuddies.add(new GymBuddy("MysticalBuddy", 3000, "/public/shop/gymbuddy-warrior.png", false));
+            gymBuddies.add(new GymBuddy("LegendaryBuddy", 0, "/public/shop/gymbuddy-champion.png", true));
+            gymBuddies.add(new GymBuddy("DarkBuddy", 2400, "/public/shop/gymbuddy-elite.png", false));
+            gymBuddies.add(new GymBuddy("AncientBuddy", 2800, "/public/shop/gymbuddy-legend.png", false));
+            gymBuddies.add(new GymBuddy("PinkBuddy", 1200, "/public/shop/gymbuddy-mythic.png", false));
+            gymBuddies.add(new GymBuddy("Second Slot", 5000, "/public/shop/second-slot.png", false, false));
             
             gymBuddyRepository.saveAll(gymBuddies);
         }
@@ -138,6 +144,32 @@ public class DataInitializer implements CommandLineRunner {
         if (allUsers.isEmpty()) {
             User defaultUser = new User(0);
             userRepository.save(defaultUser);
+            
+            // Give default user the white GymBuddy as active
+            GymBuddy defaultGymBuddy = gymBuddyRepository.findAll().stream()
+                .filter(gb -> "GymBuddy".equals(gb.getName()))
+                .findFirst()
+                .orElse(null);
+            
+            if (defaultGymBuddy != null) {
+                UserGymBuddy userGymBuddy = new UserGymBuddy(defaultUser, defaultGymBuddy, true);
+                userGymBuddyRepository.save(userGymBuddy);
+            }
+        } else {
+            // Ensure existing users have the default GymBuddy if they don't have any
+            User user = allUsers.get(0);
+            List<UserGymBuddy> userGymBuddies = userGymBuddyRepository.findByUser(user);
+            if (userGymBuddies.isEmpty()) {
+                GymBuddy defaultGymBuddy = gymBuddyRepository.findAll().stream()
+                    .filter(gb -> "GymBuddy".equals(gb.getName()))
+                    .findFirst()
+                    .orElse(null);
+                
+                if (defaultGymBuddy != null) {
+                    UserGymBuddy userGymBuddy = new UserGymBuddy(user, defaultGymBuddy, true);
+                    userGymBuddyRepository.save(userGymBuddy);
+                }
+            }
         }
     }
 }

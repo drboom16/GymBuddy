@@ -27,6 +27,7 @@ public class GymBuddyController {
         boolean allDailyAchievementsComplete = gymBuddyService.areAllDailyAchievementsComplete();
         
         List<Map<String, Object>> gymBuddiesWithAvailability = gymBuddies.stream()
+            .filter(gymBuddy -> !"GymBuddy".equals(gymBuddy.getName())) // Exclude default GymBuddy from shop
             .map(gymBuddy -> {
                 Map<String, Object> gymBuddyMap = new HashMap<>();
                 gymBuddyMap.put("id", gymBuddy.getId());
