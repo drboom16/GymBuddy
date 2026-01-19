@@ -1,7 +1,7 @@
 {
   "appId": "com.gymbuddy",
   "appName": "GymBuddy",
-  "webDir": "backend/src/main/resources/static",
+  "webDir": "frontend/static",
   "server": {
     "url": "http://localhost:8080",
     "cleartext": true,

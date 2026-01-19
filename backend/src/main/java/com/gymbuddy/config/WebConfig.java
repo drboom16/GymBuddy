@@ -11,17 +11,17 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Serve static resources from /static directory
+        // Serve static resources from frontend/static directory (filesystem first, then classpath fallback)
         registry.addResourceHandler("/**")
-                .addResourceLocations("classpath:/static/");
+                .addResourceLocations("file:../frontend/static/", "classpath:/static/");
         
-        // Serve public assets from /public directory
+        // Serve public assets from frontend/public directory (filesystem first, then classpath fallback)
         registry.addResourceHandler("/public/**")
-                .addResourceLocations("classpath:/public/");
+                .addResourceLocations("file:../frontend/public/", "classpath:/public/");
         
         // Explicitly handle font files with correct MIME types
         registry.addResourceHandler("/fonts/**")
-                .addResourceLocations("classpath:/static/fonts/")
+                .addResourceLocations("file:../frontend/static/fonts/", "classpath:/static/fonts/")
                 .setCachePeriod(31536000); // Cache for 1 year
     }
 
