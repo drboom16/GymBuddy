@@ -172,8 +172,18 @@
         .coin-button i[data-lucide="check"] {
             width: 28px;
             height: 28px;
-            stroke: var(--primary-green);
+            stroke: white;
             stroke-width: 3;
+        }
+
+        .coin-button.owned {
+            background: var(--primary-green);
+        }
+
+        .coin-button.owned i,
+        .coin-button.owned svg {
+            stroke: white;
+            fill: none;
         }
 
         .coin-button i,
@@ -212,6 +222,128 @@
             stroke: var(--text-secondary);
             opacity: 0.5;
         }
+
+        /* Purchase Confirmation Modal */
+        .purchase-confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 300;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .purchase-confirm-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .purchase-confirm-modal .modal {
+            background: var(--background-white);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            max-width: 400px;
+            width: 85%;
+            border: 2px solid #000;
+        }
+
+        .purchase-confirm-modal .modal-title {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .purchase-confirm-modal .modal-message {
+            font-size: var(--font-size-base);
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-xl);
+            line-height: 1.5;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .purchase-confirm-modal .modal-message-text {
+            flex: 1;
+        }
+
+        .purchase-confirm-modal .modal-message-image {
+            width: 80px;
+            height: 112px;
+            border-radius: var(--radius-md);
+            object-fit: contain;
+            flex-shrink: 0;
+            border: 2px solid #000;
+            background: var(--background-cream);
+        }
+
+        .purchase-confirm-modal .modal-actions {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .purchase-confirm-modal .btn-cancel {
+            flex: 1;
+            padding: var(--spacing-md);
+            background: var(--background-white);
+            color: var(--text-primary);
+            border: 2px solid #000;
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .purchase-confirm-modal .btn-confirm {
+            flex: 1;
+            padding: var(--spacing-md);
+            background: var(--primary-green);
+            color: white;
+            border: 2px solid #000;
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .purchase-confirm-modal .btn-confirm:hover {
+            background: #059669;
+        }
+
+        .coming-soon-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-end;
+            pointer-events: none;
+            padding: var(--spacing-sm);
+        }
+
+        .coming-soon-text {
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .gymbuddy-card.coming-soon {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -248,6 +380,23 @@
         <a href="/shop" class="nav-item">
             <i data-lucide="shopping-cart" class="nav-icon"></i>
         </a>
+    </div>
+
+    <!-- Purchase Confirmation Modal -->
+    <div class="purchase-confirm-modal" id="purchaseConfirmModal">
+        <div class="modal">
+            <h2 class="modal-title">Purchase EarthBuddy?</h2>
+            <div class="modal-message" id="purchaseConfirmMessage">
+                <div class="modal-message-text">
+                    Are you sure you want to purchase EarthBuddy for <span id="purchaseCoinCost">0</span> coins?
+                </div>
+                <img id="purchaseGymBuddyImage" src="" alt="EarthBuddy" class="modal-message-image">
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closePurchaseModal()">Cancel</button>
+                <button class="btn-confirm" onclick="confirmPurchase()">Purchase</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -297,17 +446,27 @@
             }
         }
 
+        let pendingPurchaseId = null;
+        let pendingPurchaseCost = null;
+
         // Fetch and render gymbuddies
         async function loadGymBuddies() {
             const gymbuddiesList = document.getElementById('gymbuddiesList');
             
             try {
-                const response = await fetch('/api/gymbuddies');
-                if (!response.ok) {
+                // Fetch available gymbuddies and user's owned gymbuddies
+                const [gymbuddiesResponse, ownedResponse] = await Promise.all([
+                    fetch('/api/gymbuddies'),
+                    fetch('/api/user/gymbuddies')
+                ]);
+                
+                if (!gymbuddiesResponse.ok) {
                     throw new Error('Failed to load gymbuddies');
                 }
                 
-                const gymbuddies = await response.json();
+                const gymbuddies = await gymbuddiesResponse.json();
+                const ownedGymbuddies = ownedResponse.ok ? await ownedResponse.json() : [];
+                const ownedIds = new Set(ownedGymbuddies.map(gb => gb.id));
                 
                 if (gymbuddies.length === 0) {
                     gymbuddiesList.innerHTML = `
@@ -335,10 +494,14 @@
                     const isFree = gymbuddy.coinCost === 0;
                     const requiresDaily = gymbuddy.requiresAllDailyAchievements === true;
                     const lockMessage = requiresDaily ? 'Complete all daily achievements to unlock' : 'Complete all achievements to unlock';
+                    const isEarthBuddy = gymbuddy.name === 'EarthBuddy';
+                    const isComingSoon = !isEarthBuddy;
+                    const isOwned = ownedIds.has(gymbuddy.id);
                     
                     return `
-                        <div class="gymbuddy-card ${isLocked ? 'locked' : ''}">
+                        <div class="gymbuddy-card ${isLocked ? 'locked' : ''} ${isComingSoon ? 'coming-soon' : ''}">
                             ${isLocked ? '<div class="locked-overlay"><i data-lucide="lock" class="locked-icon"></i></div>' : ''}
+                            ${isComingSoon ? '<div class="coming-soon-overlay"><div class="coming-soon-text">Coming Soon</div></div>' : ''}
                             <div class="gymbuddy-info">
                                 <img src="${gymbuddy.imagePath}" alt="${gymbuddy.name}" class="gymbuddy-image">
                                 <div class="gymbuddy-details">
@@ -346,16 +509,20 @@
                                     ${isLocked ? `<p style="font-size: var(--font-size-xs); color: var(--text-secondary); margin-top: var(--spacing-xs);">${lockMessage}</p>` : ''}
                                 </div>
                             </div>
-                            ${isFree && isAvailable ? `
-                                <button class="coin-button" onclick="purchaseGymBuddy(${gymbuddy.id}, ${gymbuddy.coinCost})" title="Claim for free">
+                            ${!isComingSoon ? (isOwned ? `
+                                <button class="coin-button owned" title="Owned">
+                                    <i data-lucide="check"></i>
+                                </button>
+                            ` : isFree && isAvailable ? `
+                                <button class="coin-button" onclick="purchaseGymBuddy(${gymbuddy.id}, ${gymbuddy.coinCost}, '${gymbuddy.imagePath}')" title="Claim for free">
                                     <i data-lucide="check"></i>
                                 </button>
                             ` : !isFree ? `
-                                <button class="coin-button" ${isLocked ? 'disabled' : ''} onclick="${isLocked ? '' : `purchaseGymBuddy(${gymbuddy.id}, ${gymbuddy.coinCost})`}" title="${isLocked ? lockMessage : `Purchase for ${gymbuddy.coinCost} coins`}" style="${isLocked ? 'opacity: 0.5; cursor: not-allowed;' : ''}">
+                                <button class="coin-button" ${isLocked ? 'disabled' : ''} onclick="${isLocked ? '' : `purchaseGymBuddy(${gymbuddy.id}, ${gymbuddy.coinCost}, '${gymbuddy.imagePath}')`}" title="${isLocked ? lockMessage : `Purchase for ${gymbuddy.coinCost} coins`}" style="${isLocked ? 'opacity: 0.5; cursor: not-allowed;' : ''}">
                                     <i data-lucide="coins"></i>
                                     <span class="coin-amount">${gymbuddy.coinCost}</span>
                                 </button>
-                            ` : ''}
+                            ` : '') : ''}
                         </div>
                     `;
                 }).join('');
@@ -373,10 +540,52 @@
             }
         }
 
-        function purchaseGymBuddy(id, coinCost) {
-            // TODO: Implement purchase logic
-            alert(`Purchase ${id} for ${coinCost} coins? (Purchase functionality coming soon!)`);
+        function purchaseGymBuddy(id, coinCost, imagePath) {
+            pendingPurchaseId = id;
+            pendingPurchaseCost = coinCost;
+            document.getElementById('purchaseCoinCost').textContent = coinCost;
+            document.getElementById('purchaseGymBuddyImage').src = imagePath;
+            document.getElementById('purchaseConfirmModal').classList.add('active');
         }
+
+        function closePurchaseModal() {
+            document.getElementById('purchaseConfirmModal').classList.remove('active');
+            pendingPurchaseId = null;
+            pendingPurchaseCost = null;
+        }
+
+        async function confirmPurchase() {
+            if (pendingPurchaseId && pendingPurchaseCost !== null) {
+                try {
+                    const response = await fetch(`/api/user/gymbuddies/${pendingPurchaseId}/purchase`, {
+                        method: 'POST'
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok && result.success) {
+                        // Purchase successful
+                        closePurchaseModal();
+                        // Reload gymbuddies and coins
+                        loadGymBuddies();
+                        loadUserCoins();
+                    } else {
+                        // Show error message
+                        alert(result.message || 'Purchase failed. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Error purchasing gymbuddy:', error);
+                    alert('Failed to complete purchase. Please try again.');
+                }
+            }
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('purchaseConfirmModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePurchaseModal();
+            }
+        });
 
         // Load gymbuddies and user coins on page load
         loadGymBuddies();

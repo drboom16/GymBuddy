@@ -50,6 +50,12 @@ public class HomeController {
         return StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
     }
 
+    @GetMapping(value = "/collection", produces = MediaType.TEXT_HTML_VALUE)
+    public String collection() throws IOException {
+        Resource resource = new ClassPathResource("static/collection.html");
+        return StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
+    }
+
     @GetMapping(value = "/workout-animation", produces = MediaType.TEXT_HTML_VALUE)
     public String workoutAnimation() throws IOException {
         Resource resource = new ClassPathResource("static/workout-animation.html");

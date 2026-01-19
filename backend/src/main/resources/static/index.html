@@ -123,7 +123,7 @@
 </head>
 <body>
     <div class="container">
-        <img src="/public/landingpage.gif" alt="GymBuddy Landing" class="landing-gif">
+        <img src="/public/default-buddy/landingpage.gif" alt="GymBuddy Landing" class="landing-gif">
         <h1>Gym Buddy</h1>
         <p class="subtitle">Your friendly workout companion. Let's get moving together!</p>
 
@@ -149,6 +149,29 @@
 
     <script>
         lucide.createIcons();
+        
+        // Update gymbuddy animation based on active gymbuddy
+        async function updateGymBuddyAnimation() {
+            try {
+                const response = await fetch('/api/user/gymbuddies/active');
+                if (response.ok) {
+                    const activeGymBuddy = await response.json();
+                    const landingGif = document.querySelector('.landing-gif');
+                    if (landingGif) {
+                        if (activeGymBuddy && activeGymBuddy.name === 'EarthBuddy') {
+                            landingGif.src = `/public/earth-buddy/landingpage.gif?t=${Date.now()}`;
+                        } else {
+                            landingGif.src = `/public/default-buddy/landingpage.gif?t=${Date.now()}`;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading active gymbuddy:', error);
+            }
+        }
+        
+        // Update animation on page load
+        updateGymBuddyAnimation();
     </script>
 </body>
 </html>

@@ -67,7 +67,7 @@ public class WorkoutController {
             error.put("error", "Failed to save workout: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
-    } 
+    }
 
     /**
      * GET

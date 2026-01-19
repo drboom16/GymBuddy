@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collection - GymBuddy</title>
+    <link rel="stylesheet" href="styles/design-system.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            background: var(--background-cream);
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-2xl) var(--spacing-lg) var(--spacing-md) var(--spacing-lg);
+            padding-top: calc(var(--spacing-2xl) + env(safe-area-inset-top, 0px) + 45px);
+        }
+
+        .gymbuddies-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-md);
+            padding: var(--spacing-lg);
+            padding-bottom: var(--spacing-xl);
+        }
+
+        .gymbuddy-collection-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-md);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-sm);
+            border: 2px solid #000;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .gymbuddy-collection-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .gymbuddy-collection-card.active {
+            border-color: var(--primary-green);
+            border-width: 3px;
+        }
+
+        .gymbuddy-collection-card.active::before {
+            content: "ACTIVE";
+            position: absolute;
+            top: var(--spacing-xs);
+            right: var(--spacing-xs);
+            background: var(--primary-green);
+            color: white;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 700;
+            border: 2px solid #000;
+        }
+
+        .gymbuddy-collection-image {
+            width: 100%;
+            max-width: 120px;
+            height: 168px;
+            border-radius: var(--radius-md);
+            object-fit: contain;
+            border: 2px solid #000;
+            background: var(--background-cream);
+        }
+
+        .gymbuddy-collection-name {
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+            text-align: center;
+        }
+
+        .loading {
+            text-align: center;
+            padding: var(--spacing-2xl);
+            color: var(--text-secondary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-2xl);
+            color: var(--text-secondary);
+        }
+
+        .empty-state i,
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: var(--spacing-md);
+            stroke: var(--text-secondary);
+            opacity: 0.5;
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            background: var(--background-white);
+            border: 2px solid #000;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .back-button i,
+        .back-button svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--text-primary);
+            stroke-width: 2.5;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- iPhone Dynamic Island -->
+    <div class="dynamic-island"></div>
+
+    <div class="header-container">
+        <h1 class="page-title-large" style="padding: 0; margin: 0;">Collection</h1>
+        <a href="javascript:history.back()" class="back-button">
+            <i data-lucide="x"></i>
+        </a>
+    </div>
+
+    <div class="content-container">
+        <div id="gymbuddiesCollection" class="gymbuddies-container">
+            <div class="loading">Loading collection...</div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Load user's gymbuddy collection
+        async function loadCollection() {
+            const collectionContainer = document.getElementById('gymbuddiesCollection');
+            
+            try {
+                const response = await fetch('/api/user/gymbuddies');
+                if (!response.ok) {
+                    throw new Error('Failed to load collection');
+                }
+                
+                const gymbuddies = await response.json();
+                
+                if (gymbuddies.length === 0) {
+                    collectionContainer.innerHTML = `
+                        <div class="empty-state" style="grid-column: 1 / -1;">
+                            <i data-lucide="users"></i>
+                            <p>No gymbuddies in your collection yet.</p>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                    return;
+                }
+                
+                collectionContainer.innerHTML = gymbuddies.map(gymbuddy => {
+                    const isActive = gymbuddy.isActive === true;
+                    return `
+                        <div class="gymbuddy-collection-card ${isActive ? 'active' : ''}" onclick="setActiveGymBuddy(${gymbuddy.id})">
+                            <img src="${gymbuddy.imagePath}" alt="${gymbuddy.name}" class="gymbuddy-collection-image">
+                            <h3 class="gymbuddy-collection-name">${gymbuddy.name}</h3>
+                        </div>
+                    `;
+                }).join('');
+                
+                lucide.createIcons();
+            } catch (error) {
+                console.error('Error loading collection:', error);
+                collectionContainer.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <i data-lucide="alert-circle"></i>
+                        <p>Failed to load collection. Please try again later.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+            }
+        }
+
+        async function setActiveGymBuddy(gymBuddyId) {
+            try {
+                const response = await fetch(`/api/user/gymbuddies/${gymBuddyId}/set-active`, {
+                    method: 'POST'
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to set active gymbuddy');
+                }
+                
+                // Reload collection to update active status
+                loadCollection();
+            } catch (error) {
+                console.error('Error setting active gymbuddy:', error);
+                alert('Failed to set active gymbuddy. Please try again.');
+            }
+        }
+
+        // Load collection on page load
+        loadCollection();
+    </script>
+</body>
+</html>

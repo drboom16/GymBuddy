@@ -37,6 +37,16 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public boolean deductCoins(int amount) {
+        User user = getOrCreateUser();
+        if (user.getCoins() >= amount) {
+            user.setCoins(user.getCoins() - amount);
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
     public User getUser() {
         return getOrCreateUser();
     }
