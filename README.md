@@ -89,23 +89,18 @@ This project is focused on mastering Spring Boot fundamentals, including:
 - Spring Boot configuration
 - Testing with JUnit and Mockito
 
-## Documentation
-
 ## Demo Videos
 
 <table>
   <tr>
     <td>
-      <video src="readme-videos/r1.mov?raw=1" controls muted playsinline></video>
-      <div>Fallback: <a href="readme-videos/r1.mov?raw=1">r1.mov</a></div>
+      <video src="https://github.com/user-attachments/assets/64b22bc3-798c-42bf-9f6a-c15c05a36442" controls muted playsinline></video>
     </td>
     <td>
-      <video src="readme-videos/r2.mov?raw=1" controls muted playsinline></video>
-      <div>Fallback: <a href="readme-videos/r2.mov?raw=1">r2.mov</a></div>
+      <video src="https://github.com/user-attachments/assets/5a98ad27-bd5a-4756-8fb1-fce406fe22de" controls muted playsinline></video>
     </td>
     <td>
-      <video src="readme-videos/r3.mov?raw=1" controls muted playsinline></video>
-      <div>Fallback: <a href="readme-videos/r3.mov?raw=1">r3.mov</a></div>
+      <video src="https://github.com/user-attachments/assets/a7258d66-2b97-4783-80ad-2e848b475d47" controls muted playsinline></video>
     </td>
   </tr>
 </table>
